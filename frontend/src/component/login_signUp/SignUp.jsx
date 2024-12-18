@@ -1,25 +1,6 @@
 import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Paper,
-} from "@mui/material";
-import { styled } from "@mui/system";
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  margin: "auto",
-  maxWidth: 400,
-  boxShadow: theme.shadows[4],
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const SignupForm = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -28,6 +9,9 @@ const SignupForm = () => {
     acceptTerms: false,
   });
 
+  const [responseMessage, setResponseMessage] = useState("");
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -36,112 +20,79 @@ const SignupForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.acceptTerms) {
-      console.log("Form Data Submitted:", formData);
-    } else {
-      alert("Please accept the terms and conditions.");
+  // Submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form reload
+    try {
+      const response = await fetch("http://localhost:8000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const Data = await response.json();
+      console.log("Response:", Data);
+
+      // Update response message
+      setResponseMessage(Data.message || "Registration successful!");
+    } catch (error) {
+      console.error("Error with POST request:", error);
+      setResponseMessage("Error with registration. Please try again.");
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f4f6f8",
-      }}
-    >
-      <StyledPaper>
-        <Typography variant="h4" align="center" gutterBottom>
-          Signup
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="First Name"
-                variant="outlined"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                variant="outlined"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                variant="outlined"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Password"
-                variant="outlined"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="acceptTerms"
-                    checked={formData.acceptTerms}
-                    onChange={handleChange}
-                  />
-                }
-                label={
-                  <Typography variant="body2">
-                    I accept the <a href="#">terms and conditions</a>.
-                  </Typography>
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{
-                  padding: 1.5,
-                  backgroundColor: "#1976d2",
-                  color: "white",
-                }}
-              >
-                Sign Up
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </StyledPaper>
-    </Box>
+    <div>
+      <h2>Signup Form</h2>
+      <form onSubmit={handleSubmit} >
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <label>
+          <input
+            type="checkbox"
+            name="acceptTerms"
+            checked={formData.acceptTerms}
+            onChange={handleChange}
+          />
+          Accept Terms and Conditions
+        </label>
+        <button type="submit">Register</button>
+      </form>
+      {responseMessage && <p>{responseMessage}</p>}
+    </div>
   );
 };
 
-export default SignupForm;
+export default Signup;
