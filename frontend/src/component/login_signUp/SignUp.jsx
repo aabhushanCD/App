@@ -1,5 +1,18 @@
 import React, { useState } from "react";
-
+import {
+  Container,
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Paper,
+  Alert,
+} from "@mui/material";
+import Navbar from "../header/navBar";
+import Footer from "../footer/Footer";
 const Signup = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -10,6 +23,7 @@ const Signup = () => {
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -36,62 +50,123 @@ const Signup = () => {
       console.log("Response:", Data);
 
       // Update response message
+      setIsSuccess(true);
       setResponseMessage(Data.message || "Registration successful!");
     } catch (error) {
       console.error("Error with POST request:", error);
+      setIsSuccess(false);
       setResponseMessage("Error with registration. Please try again.");
     }
   };
 
   return (
-    <div>
-      <h2>Signup Form</h2>
-      <form onSubmit={handleSubmit} >
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <label>
-          <input
-            type="checkbox"
-            name="acceptTerms"
-            checked={formData.acceptTerms}
-            onChange={handleChange}
-          />
-          Accept Terms and Conditions
-        </label>
-        <button type="submit">Register</button>
-      </form>
-      {responseMessage && <p>{responseMessage}</p>}
-    </div>
+    <>
+      <Navbar />
+      <Container maxWidth="sm">
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            borderRadius: 3,
+            backgroundColor: "#f9f9f9",
+            marginTop: 4,
+          }}
+        >
+          <Typography variant="h4" align="center" gutterBottom>
+            Create an Account
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              {/* First Name */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="firstName"
+                  label="First Name"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              {/* Last Name */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="lastName"
+                  label="Last Name"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              {/* Email */}
+              <Grid item xs={12}>
+                <TextField
+                  name="email"
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              {/* Password */}
+              <Grid item xs={12}>
+                <TextField
+                  name="password"
+                  label="Password"
+                  variant="outlined"
+                  fullWidth
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              {/* Accept Terms */}
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="acceptTerms"
+                      checked={formData.acceptTerms}
+                      onChange={handleChange}
+                      required
+                    />
+                  }
+                  label="I accept the Terms and Conditions"
+                />
+              </Grid>
+              {/* Submit Button */}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ padding: "0.8rem" }}
+                >
+                  Register
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+          {/* Response Message */}
+          {responseMessage && (
+            <Box mt={3}>
+              <Alert severity={isSuccess ? "success" : "error"}>
+                {responseMessage}
+              </Alert>
+            </Box>
+          )}
+        </Paper>
+      </Container>
+      <Footer></Footer>
+    </>
   );
 };
 

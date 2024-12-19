@@ -1,8 +1,7 @@
 import React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import SignupForm from "./component/login_signUp/SignUp"; 
-
+import Home from "./component/dashboard/home";
 const theme = createTheme({
   palette: {
     primary: {
@@ -19,10 +18,12 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SignupForm />
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+      </ThemeProvider>
+      <Home></Home>
+    </>
   );
 }
 
