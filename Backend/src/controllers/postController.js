@@ -2,10 +2,18 @@ import { Post } from "../models/postModel.js";
 
 export const createPosts = async (req, res) => {
   try {
-    const [owner, image, video, share, content, likes, deleted] = req.body;
+    const {
+      owner,
+      image,
+      video = null,
+      share = null,
+      content,
+      likes = [],
+      deleted = false,
+    } = req.body;
 
     if (!owner) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "how can you upload data I'm shocked",
       });
     }
@@ -23,8 +31,8 @@ export const createPosts = async (req, res) => {
       message: "Your post had uploaded successfully",
     });
   } catch (error) {
-    res.status(401).json({
-      message: "Error had occured while posting",
+    res.status(500).json({
+      message: "Error had occured while posting!!!!!!!!!",
       error: error.message,
     });
   }

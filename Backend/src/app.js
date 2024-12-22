@@ -17,8 +17,8 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/auth/user", userRoutes);
+app.use("/api/auth", authRoutes); //use for signup
+app.use("/api/auth/user", userRoutes); // use for login
 app.use("/api/posts", postRoutes);
 // Base route for authentication
 

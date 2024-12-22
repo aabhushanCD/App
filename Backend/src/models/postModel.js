@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+
       index: true, // Index for performance
     },
     image: {
@@ -25,12 +25,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       maxlength: 500, // Content length limit
     },
-    likes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ], // Changed to array of user references
+    likes: [], // Changed to array of user references
     deleted: {
       type: Boolean,
       default: false, // Soft delete field
@@ -42,8 +37,5 @@ const postSchema = new mongoose.Schema(
 );
 
 // Optional: Add virtual for like count
-postSchema.virtual("likeCount").get(function () {
-  return this.likes.length;
-});
 
 export const Post = mongoose.model("Post", postSchema);
