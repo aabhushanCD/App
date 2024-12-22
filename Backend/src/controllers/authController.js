@@ -2,6 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
+import { generateToken } from "../utils/generateToken.js";
 export const signup = async (req, res) => {
   try {
     const { firstName, lastName, email, password, acceptTerms } = req.body;
@@ -32,10 +33,10 @@ export const signup = async (req, res) => {
       });
     }
     await newUser.save();
-
     res.status(201).json({
       message: "User registered successfully!",
     });
+    generateToken(newUser._id, res);
   } catch (error) {
     res.status(500).json({
       message: "Internal server Error!!",
@@ -82,5 +83,3 @@ export const Login = async (req, res) => {
     });
   }
 };
-
-
