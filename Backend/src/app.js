@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 const app = express();
 
 // Middlewares
@@ -17,7 +18,8 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/auth/user", userRoutes);
+app.use("/api/posts", postRoutes);
 // Base route for authentication
 
 export default app;
