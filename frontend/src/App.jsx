@@ -23,9 +23,8 @@ function App() {
         <CssBaseline />
       </ThemeProvider>
       <Home></Home>
-     
     </>
   );
-}
+};
 
 export default App;
