@@ -1,162 +1,155 @@
-import React, { useState } from "react";
+import {
+  Grid,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { useState, useRef } from "react";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
-const CreatePostForm = () => {
-  const [formData, setFormData] = useState({
-    owner: "",
-    image: "",
-    video: "",
-    share: false,
-    content: "",
-    likes: 0,
-    deleted: false,
-  });
+const Posts = () => {
+  const [owner, setOwner] = useState("6763ab80e5e851a7a475c609"); // Replace with dynamic owner data if needed
+  const [content, setContent] = useState("");
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+  const handleIconClick = () => {
+    fileInputRef.current.click(); // Simulates a click on the hidden file input
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    console.log("Selected file:", selectedFile?.name);
+  };
 
-    // // Validate fields
-    // if (!formData.owner || !formData.content) {
-    //   setError("Owner and Content are required fields.");
-    //   return;
-    // }
+  const handlePostSubmit = async (event) => {
+    event.preventDefault();
+    setError(null); // Clear previous errors
+
+    if (!content.trim()) {
+      setError("Content cannot be empty.");
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:8000/api/posts", {
+      const formData = new FormData();
+      formData.append("owner", owner);
+      formData.append("content", content);
+      if (file) {
+        formData.append("file", file);
+      }
+
+      const response = await fetch("http://localhost:8000/api/post", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formData,
       });
 
-      const data = await response.json();
+   
 
-      if (response.status === 201) {
-        setSuccess(data.message);
-        setFormData({
-          owner: "",
-          image: "",
-          video: "",
-          share: false,
-          content: "",
-          likes: 0,
-          deleted: false,
-        });
-        setError("");
-      } else {
-        setError(data.message);
-      }
+      const result = await response.json();
+      console.log("Post created:", result);
+
+      // Reset form
+      setContent("");
+      setFile(null);
+      fileInputRef.current.value = null; // Reset file input
     } catch (err) {
-      setError("An error occurred while posting.");
+      console.error(err);
+      setError(err.message || "An unexpected error occurred.");
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Create a Post</h2>
+    <>
+      <Box
+        sx={{
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "16px",
+          width: "100%",
+          maxWidth: "500px",
+          margin: "0 auto",
+          backgroundColor: "#fff",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <form onSubmit={handlePostSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Create a Post
+              </Typography>
 
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-      {success && <div className="text-green-500 mb-4">{success}</div>}
+              {error && (
+                <Typography variant="body2" color="error" gutterBottom>
+                  {error}
+                </Typography>
+              )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="owner">
-            Owner
-          </label>
-          <input
-            type="text"
-            id="owner"
-            name="owner"
-            value={formData.owner}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter owner name"
-          
-          />
-        </div>
+              <TextField
+                name="content"
+                fullWidth
+                label="What's on your mind?"
+                variant="outlined"
+                multiline
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                InputProps={{
+                  style: { maxHeight: "200px", overflowY: "auto" },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
+                }}
+              />
+            </Grid>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="image">
-            Image URL
-          </label>
-          <input
-            type="url"
-            id="image"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter image URL"
-          />
-        </div>
+            <Grid item xs={12}>
+              <IconButton
+                onClick={handleIconClick}
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+              >
+                <AddPhotoAlternateIcon fontSize="large" />
+              </IconButton>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="video">
-            Video URL
-          </label>
-          <input
-            type="url"
-            id="video"
-            name="video"
-            value={formData.video}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter video URL"
-          />
-        </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+                accept="image/*,video/*"
+              />
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-bold mb-2"
-            htmlFor="content"
-          >
-            Content
-          </label>
-          <textarea
-            id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Write something..."
-           
-          ></textarea>
-        </div>
+              {file && (
+                <Typography variant="body2" gutterBottom>
+                  Selected file: {file.name}
+                </Typography>
+              )}
+            </Grid>
 
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            id="share"
-            name="share"
-            checked={formData.share}
-            onChange={handleChange}
-            className="mr-2"
-          />
-          <label className="text-gray-700 font-bold" htmlFor="share">
-            Share publicly
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Submit Post
-        </button>
-      </form>
-    </div>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ borderRadius: "8px", padding: "10px" }}
+              >
+                Post
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+    </>
   );
 };
 
-export default CreatePostForm;
+export default Posts;
