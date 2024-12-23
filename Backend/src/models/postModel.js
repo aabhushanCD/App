@@ -10,10 +10,6 @@ const postSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      validate: {
-        validator: (v) => /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/.test(v),
-        message: "Invalid image URL",
-      },
     },
     video: {
       type: String,
