@@ -2,7 +2,11 @@
 
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
-import { generateToken } from "../utils/generateToken.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateToken.js";
+
 export const signup = async (req, res) => {
   try {
     const { firstName, lastName, email, password, acceptTerms } = req.body;
@@ -36,7 +40,6 @@ export const signup = async (req, res) => {
     res.status(201).json({
       message: "User registered successfully!",
     });
-    generateToken(newUser._id, res);
   } catch (error) {
     res.status(500).json({
       message: "Internal server Error!!",
@@ -66,6 +69,26 @@ export const Login = async (req, res) => {
         message: "Invalid email or password.",
       });
     }
+    const accessToken = generateAccessToken(user._id, email);
+    const refreshToken = generateRefreshToken(user._id);
+    user.refreshToken = refreshToken;
+    await user.save({
+      validateBeforeSave: false,
+    });
+
+    res.cookie("accessToken", accessToken, {
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      httpOnly: true,
+
+      sameSite: "strict",
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+      httpOnly: true,
+
+      sameSite: "strict",
+    });
     res.status(200).json({
       message: "Login successful!",
       user: {
@@ -75,7 +98,6 @@ export const Login = async (req, res) => {
         lastName: user.lastName,
       },
     });
-    generateToken(user._id, res);
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({

@@ -18,9 +18,8 @@ export const createPosts = async (req, res, next) => {
       });
     }
     let imageUrl = null;
-   
+
     if (req.file) {
-   
       const cloudinaryResult = await uploadOnCloudinary(req.file.path);
 
       if (!cloudinaryResult) {
@@ -28,7 +27,7 @@ export const createPosts = async (req, res, next) => {
           message: "Failed to upload file to Cloudinary.",
         });
       }
-      imageUrl = cloudinaryResult.secure_url;
+      imageUrl = cloudinaryResult.url;
     } else {
       // If no file is uploaded, handle the case accordingly
       return res.status(400).json({

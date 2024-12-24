@@ -48,8 +48,6 @@ const Posts = () => {
         body: formData,
       });
 
-   
-
       const result = await response.json();
       console.log("Post created:", result);
 
