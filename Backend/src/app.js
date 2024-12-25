@@ -20,6 +20,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes); //use for signup
 app.use("/api/auth/user", userRoutes); // use for login
 app.use("/api/post", postRoutes);
+
 // Base route for authentication
 
 export default app;

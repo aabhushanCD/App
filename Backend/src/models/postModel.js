@@ -21,7 +21,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       maxlength: 500, // Content length limit
     },
-    likes: [], // Changed to array of user references
+
     deleted: {
       type: Boolean,
       default: false, // Soft delete field

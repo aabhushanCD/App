@@ -1,16 +1,9 @@
 import { Post } from "../models/postModel.js";
+import User from "../models/userModel.js";
 import { uploadOnCloudinary } from "../utils/fileUpload.js";
 export const createPosts = async (req, res, next) => {
   try {
-    const {
-      owner,
-      image,
-      video = null,
-      share = null,
-      content,
-      likes = [],
-      deleted = false,
-    } = req.body;
+    const { owner, image, video = null, content, deleted = false } = req.body;
 
     if (!owner) {
       return res.status(400).json({
@@ -54,6 +47,26 @@ export const createPosts = async (req, res, next) => {
     res.status(500).json({
       message: "Error had occured while posting!!!!!!!!!",
       error: error.message,
+    });
+  }
+};
+
+export const getPost = async (req, res) => {
+  try {
+    const page = parseInt(req.querry.page) || 1;
+    const limit = parseInt(req.querry.limit) || 10;
+    const skip = (page - 1) * limit;
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error cannot get Post",
     });
   }
 };
