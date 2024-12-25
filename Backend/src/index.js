@@ -7,7 +7,7 @@ import connectDB from "./db/connect.js";
 dotenv.config();
 
 // Connect to MongoDB and start the server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
