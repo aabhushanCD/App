@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+
 import Home from "./component/dashboard/home";
 const theme = createTheme({
   palette: {
@@ -25,6 +26,6 @@ function App() {
       <Home></Home>
     </>
   );
-};
+}
 
 export default App;

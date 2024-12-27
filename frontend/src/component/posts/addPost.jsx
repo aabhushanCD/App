@@ -6,16 +6,17 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { AuthContext } from "../store/auth";
 
 const Posts = () => {
-  const [owner, setOwner] = useState("6763ab80e5e851a7a475c609"); // Replace with dynamic owner data if needed
+  const { USER } = useContext(AuthContext);
+  const owner = USER.id; // Replace with dynamic owner data if needed
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
-
   const handleIconClick = () => {
     fileInputRef.current.click(); // Simulates a click on the hidden file input
   };
@@ -29,7 +30,7 @@ const Posts = () => {
   const handlePostSubmit = async (event) => {
     event.preventDefault();
     setError(null); // Clear previous errors
-
+    // setOwner = USER.id;
     if (!content.trim()) {
       setError("Content cannot be empty.");
       return;

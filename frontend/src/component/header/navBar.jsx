@@ -40,17 +40,17 @@ const Navbar = () => {
             color="inherit"
             sx={{ margin: "0 0.5rem" }}
             component={Link}
-            to="/about-us"
+            to="/displayPost"
           >
-            About Us
+            Posts
           </Button>
           <Button
             color="inherit"
             sx={{ margin: "0 0.5rem" }}
             component={Link}
-            to="#"
+            to="/post"
           >
-            Contact
+           Add Post
           </Button>
           <Button
             color="inherit"
