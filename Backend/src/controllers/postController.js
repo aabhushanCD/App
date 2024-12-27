@@ -3,7 +3,7 @@ import User from "../models/userModel.js";
 import { uploadOnCloudinary } from "../utils/fileUpload.js";
 export const createPosts = async (req, res, next) => {
   try {
-    const { owner, image, video = null, content, deleted = false } = req.body;
+    const { owner, image, video = null, content } = req.body;
 
     if (!owner) {
       return res.status(400).json({
@@ -31,10 +31,7 @@ export const createPosts = async (req, res, next) => {
       owner,
       image: imageUrl,
       video,
-      share,
       content,
-      likes,
-      deleted,
     });
 
     await newPost.save();
@@ -45,7 +42,7 @@ export const createPosts = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(500).json({
-      message: "Error had occured while posting!!!!!!!!!",
+      message: "Error had occured while posting!",
       error: error.message,
     });
   }

@@ -47,7 +47,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <Container>
         {/* Carousel Section */}
         <Box mb={4}>
@@ -154,7 +154,7 @@ const Home = () => {
           </Grid>
         </Grid>
       </Container>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 };

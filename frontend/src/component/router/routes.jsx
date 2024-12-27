@@ -2,7 +2,7 @@ import { BrowserRouter, Router, Route, Routes } from "react-router-dom";
 import Login from "../login_signUp/Login";
 import Signup from "../login_signUp/SignUp";
 import Home from ".././dashboard/home";
-import Posts from "../posts/post";
+import Posts from "../posts/addPost";
 import DisplayPost from "../posts/displayPost";
 function Routers() {
   return (
