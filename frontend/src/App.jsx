@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
+import { AuthContext } from "./component/store/auth";
 import Home from "./component/dashboard/home";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -18,14 +19,19 @@ const theme = createTheme({
 });
 
 function App() {
+  const [USER, setUser] = useState(null);
+  const parsedUser = JSON.parse(localStorage.getItem("user"));
+  console.log(parsedUser);
+  setUser(parsedUser);
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-      </ThemeProvider>
-      <Home></Home>
+      <AuthContext.Provider value={{ USER, setUser }}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+        </ThemeProvider>
+        <Home></Home>
+      </AuthContext.Provider>
     </>
   );
 }
-
 export default App;

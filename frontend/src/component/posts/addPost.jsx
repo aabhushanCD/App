@@ -11,8 +11,8 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { AuthContext } from "../store/auth";
 
 const Posts = () => {
-  const { USER } = useContext(AuthContext);
-  const owner = USER.id; // Replace with dynamic owner data if needed
+  // const { USER } = useContext(AuthContext);
+  // Replace with dynamic owner data if needed
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
@@ -20,6 +20,9 @@ const Posts = () => {
   const handleIconClick = () => {
     fileInputRef.current.click(); // Simulates a click on the hidden file input
   };
+
+  const parsedUser = JSON.parse(localStorage.getItem("user"));
+  const owner = parsedUser.id;
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];

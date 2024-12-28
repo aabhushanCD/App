@@ -9,12 +9,11 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Navbar from "../header/navBar";
 import Footer from "../footer/Footer";
 import { AuthContext } from "../store/auth";
 function Login() {
-  const { USER, setUser } = useContext(AuthContext);
   const [fieldData, setFieldData] = useState({ email: "", password: "" });
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -56,12 +55,8 @@ function Login() {
 
       const { user, message } = await response.json();
       setData({ user, message });
-      setUser({
-        id: user._id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      });
+      const hello = JSON.stringify(user);
+      localStorage.setItem("user", hello);
     } catch (err) {
       setError(err.message);
     }
