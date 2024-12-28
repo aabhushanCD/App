@@ -10,6 +10,12 @@ export const createPosts = async (req, res, next) => {
         message: "how can you upload data I'm shocked",
       });
     }
+    const existedUserPost = await User.findById(owner);
+    if (!existedUserPost) {
+      return res.status(400).json({
+        message: "User don't Exist",
+      });
+    }
     let imageUrl = null;
 
     if (req.file) {
