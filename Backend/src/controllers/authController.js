@@ -106,3 +106,41 @@ export const Login = async (req, res) => {
     });
   }
 };
+
+export const LogOut = async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "User ID is required to log out." });
+    }
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    user.refreshToken = "";
+    user.save({
+      validateBeforeSave: false,
+    });
+    res.cookie("accessToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      expires: new Date(0), // Immediately expire the cookie
+    });
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      expires: new Date(0),
+    });
+    return res.status(200).json({ message: "Successfully logged out." });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to log out.",
+      error: error.message,
+    });
+  }
+};

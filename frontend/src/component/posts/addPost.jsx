@@ -9,6 +9,7 @@ import {
 import { useState, useRef, useContext } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { AuthContext } from "../store/auth";
+import Navbar from "../header/navBar";
 
 const Posts = () => {
   // const { USER } = useContext(AuthContext);
@@ -34,8 +35,8 @@ const Posts = () => {
     event.preventDefault();
     setError(null); // Clear previous errors
     // setOwner = USER.id;
-    if (!content.trim()) {
-      setError("Content cannot be empty.");
+    if (!(content.trim()) || !fileInputRef) {
+      setError(" cannot be empty.");
       return;
     }
 
@@ -67,6 +68,7 @@ const Posts = () => {
 
   return (
     <>
+      <Navbar></Navbar>
       <Box
         sx={{
           border: "1px solid #ddd",

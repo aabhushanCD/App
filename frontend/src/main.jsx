@@ -6,11 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import Routers from "./component/router/routes";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routers>
-        <App />
-      </Routers>
-    </BrowserRouter>
-  </StrictMode>
+  <BrowserRouter>
+    <Routers>
+      <App />
+    </Routers>
+  </BrowserRouter>
 );

@@ -27,7 +27,8 @@ export const createPosts = async (req, res, next) => {
         });
       }
       imageUrl = cloudinaryResult.url;
-    } else {
+    }
+     else {
       // If no file is uploaded, handle the case accordingly
       return res.status(400).json({
         message: "Please upload an image or video for the post.",
@@ -56,16 +57,20 @@ export const createPosts = async (req, res, next) => {
 
 export const getPost = async (req, res) => {
   try {
-    const page = parseInt(req.querry.page) || 1;
-    const limit = parseInt(req.querry.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const posts = await Post.find()
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
-
+      .limit(limit)
+      .populate("owner", "firstName lastName");
+    const details = posts.map((post) => ({
+      ...post.toObject(),
+      Name: `${post.owner.firstName} ${post.owner.lastName}`,
+    }));
     res.status(200).json({
-      posts,
+      details,
     });
   } catch (error) {
     res.status(500).json({
