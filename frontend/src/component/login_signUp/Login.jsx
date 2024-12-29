@@ -55,8 +55,8 @@ function Login() {
 
       const { user, message } = await response.json();
       setData({ user, message });
-      const hello = JSON.stringify(user);
-      localStorage.setItem("user", hello);
+      const User = JSON.stringify(user);
+      localStorage.setItem("user", User);
     } catch (err) {
       setError(err.message);
     }
