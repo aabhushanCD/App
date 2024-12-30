@@ -15,7 +15,7 @@ const LogOut = () => {
     //   }
     //   const result = await response.json();
     // console.log("Response Data:", result);
-    localStorage.setItem("user", "");
+    localStorage.removeItem("user");
   };
   return (
     <div>

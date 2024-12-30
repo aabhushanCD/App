@@ -6,6 +6,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken.js";
+import { error } from "console";
 
 export const signup = async (req, res) => {
   try {
@@ -59,14 +60,14 @@ export const Login = async (req, res) => {
     }
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({
-        message: "User not found",
+      return res.status(404).json({
+        message: `Something went wrong Failed to Login & Check your Credentials 404 ! `,
       });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
-        message: "Invalid email or password.",
+        message: `Invalid email or password.`,
       });
     }
     const accessToken = generateAccessToken(user._id, email);
@@ -99,9 +100,8 @@ export const Login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Login Error:", error);
     res.status(500).json({
-      message: "Internal server error",
+      message: "An error occurred during login.",
       error: error.message,
     });
   }
@@ -118,7 +118,10 @@ export const LogOut = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({
+        message: "User not found.",
+        error: error.message,
+      });
     }
     user.refreshToken = "";
     user.save({

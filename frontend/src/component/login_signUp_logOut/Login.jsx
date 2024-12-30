@@ -50,15 +50,19 @@ function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
+        const responseData = await response.json();
+        const errorMessage =
+          responseData?.message ||
+          "Login failed. Please check your credentials.";
+        throw new Error(errorMessage);
       }
 
-      const { user, message } = await response.json();
-      setData({ user, message });
-      const User = JSON.stringify(user);
-      localStorage.setItem("user", User);
-    } catch (err) {
-      setError(err.message);
+      const responseData = await response.json();
+      setData(responseData);
+
+      localStorage.setItem("user", JSON.stringify(responseData.user));
+    } catch (error) {
+      setError(error.message || "something went wrong!");
     }
   };
 
@@ -125,7 +129,7 @@ function Login() {
 
           {data && (
             <Alert severity="success">
-              {data.message} Welcome, {data.user.name}!
+              {data.message} WelCome {data.user.firstName}!
             </Alert>
           )}
         </Box>
