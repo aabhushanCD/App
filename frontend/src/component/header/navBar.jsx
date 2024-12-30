@@ -55,7 +55,9 @@ const Navbar = () => {
           </Button>
 
           {localStorage.getItem("user") ? (
-            <LogOut color="inherit" sx={{ margin: "0 0.5rem" }} />
+            <Button>
+              <LogOut color="inherit" sx={{ margin: "0 0.5rem", }} />
+            </Button>
           ) : (
             <>
               <Button

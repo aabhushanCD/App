@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-
+import { IoIosLogOut } from "react-icons/io";
 const LogOut = () => {
   const handleClick = async () => {
     //   const response = await fetch("http://localhost:8000/api/auth/logout", {
@@ -19,11 +19,13 @@ const LogOut = () => {
   };
   return (
     <div>
-      <Button onClick={handleClick}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          LogOut
-        </Link>
-      </Button>
+      <a
+        href="/"
+        onClick={handleClick}
+        style={{ textDecoration: "none", color: "black" }}
+      >
+        <IoIosLogOut style={{ marginRight: "0.5rem", fontSize: "40px" }} />
+      </a>
     </div>
   );
 };
