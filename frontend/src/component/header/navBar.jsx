@@ -1,6 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import LogOut from "../login_signUp_logOut/LogOut";
 
 const Navbar = () => {
   return (
@@ -50,31 +51,38 @@ const Navbar = () => {
             component={Link}
             to="/post"
           >
-           Add Post
+            Add Post
           </Button>
-          <Button
-            color="inherit"
-            sx={{ margin: "0 0.5rem" }}
-            component={Link}
-            to="/login"
-          >
-            Login
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              margin: "0 0.5rem",
-              color: "#fff",
-              borderColor: "#fff",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.2)",
-              },
-            }}
-            component={Link}
-            to="/signup"
-          >
-            SignUp
-          </Button>
+
+          {localStorage.getItem("user") ? (
+            <LogOut color="inherit" sx={{ margin: "0 0.5rem" }} />
+          ) : (
+            <>
+              <Button
+                color="inherit"
+                sx={{ margin: "0 0.5rem" }}
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  margin: "0 0.5rem",
+                  color: "#fff",
+                  borderColor: "#fff",
+                  "&:hover": {
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                  },
+                }}
+                component={Link}
+                to="/signup"
+              >
+                SignUp
+              </Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

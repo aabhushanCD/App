@@ -10,7 +10,12 @@ import postRoutes from "./routes/postRoutes.js";
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with the origin of your frontend
+    credentials: true, // Allow credentials (cookies) to be included
+  })
+);
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
