@@ -14,10 +14,9 @@ import {
 } from "@mui/material";
 import { ThumbUp, Comment, Share } from "@mui/icons-material";
 
-const DisplayPost = ({ postData }) => {
+const DisplayPost = ({ postData}) => {
   return (
     <>
-      <Navbar></Navbar>
       <ul style={{ listStyleType: "none" }}>
         {postData.map((post) => {
           return (
@@ -43,6 +42,7 @@ const DisplayPost = ({ postData }) => {
                         alt="Video"
                         width={"570px"}
                         loading={true}
+                        controls
                       ></video>
                     )}
                   </CardContent>

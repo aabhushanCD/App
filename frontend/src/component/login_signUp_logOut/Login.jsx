@@ -13,12 +13,13 @@ import React, { useContext, useState, useEffect } from "react";
 import Navbar from "../header/navBar";
 import Footer from "../footer/Footer";
 import { AuthContext } from "../store/auth";
+import { useNavigate } from "react-router-dom";
 function Login() {
   const [fieldData, setFieldData] = useState({ email: "", password: "" });
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFieldData({
@@ -61,6 +62,7 @@ function Login() {
       setData(responseData);
 
       localStorage.setItem("user", JSON.stringify(responseData.user));
+      setTimeout(() => navigate("/"), 980);
     } catch (error) {
       setError(error.message || "something went wrong!");
     }
