@@ -12,13 +12,14 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import Navbar from "../header/navBar";
 import Footer from "../footer/Footer";
-import AuthContext from "../../store/auth";
+import { AuthContext } from "../store/auth";
+import { useNavigate } from "react-router-dom";
 function Login() {
   const [fieldData, setFieldData] = useState({ email: "", password: "" });
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFieldData({
@@ -50,15 +51,20 @@ function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
+        const responseData = await response.json();
+        const errorMessage =
+          responseData?.message ||
+          "Login failed. Please check your credentials.";
+        throw new Error(errorMessage);
       }
 
-      const { user, message } = await response.json();
-      setData({ user, message });
-      const User = JSON.stringify(user);
-      localStorage.setItem("user", User);
-    } catch (err) {
-      setError(err.message);
+      const responseData = await response.json();
+      setData(responseData);
+
+      localStorage.setItem("user", JSON.stringify(responseData.user));
+      setTimeout(() => navigate("/"), 980);
+    } catch (error) {
+      setError(error.message || "something went wrong!");
     }
   };
 
@@ -125,7 +131,7 @@ function Login() {
 
           {data && (
             <Alert severity="success">
-              {data.message} Welcome, {data.user.name}!
+              {data.message} WelCome {data.user.firstName}!
             </Alert>
           )}
         </Box>
@@ -139,6 +145,6 @@ export default Login;
 
 export const AuthContextProvider = ({ children }) => {
 
-  
+
   return <AuthContext.Provider> {children}</AuthContext.Provider>;
 };
