@@ -1,3 +1,3 @@
-import React, { Children, createContext, useState } from "react";
+import { createContext } from "react";
 
-export const AuthContext = createContext({ USER: "", setUser: () => {} });
+export const AuthContext = createContext();

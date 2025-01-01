@@ -12,7 +12,7 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import Navbar from "../header/navBar";
 import Footer from "../footer/Footer";
-import { AuthContext } from "../store/auth";
+import AuthContext from "../../store/auth";
 function Login() {
   const [fieldData, setFieldData] = useState({ email: "", password: "" });
   const [data, setData] = useState(null);
@@ -136,3 +136,9 @@ function Login() {
 }
 
 export default Login;
+
+export const AuthContextProvider = ({ children }) => {
+
+  
+  return <AuthContext.Provider> {children}</AuthContext.Provider>;
+};

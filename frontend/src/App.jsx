@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { AuthContext } from "./component/store/auth";
+// import { AuthContext } from "./component/store/auth";
 import Home from "./component/dashboard/home";
 
 const theme = createTheme({

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useState, useRef, useContext } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { AuthContext } from "../store/auth";
+
 import Navbar from "../header/navBar";
 
 const Posts = () => {
