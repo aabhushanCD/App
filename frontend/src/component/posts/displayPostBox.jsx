@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
+// import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
 import DisplayPost from "./displayPost";
 import Navbar from "../header/navBar";
 import { Alert } from "@mui/material";
@@ -34,7 +34,7 @@ function DisplayPostBox() {
     } catch (error) {
       setError(error.message || "something went wrong!!");
     } finally {
-      setLoading(false);  
+      setLoading(false);
     }
   };
   useEffect(() => {
