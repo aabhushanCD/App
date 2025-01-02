@@ -10,11 +10,13 @@ import { useState, useRef, useContext } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 import Navbar from "../header/navBar";
+import { AuthContext } from "../store/auth";
 
 const Posts = () => {
   // const { USER } = useContext(AuthContext);
   // Replace with dynamic owner data if needed
   const [content, setContent] = useState("");
+  const { authValue, setAuthValue } = useContext(AuthContext);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -22,7 +24,9 @@ const Posts = () => {
     fileInputRef.current.click(); // Simulates a click on the hidden file input
   };
 
-  const parsedUser = JSON.parse(localStorage.getItem("user"));
+  // local storage data
+  // JSON.parse(localStorage.getItem("user"));
+  const parsedUser = authValue;
   const owner = parsedUser.id;
 
   const handleFileChange = (event) => {
@@ -35,7 +39,7 @@ const Posts = () => {
     event.preventDefault();
     setError(null); // Clear previous errors
     // setOwner = USER.id;
-    if (!(content.trim()) || !fileInputRef) {
+    if (!content.trim() || !fileInputRef) {
       setError(" cannot be empty.");
       return;
     }

@@ -1,31 +1,22 @@
-import React from "react";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+
 import { IoIosLogOut } from "react-icons/io";
+import { AuthContext } from "../store/auth";
+import { Link } from "react-router-dom";
 const LogOut = () => {
-  const handleClick = async () => {
-    //   const response = await fetch("http://localhost:8000/api/auth/logout", {
-    //     method: "POST",
-    //     body: JSON.stringify(localStorage.getItem("user.id")),
-    //     credentials: "include",
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! Status: ${response.status}`);
-    //   }
-    //   const result = await response.json();
-    // console.log("Response Data:", result);
-    localStorage.removeItem("user");
+  const { authValue, setAuthValue } = useContext(AuthContext);
+  const handleClick = () => {
+    setAuthValue(null);
   };
   return (
     <div>
-      <a
-        href="/"
+      <Link
+        to="/"
         onClick={handleClick}
         style={{ textDecoration: "none", color: "black" }}
       >
         <IoIosLogOut style={{ marginRight: "0.5rem", fontSize: "40px" }} />
-      </a>
+      </Link>
     </div>
   );
 };

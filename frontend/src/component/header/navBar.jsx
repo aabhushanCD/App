@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import LogOut from "../login_signUp_logOut/LogOut";
+import { AuthContext } from "../store/auth";
 
 const Navbar = () => {
+  const { authValue } = useContext(AuthContext);
   return (
     <AppBar
       position="static"
@@ -54,9 +56,9 @@ const Navbar = () => {
             Add Post
           </Button>
 
-          {localStorage.getItem("user") ? (
+          {authValue ? (
             <Button>
-              <LogOut color="inherit" sx={{ margin: "0 0.5rem", }} />
+              <LogOut color="inherit" sx={{ margin: "0 0.5rem" }} />
             </Button>
           ) : (
             <>

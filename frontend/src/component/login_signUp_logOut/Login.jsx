@@ -15,6 +15,7 @@ import Footer from "../footer/Footer";
 import { AuthContext } from "../store/auth";
 import { useNavigate } from "react-router-dom";
 function Login() {
+  const { setAuthValue } = useContext(AuthContext);
   const [fieldData, setFieldData] = useState({ email: "", password: "" });
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -59,9 +60,10 @@ function Login() {
       }
 
       const responseData = await response.json();
+      setAuthValue(responseData.user);
       setData(responseData);
 
-      localStorage.setItem("user", JSON.stringify(responseData.user));
+      // localStorage.setItem("user", JSON.stringify(responseData.user));
       setTimeout(() => navigate("/"), 980);
     } catch (error) {
       setError(error.message || "something went wrong!");
@@ -144,7 +146,10 @@ function Login() {
 export default Login;
 
 export const AuthContextProvider = ({ children }) => {
-
-
-  return <AuthContext.Provider> {children}</AuthContext.Provider>;
+  const [authValue, setAuthValue] = useState(null);
+  return (
+    <AuthContext.Provider value={{ authValue, setAuthValue }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
