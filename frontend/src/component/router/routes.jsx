@@ -5,6 +5,7 @@ import Home from ".././dashboard/home";
 import Posts from "../posts/addPost";
 import DisplayPostBox from "../posts/displayPostBox";
 import SideBar from "../sideBar/sideBar";
+import Profile from "../profile/Profile";
 function Routers() {
   return (
     <AuthContextProvider>
@@ -15,6 +16,7 @@ function Routers() {
         <Route path="/post" element={<Posts />} />
         <Route path="/displayPost" element={<DisplayPostBox />} />
         <Route path="/sideBar" element={<SideBar />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </AuthContextProvider>
   );

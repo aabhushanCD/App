@@ -7,17 +7,13 @@ import { AuthContext } from "../store/auth";
 const Navbar = () => {
   const { authValue } = useContext(AuthContext);
   return (
-    <AppBar
-      position="static"
-      color="primary"
-      sx={{ padding: "0.5rem 0", marginBottom: "0.2rem" }}
-    >
+    <AppBar position="static" color="secondary" sx={{ marginBottom: "0.2rem" }}>
       <Toolbar>
         {/* Logo Section */}
         <Typography
           variant="h6"
           component={Link}
-          to="/"
+          to="/profile"
           color="inherit"
           sx={{
             flexGrow: 1,
