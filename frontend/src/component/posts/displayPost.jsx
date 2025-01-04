@@ -14,14 +14,20 @@ import {
 } from "@mui/material";
 import { ThumbUp, Comment, Share } from "@mui/icons-material";
 
-const DisplayPost = ({ postData}) => {
+const DisplayPost = ({ postData }) => {
   return (
     <>
       <ul style={{ listStyleType: "none" }}>
-        {postData.map((post) => {
+        {postData.map((post, index) => {
           return (
-            <li key={post._id}>
-              <Box sx={{ maxWidth: 600, margin: "auto", mt: 2 }}>
+            <li key={index}>
+              <Box
+                sx={{
+                  // maxWidth: 600, maxHeight: 700,
+                  margin: "auto",
+                  mt: 2,
+                }}
+              >
                 {/* Post Card */}
                 <Card>
                   {/* Header: User Info */}
@@ -35,14 +41,22 @@ const DisplayPost = ({ postData}) => {
                   <CardContent>
                     <Typography variant="body1">{post.content}</Typography>
                     {post.image.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                      <img src={post.image} alt="image" width={"570px"}></img>
+                      <img
+                        src={post.image}
+                        alt="image"
+                        style={{
+                          maxWidth: "1200px",
+                          maxHeight: "630px",
+                          margin: "auto",
+                        }}
+                      ></img>
                     ) : (
                       <video
                         src={post.image}
                         alt="Video"
                         width={"570px"}
-                        loading={true}
                         controls
+                        preload="none"
                       ></video>
                     )}
                   </CardContent>

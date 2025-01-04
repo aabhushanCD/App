@@ -73,7 +73,15 @@ function Login() {
   return (
     <>
       <Navbar />
-      <Container maxWidth="sm" sx={{ border: "1px solid black" }}>
+      <Container
+        maxWidth="sm"
+        sx={{
+          border: "1px solid black",
+          boxShadow: "1px 1px 15px 1px black",
+          marginTop: "20px",
+          width: "33.33%",
+        }}
+      >
         <Typography variant="h4" gutterBottom align="center">
           Login
         </Typography>
