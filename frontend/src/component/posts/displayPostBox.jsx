@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
-// import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
 import DisplayPost from "./displayPost";
 import Navbar from "../header/navBar";
 import { Alert } from "@mui/material";
-import { alignProperty } from "@mui/material/styles/cssUtils";
-import { Height } from "@mui/icons-material";
+
 function DisplayPostBox() {
   const [postData, setPostData] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const getAllPost = async (page) => {
+  const getAllPost = async () => {
     setLoading(true);
+    const limit = 10;
     try {
       const response = await fetch(
-        "http://localhost:8000/api/post/displayPost",
+        `http://localhost:8000/api/post/displayPost/${page}/${limit}`,
         {
           method: "GET",
           headers: {
             "content-Type": "application/json",
           },
-          param: page,
         }
       );
       if (!response.ok) {
@@ -30,6 +29,7 @@ function DisplayPostBox() {
       }
       const { details } = await response.json();
       console.log(details);
+
       setPostData((prevPost) => [...prevPost, ...details]);
     } catch (error) {
       setError(error.message || "something went wrong!!");
@@ -37,12 +37,25 @@ function DisplayPostBox() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    getAllPost(page);
+    const infiniteScroll = () => {
+      const innerHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      if (scrollTop + innerHeight + 10 >= scrollHeight && !loading) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+    window.addEventListener("scroll", infiniteScroll);
+    return () => {
+      window.removeEventListener("scroll", infiniteScroll);
+    };
+  }, [loading]);
+  useEffect(() => {
+    getAllPost();
   }, [page]);
-  const loadMorePosts = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+
   return (
     <>
       <Navbar></Navbar>
@@ -55,22 +68,13 @@ function DisplayPostBox() {
         }}
       >
         {error && (
-          <Alert severity="error">No post's are available {error}</Alert>
+          <Alert severity="info">No posts are available {error}</Alert>
         )}
-        {loading ? (
+        <DisplayPost postData={postData} />
+        {loading && (
           <AiOutlineLoading3Quarters
             style={{ fontSize: "24px", animation: "spin 1s linear infinite" }}
           />
-        ) : (
-          <>
-            <DisplayPost postData={postData}></DisplayPost>
-            <button
-              onClick={loadMorePosts}
-              style={{ marginBottom: "50px", borderRadius: "5px" }}
-            >
-              LoadMore
-            </button>
-          </>
         )}
       </div>
     </>

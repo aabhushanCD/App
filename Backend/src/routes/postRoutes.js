@@ -5,5 +5,5 @@ import { upload } from "../middlewares/multer.js";
 const router = express.Router();
 
 router.post("/", upload.single("file"), createPosts);
-router.get("/displayPost", getPost);
+router.get("/displayPost/:page/:limit", getPost);
 export default router;
