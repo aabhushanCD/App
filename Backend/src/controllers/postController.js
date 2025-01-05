@@ -27,8 +27,7 @@ export const createPosts = async (req, res, next) => {
         });
       }
       imageUrl = cloudinaryResult.url;
-    }
-     else {
+    } else {
       // If no file is uploaded, handle the case accordingly
       return res.status(400).json({
         message: "Please upload an image or video for the post.",
@@ -75,6 +74,33 @@ export const getPost = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal Server Error cannot get Post",
+    });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.body;
+    if (!postId) {
+      return res.status(400).json({
+        message: "Sorry something went wrong cannot delete this post",
+      });
+    }
+
+    const post = await Post.findByIdAndDelete(postId);
+    console.log(post);
+    if (!post) {
+      return res.status(401).json({
+        message: "Post dont exist",
+      });
+    }
+    res.status(200).json({
+      message: "Deleted",
+    });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({
+      message: "Error from server Please try again",
     });
   }
 };

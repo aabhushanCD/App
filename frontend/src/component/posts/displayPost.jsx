@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../header/navBar";
+
 // import { format } from "date-fns";
 import {
   Card,
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { ThumbUp, Comment, Share } from "@mui/icons-material";
 
+import PostMenu from "./postMenu";
 const DisplayPost = ({ postData }) => {
   return (
     <>
@@ -23,20 +24,25 @@ const DisplayPost = ({ postData }) => {
             <li key={index}>
               <Box
                 sx={{
-                  // maxWidth: 600, maxHeight: 700,
                   margin: "auto",
                   mt: 2,
+                  maxWidth: "500px",
                 }}
               >
                 {/* Post Card */}
                 <Card>
                   {/* Header: User Info */}
-                  <CardHeader
-                    avatar={<Avatar aria-label="user-avatar">A</Avatar>}
-                    title={`${post.Name}`}
-                    subheader={post.createdAt.slice(0, 10)}
-                  />
-
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {" "}
+                    <CardHeader
+                      avatar={<Avatar aria-label="user-avatar">A</Avatar>}
+                      title={`${post.Name}`}
+                      subheader={post.createdAt.slice(0, 10)}
+                    />
+                    <PostMenu postId={post._id} />
+                  </div>
                   {/* Post Content */}
                   <CardContent>
                     <Typography variant="body1">{post.content}</Typography>
@@ -45,7 +51,7 @@ const DisplayPost = ({ postData }) => {
                         src={post.image}
                         alt="image"
                         style={{
-                          maxWidth: "1200px",
+                          maxWidth: "450px",
                           maxHeight: "630px",
                           margin: "auto",
                         }}
@@ -57,6 +63,7 @@ const DisplayPost = ({ postData }) => {
                         width={"570px"}
                         controls
                         preload="none"
+                        style={{ maxWidth: "450px" }}
                       ></video>
                     )}
                   </CardContent>

@@ -3,10 +3,10 @@ import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
 import DisplayPost from "./displayPost";
 import Navbar from "../header/navBar";
 import { Alert } from "@mui/material";
-
+import "./style.css";
 function DisplayPostBox() {
   const [postData, setPostData] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const getAllPost = async () => {
@@ -65,17 +65,13 @@ function DisplayPostBox() {
           justifyContent: "center",
           flexDirection: "column",
           alignItems: "center",
+         
+          margin: "auto",
         }}
       >
-        {error && (
-          <Alert severity="info">No posts are available {error}</Alert>
-        )}
+        {error && <Alert severity="info">No posts are available {error}</Alert>}
         <DisplayPost postData={postData} />
-        {loading && (
-          <AiOutlineLoading3Quarters
-            style={{ fontSize: "24px", animation: "spin 1s linear infinite" }}
-          />
-        )}
+        {loading && <AiOutlineLoading3Quarters className="spinner" />}
       </div>
     </>
   );
