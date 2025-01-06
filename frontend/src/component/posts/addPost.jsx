@@ -5,7 +5,9 @@ import {
   Box,
   Typography,
   IconButton,
+  Alert,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
@@ -26,8 +28,6 @@ const Posts = () => {
 
   // local storage data
   // JSON.parse(localStorage.getItem("user"));
-  const parsedUser = authValue;
-  const owner = parsedUser.id;
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -36,6 +36,7 @@ const Posts = () => {
   };
 
   const handlePostSubmit = async (event) => {
+    let owner = authValue.id;
     event.preventDefault();
     setError(null); // Clear previous errors
     // setOwner = USER.id;
@@ -73,89 +74,99 @@ const Posts = () => {
   return (
     <>
       <Navbar></Navbar>
-      <Box
-        sx={{
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          padding: "16px",
-          width: "100%",
-          maxWidth: "500px",
-          margin: "0 auto",
-          backgroundColor: "#fff",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <form onSubmit={handlePostSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Create a Post
-              </Typography>
 
-              {error && (
-                <Typography variant="body2" color="error" gutterBottom>
-                  {error}
+      {authValue ? (
+        <Box
+          sx={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            padding: "16px",
+            width: "100%",
+            maxWidth: "500px",
+            margin: "0 auto",
+            backgroundColor: "#fff",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <form onSubmit={handlePostSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom>
+                  Create a Post
                 </Typography>
-              )}
 
-              <TextField
-                name="content"
-                fullWidth
-                label="What's on your mind?"
-                variant="outlined"
-                multiline
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                InputProps={{
-                  style: { maxHeight: "200px", overflowY: "auto" },
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-              />
+                {error && (
+                  <Typography variant="body2" color="error" gutterBottom>
+                    {error}
+                  </Typography>
+                )}
+
+                <TextField
+                  name="content"
+                  fullWidth
+                  label="What's on your mind?"
+                  variant="outlined"
+                  multiline
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  InputProps={{
+                    style: { maxHeight: "200px", overflowY: "auto" },
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "8px",
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <IconButton
+                  onClick={handleIconClick}
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <AddPhotoAlternateIcon fontSize="large" />
+                </IconButton>
+
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                  accept="image/*,video/*"
+                />
+
+                {file && (
+                  <Typography variant="body2" gutterBottom>
+                    Selected file: {file.name}
+                  </Typography>
+                )}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ borderRadius: "8px", padding: "10px" }}
+                >
+                  Post
+                </Button>
+              </Grid>
             </Grid>
-
-            <Grid item xs={12}>
-              <IconButton
-                onClick={handleIconClick}
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-                <AddPhotoAlternateIcon fontSize="large" />
-              </IconButton>
-
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-                accept="image/*,video/*"
-              />
-
-              {file && (
-                <Typography variant="body2" gutterBottom>
-                  Selected file: {file.name}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ borderRadius: "8px", padding: "10px" }}
-              >
-                Post
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
+          </form>
+        </Box>
+      ) : (
+        <Alert severity="error">
+          {"Please Login First to Add post"}
+          <Button variant="primary">
+            <Link to="/login">Login</Link>
+          </Button>
+        </Alert>
+      )}
     </>
   );
 };
