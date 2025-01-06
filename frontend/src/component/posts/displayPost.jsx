@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 // import { format } from "date-fns";
 import {
@@ -13,9 +13,11 @@ import {
   Box,
 } from "@mui/material";
 import { ThumbUp, Comment, Share } from "@mui/icons-material";
-
-import PostMenu from "./postMenu";
+import { AuthContext } from "../store/auth";
+import PostMenu from "./PostMenu";
 const DisplayPost = ({ postData }) => {
+  const { authValue, setAuthValue } = useContext(AuthContext);
+
   return (
     <>
       <ul style={{ listStyleType: "none" }}>

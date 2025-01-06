@@ -81,6 +81,7 @@ export const getPost = async (req, res) => {
 export const deletePost = async (req, res) => {
   try {
     const { postId } = req.body;
+    console.log(postId);
     if (!postId) {
       return res.status(400).json({
         message: "Sorry something went wrong cannot delete this post",
@@ -88,9 +89,8 @@ export const deletePost = async (req, res) => {
     }
 
     const post = await Post.findByIdAndDelete(postId);
-    console.log(post);
     if (!post) {
-      return res.status(401).json({
+      return res.status(404).json({
         message: "Post dont exist",
       });
     }
