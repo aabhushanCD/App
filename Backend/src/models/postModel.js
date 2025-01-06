@@ -21,11 +21,6 @@ const postSchema = new mongoose.Schema(
       type: String,
       maxlength: 500, // Content length limit
     },
-
-    deleted: {
-      type: Boolean,
-      default: false, // Soft delete field
-    },
   },
   {
     timestamps: true,

@@ -1,5 +1,5 @@
 import { Alert, dialogClasses, Icon } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import "./post.css";
 const PostMenu = ({ postId }) => {
@@ -7,6 +7,7 @@ const PostMenu = ({ postId }) => {
   const [toggle, setToggle] = useState(false);
   const [success, setSuccess] = useState(null);
   const Toggle = () => setToggle((prev) => !prev);
+
   const handleMenuClick = (event) => {
     Toggle();
     console.log(postId);
@@ -17,7 +18,10 @@ const PostMenu = ({ postId }) => {
         "http://localhost:8000/api/post/deletePost",
         {
           method: "DELETE",
-          body: JSON.stringify({ postId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId }), // Correct body structure
         }
       );
       if (!response.ok) {
@@ -28,6 +32,7 @@ const PostMenu = ({ postId }) => {
     } catch (error) {
       setError(error.message);
     }
+    setSuccess(null);
   };
 
   return (
@@ -46,7 +51,9 @@ const PostMenu = ({ postId }) => {
               <button className="btn">Edit</button>
               <button className="btn">Option2</button>
             </div>
-            <Alert>{success}</Alert>
+            {success && (
+              <Alert sx={{ position: "absolute" }}>{"success"}</Alert>
+            )}
             {error && (
               <Alert severity="error" sx={{ position: "absolute" }}>
                 {error}
