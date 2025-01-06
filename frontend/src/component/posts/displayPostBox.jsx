@@ -3,6 +3,7 @@ import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
 import DisplayPost from "./displayPost";
 import Navbar from "../header/navBar";
 import { Alert } from "@mui/material";
+import SideBar from "../sideBar/SideBar";
 import "./style.css";
 function DisplayPostBox() {
   const [postData, setPostData] = useState([]);
@@ -59,13 +60,14 @@ function DisplayPostBox() {
   return (
     <>
       <Navbar></Navbar>
+      <SideBar></SideBar>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
           alignItems: "center",
-         
+
           margin: "auto",
         }}
       >
