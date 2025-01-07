@@ -80,27 +80,34 @@ export const getPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const { postId } = req.body;
-    console.log(postId);
-    if (!postId) {
+    const { postId, ownerId } = req.body;
+
+    console.log(ownerId);
+    if (!postId || !ownerId) {
       return res.status(400).json({
         message: "Sorry something went wrong cannot delete this post",
       });
     }
 
-    const post = await Post.findByIdAndDelete(postId);
+    const post = await Post.findById(postId).populate("owner", "_id");
     if (!post) {
       return res.status(404).json({
         message: "Post dont exist",
       });
     }
+    if (ownerId !== post.owner._id.toString()) {
+      return res.status(403).json({
+        message: "Unauthorized user trying to delete",
+      });
+    }
+    await Post.findByIdAndDelete(postId);
     res.status(200).json({
-      message: "Deleted",
+      message: "Post Deleted Successfully",
     });
   } catch (error) {
     console.error("Error deleting post:", error);
     res.status(500).json({
-      message: "Error from server Please try again",
+      message: "An error occurred. Please try again later.",
     });
-  }
+  } 
 };

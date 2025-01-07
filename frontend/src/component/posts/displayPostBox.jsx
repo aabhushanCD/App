@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AiOutlineFontSize, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import DisplayPost from "./displayPost";
 import Navbar from "../header/navBar";
 import { Alert } from "@mui/material";
@@ -74,7 +74,7 @@ function DisplayPostBox() {
         {error && <Alert severity="info">No posts are available {error}</Alert>}
         <DisplayPost postData={postData} />
         {loading && <AiOutlineLoading3Quarters className="spinner" />}
-      </div>
+      </div>  
     </>
   );
 }

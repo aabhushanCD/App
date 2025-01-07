@@ -1,8 +1,8 @@
-import { Alert, dialogClasses, Icon } from "@mui/material";
-import React, { useContext, useState } from "react";
+import { Alert, Icon } from "@mui/material";
+import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import "./post.css";
-const PostMenu = ({ postId }) => {
+const PostMenu = ({ postId, ownerId }) => {
   const [error, setError] = useState(null);
   const [toggle, setToggle] = useState(false);
   const [success, setSuccess] = useState(null);
@@ -10,9 +10,9 @@ const PostMenu = ({ postId }) => {
 
   const handleMenuClick = (event) => {
     Toggle();
-    console.log(postId);
   };
   const deleteApi = async () => {
+    console.log(ownerId);
     try {
       const response = await fetch(
         "http://localhost:8000/api/post/deletePost",
@@ -21,7 +21,7 @@ const PostMenu = ({ postId }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ postId }), // Correct body structure
+          body: JSON.stringify({ postId, ownerId }), // Correct body structure
         }
       );
       if (!response.ok) {
