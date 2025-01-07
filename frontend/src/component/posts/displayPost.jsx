@@ -43,7 +43,10 @@ const DisplayPost = ({ postData }) => {
                       title={`${post.Name}`}
                       subheader={post.createdAt.slice(0, 10)}
                     />
-                    <PostMenu postId={post._id} />
+                    {/* post ko 3 dot menu ho yo */}
+                    {authValue && (
+                      <PostMenu postId={post._id} ownerId={authValue.id} />
+                    )}
                   </div>
                   {/* Post Content */}
                   <CardContent>
