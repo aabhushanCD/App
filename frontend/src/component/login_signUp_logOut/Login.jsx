@@ -79,7 +79,7 @@ function Login() {
           border: "1px solid black",
           boxShadow: "1px 1px 15px 1px black",
           marginTop: "20px",
-          width: "33.33%",
+          width: "35%",
         }}
       >
         <Typography variant="h4" gutterBottom align="center">
