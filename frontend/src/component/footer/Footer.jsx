@@ -10,6 +10,8 @@ function Footer() {
         color: "white",
         padding: "2rem 0",
         marginTop: "2rem",
+
+        width: "100%",
       }}
     >
       <Container maxWidth="lg">
@@ -32,10 +34,7 @@ function Footer() {
               Quick Links
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8 }}>
-              <Link
-                to="/"
-                style={{ color: "white", textDecoration: "none" }}
-              >
+              <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 Home
               </Link>
             </Typography>

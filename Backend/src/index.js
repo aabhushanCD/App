@@ -11,13 +11,7 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 
 connectDB().then(() => {
-  const server = app.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
-  });
-  const wss = new WebSocketServer({ server });
-  wss.on("connection", (ws) => {
-    console.log("websocket is running");
-
-    ws.send("hello");
   });
 });
