@@ -4,7 +4,7 @@ dotenv.config();
 
 export const generateAccessToken = (id, email) => {
   return jwt.sign({ id, email }, process.env.JWT_SECRET, {
-    expiresIn: "1d", // Expires in 1 day
+    expiresIn: "15m", // Expires in 1 day
   });
 };
 

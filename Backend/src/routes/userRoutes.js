@@ -6,5 +6,5 @@ const router = express.Router();
 
 router.get("/me", isAuth, myProfile);
 router.get("/:id", isAuth, userProfile);
-
+router.get("/", isAuth);
 export default router;
