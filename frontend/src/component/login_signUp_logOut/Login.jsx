@@ -28,6 +28,20 @@ function Login() {
       [name]: value,
     });
   };
+  const checkAuth = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/auth/user/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (!response.ok) {
+        return response.message || "Sry porblem in user";
+      }
+    } catch (error) {}
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -152,12 +166,3 @@ function Login() {
 }
 
 export default Login;
-
-export const AuthContextProvider = ({ children }) => {
-  const [authValue, setAuthValue] = useState(null);
-  return (
-    <AuthContext.Provider value={{ authValue, setAuthValue }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
