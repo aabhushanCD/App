@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import {
   AppBar,
   Toolbar,
@@ -30,6 +31,10 @@ function Profile() {
     friends: ["John Doe", "Jane Smith", "Alice Johnson"],
   };
 
+  const handleClick = (event) => {
+    console.log(event);
+  };
+
   return (
     <>
       {/* Navigation Bar */}
@@ -37,13 +42,16 @@ function Profile() {
       {/* Cover Photo and Profile Info */}
       <div style={{ position: "relative", textAlign: "center" }}>
         <img
+          name="coverPhoto"
           src={user.coverPhoto}
           alt="Cover"
           style={{ width: "100%", height: "200px", objectFit: "cover" }}
+          onClick={(event) => handleClick(event)}
         />
         <Avatar
           alt={user.name}
           src={user.profilePicture}
+          onClick={(event) => handleClick(event)}
           sx={{
             width: 100,
             height: 100,

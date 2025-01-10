@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    profilePicture: {
+      type: String,
+    },
+    coverPhoto: {
+      type: String,
+    },
     acceptTerms: {
       type: Boolean,
       default: false,

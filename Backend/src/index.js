@@ -3,7 +3,7 @@
 import dotenv from "dotenv";
 import app from "./app.js";
 import connectDB from "./db/connect.js";
-import { WebSocketServer } from "ws";
+
 
 dotenv.config();
 
