@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from "../utils/generateToken.js";
 import { error } from "console";
-
+import { uploadOnCloudinary } from "../utils/fileUpload";
 export const signup = async (req, res) => {
   try {
     const { firstName, lastName, email, password, acceptTerms } = req.body;
@@ -78,7 +78,7 @@ export const Login = async (req, res) => {
     });
 
     res.cookie("accessToken", accessToken, {
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 15 * 60 * 60 * 1000, // 15 min
       httpOnly: true,
 
       sameSite: "strict",
@@ -129,13 +129,11 @@ export const LogOut = async (req, res) => {
     });
     res.cookie("accessToken", "", {
       httpOnly: true,
-      secure: true,
       sameSite: "None",
       expires: new Date(0), // Immediately expire the cookie
     });
     res.cookie("refreshToken", "", {
       httpOnly: true,
-      secure: true,
       sameSite: "None",
       expires: new Date(0),
     });
@@ -145,5 +143,89 @@ export const LogOut = async (req, res) => {
       message: "Failed to log out.",
       error: error.message,
     });
+  }
+};
+
+export const profilePhotoUpload = async (req, res) => {
+  try {
+    const { owner, profilePicture } = req.body;
+    if (!owner) {
+      return res.status(404).json({
+        message: "Please login first!",
+      });
+    }
+    let resImage = "";
+    if (profilePicture) {
+      const cloudinary = await uploadOnCloudinary(profilePicture);
+      if (!cloudinary) {
+        return res.status(500).json({
+          message: "Internal server error failed to upload photo to cloudinary",
+        });
+      }
+      resImage = cloudinary.url;
+    } else {
+      return res.status(404).json({
+        message: "please upload photo",
+      });
+    }
+
+    const user = await User.findById(owner).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found!",
+      });
+    }
+    user.profilePicture = resImage;
+    await user.validateBeforeSave(false).save();
+
+    return res.status(200).json({
+      message: "profile Updated",
+      profilePicture: user.profilePicture,
+    });
+  } catch (error) {
+    console.error("Error uploading profile photo:", error);
+    return res.status(500).json({ message: "An unexpected error occurred." });
+  }
+};
+
+export const coverPhotoUpload = async (req, res) => {
+  try {
+    const { owner, coverPhoto } = req.body;
+    if (!owner) {
+      return res.status(404).json({
+        message: "Please login first!",
+      });
+    }
+    let coverImage = "";
+    if (coverPhoto) {
+      const cloudinary = await uploadOnCloudinary(coverPhoto);
+      if (!cloudinary) {
+        return res.status(500).json({
+          message: "Internal server error failed to upload photo to cloudinary",
+        });
+      }
+      coverImage = cloudinary.url;
+    } else {
+      return res.status(404).json({
+        message: "please upload photo",
+      });
+    }
+
+    const user = await User.findById(owner).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found!",
+      });
+    }
+    user.profilePicture = coverImage;
+    await user.validateBeforeSave(false).save();
+
+    return res.status(200).json({
+      message: "profile Updated",
+      coverPhoto: user.coverPhoto,
+    });
+  } catch (error) {
+    console.error("Error uploading Cover photo:", error);
+    return res.status(500).json({ message: "An unexpected error occurred." });
   }
 };
