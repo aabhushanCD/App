@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import app from "./app.js";
 import connectDB from "./db/connect.js";
 
-
 dotenv.config();
 
 // Connect to MongoDB and start the server

@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from "../utils/generateToken.js";
 import { error } from "console";
-import { uploadOnCloudinary } from "../utils/fileUpload";
+import { uploadOnCloudinary } from "../utils/fileUpload.js";
 export const signup = async (req, res) => {
   try {
     const { firstName, lastName, email, password, acceptTerms } = req.body;
@@ -149,6 +149,7 @@ export const LogOut = async (req, res) => {
 export const profilePhotoUpload = async (req, res) => {
   try {
     const { owner, profilePicture } = req.body;
+    console.log(owner);
     if (!owner) {
       return res.status(404).json({
         message: "Please login first!",
