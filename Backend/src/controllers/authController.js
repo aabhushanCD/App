@@ -97,6 +97,7 @@ export const Login = async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        profilePicture: user.profilePicture,
       },
     });
   } catch (error) {
@@ -148,16 +149,20 @@ export const LogOut = async (req, res) => {
 
 export const profilePhotoUpload = async (req, res) => {
   try {
-    const { owner, profilePicture } = req.body;
-    console.log(owner);
+    const { owner } = req.body;
+    const file = req.file;
+
     if (!owner) {
       return res.status(404).json({
         message: "Please login first!",
       });
     }
     let resImage = "";
-    if (profilePicture) {
-      const cloudinary = await uploadOnCloudinary(profilePicture);
+    if (file) {
+      const cloudinary = await uploadOnCloudinary(req.file.path).select(
+        "-api_key"
+      );
+      console.log(cloudinary);
       if (!cloudinary) {
         return res.status(500).json({
           message: "Internal server error failed to upload photo to cloudinary",
@@ -177,10 +182,12 @@ export const profilePhotoUpload = async (req, res) => {
       });
     }
     user.profilePicture = resImage;
-    await user.validateBeforeSave(false).save();
+    await user.save({
+      validateBeforeSave: false,
+    });
 
     return res.status(200).json({
-      message: "profile Updated",
+      message: "profile Updated Successfully",
       profilePicture: user.profilePicture,
     });
   } catch (error) {
