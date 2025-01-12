@@ -43,11 +43,15 @@ function Profile() {
   const handleFileChange = async () => {
     const file = fileInputRef.current.files[0];
 
-    const formData = new FormData();
-    formData.append("owner", authValue.id);
-    formData.append("profilePicture", file);
+    if (!file) {
+      console.error("No file selected.");
+      return;
+    }
 
     try {
+      const formData = new FormData();
+      formData.append("owner", authValue.id);
+      formData.append("profilePicture", file);
       const response = await fetch(
         "http://localhost:8000/api/auth/user/profilePicture",
         {
@@ -59,6 +63,7 @@ function Profile() {
         return (error.message = "something went wrong");
       }
       setData(response);
+      fileInputRef.current.value = null;
     } catch (error) {
       return (error.message = "api error");
     }
@@ -83,26 +88,30 @@ function Profile() {
           alt="Cover"
           style={{ width: "100%", height: "200px", objectFit: "cover" }}
         />
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-        {data && (
-          <Avatar
-            alt={user.firstName}
-            src={data.profilePicture}
-            onClick={handleClick}
-            sx={{
-              width: 100,
-              height: 100,
-              position: "absolute",
-              bottom: "-50px",
-              left: "calc(50% - 50px)",
-              border: "3px solid white",
-            }}
-          />
+
+        {user && (
+          <>
+            {console.log(user.profilePicture)}
+            <Avatar
+              alt={user.firstName}
+              src={user.profilePicture}
+              onClick={handleClick}
+              sx={{
+                width: 100,
+                height: 100,
+                position: "absolute",
+                bottom: "-50px",
+                left: "calc(50% - 50px)",
+                border: "3px solid white",
+              }}
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+          </>
         )}
       </div>
 

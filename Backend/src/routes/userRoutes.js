@@ -12,6 +12,10 @@ const router = express.Router();
 router.get("/me", isAuth, myProfile);
 router.get("/:id", isAuth, userProfile);
 router.get("/", isAuth);
-router.post("/profilePicture",upload.single("profilePicture"),profilePhotoUpload);
+router.post(
+  "/profilePicture",
+  upload.single("profilePicture"),
+  profilePhotoUpload
+);
 router.post("/coverPhoto", upload.single("cover"), coverPhotoUpload);
 export default router;
