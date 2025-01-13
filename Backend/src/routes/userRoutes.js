@@ -3,7 +3,7 @@ import { isAuth } from "../middlewares/isAuth.js";
 import { myProfile, userProfile } from "../controllers/userController.js";
 import { upload } from "../middlewares/multer.js";
 import {
-  coverPhotoUpload,
+
   profilePhotoUpload,
 } from "../controllers/authController.js";
 
@@ -17,5 +17,5 @@ router.post(
   upload.single("profilePicture"),
   profilePhotoUpload
 );
-router.post("/coverPhoto", upload.single("cover"), coverPhotoUpload);
+// router.post("/coverPhoto", upload.single("cover"), coverPhotoUpload);
 export default router;
