@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 // import { format } from "date-fns";
 import {
@@ -12,12 +12,23 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import axios from "axios";
 import { ThumbUp, Comment, Share } from "@mui/icons-material";
 import { AuthContext } from "../store/auth";
 import PostMenu from "./PostMenu";
 const DisplayPost = ({ postData }) => {
-  const { authValue, setAuthValue } = useContext(AuthContext);
-
+  const [likeData, setLikeData] = useState(0);
+  const refLike = useRef(null);
+  const { authValue } = useContext(AuthContext);
+  const handleLike = async () => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/post/like");
+      refLike.current.color = green;
+      setLikeData(response);
+    } catch (error) {
+      console.error("error Cannot like the post from frontend", error.message);
+    }
+  };
   return (
     <>
       <ul style={{ listStyleType: "none" }}>
@@ -78,7 +89,11 @@ const DisplayPost = ({ postData }) => {
                     <Button
                       startIcon={<ThumbUp />}
                       sx={{ flex: 1, justifyContent: "center" }}
-                    ></Button>
+                      ref={refLike}
+                      onClick={handleLike}
+                    >
+                      {likeData.totalLikes}
+                    </Button>
                     <Button
                       startIcon={<Comment />}
                       sx={{ flex: 1, justifyContent: "center" }}
