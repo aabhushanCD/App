@@ -5,7 +5,6 @@ const postSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-
       index: true, // Index for performance
     },
     image: {
@@ -20,6 +19,14 @@ const postSchema = new mongoose.Schema(
     content: {
       type: String,
       maxlength: 500, // Content length limit
+    },
+    like: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Like",
+    },
+    comment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
     },
   },
   {
