@@ -17,13 +17,16 @@ import { ThumbUp, Comment, Share } from "@mui/icons-material";
 import { AuthContext } from "../store/auth";
 import PostMenu from "./PostMenu";
 const DisplayPost = ({ postData }) => {
-  const [likeData, setLikeData] = useState(0);
+  const [likeData, setLikeData] = useState();
   const refLike = useRef(null);
   const { authValue } = useContext(AuthContext);
-  const handleLike = async () => {
+  const handleLike = async (post) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/post/like");
-      refLike.current.color = green;
+      const response = await axios.post("http://localhost:8000/api/post/like", {
+        postId: post,
+        userId: authValue.id,
+      });
+
       setLikeData(response);
     } catch (error) {
       console.error("error Cannot like the post from frontend", error.message);
@@ -90,7 +93,7 @@ const DisplayPost = ({ postData }) => {
                       startIcon={<ThumbUp />}
                       sx={{ flex: 1, justifyContent: "center" }}
                       ref={refLike}
-                      onClick={handleLike}
+                      onClick={() => handleLike(post._id)}
                     >
                       {likeData.totalLikes}
                     </Button>

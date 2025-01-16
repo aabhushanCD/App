@@ -116,6 +116,7 @@ export const deletePost = async (req, res) => {
 export const postLike = async (req, res) => {
   try {
     const { userId, postId } = req.body;
+    console.log(userId, postId);
     const existedLike = await Like.findOne({ userId: userId, postId: postId });
     if (existedLike) {
       return res.status(404).json({
