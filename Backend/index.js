@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import authUser from "./src/routes/authRoute.js";
+import { ConnectDB } from "./src/db/ConnectDb.js";
 dotenv.config({ path: ".env" });
 
 const app = express();
@@ -24,6 +26,8 @@ app.use(
   })
 );
 
+app.use("/api/auth/", authUser);
 app.listen(PORT, () => {
+  ConnectDB();
   console.log("Server is running in " + PORT);
 });
