@@ -3,11 +3,15 @@ import {
   Login,
   Register,
   LogOut,
-  AuthUser,
+  profileUpdate,
+  authUser,
 } from "../controller/authController.js";
-const app = express();
-app.route("/login", Login);
-app.route("/register", Register);
-app.route("/logOut", LogOut);
-app.route("/auth", AuthUser);
-export default app;
+import { verifyToken } from "../middleware/verifyToken.js";
+const router = express.Router();
+
+router.post("/login", Login);
+router.post("/register", Register);
+router.post("/logOut", verifyToken, LogOut);
+router.put("/updateProfile", verifyToken, profileUpdate);
+router.get("/me", verifyToken, authUser);
+export default router;

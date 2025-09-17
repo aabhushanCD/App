@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import authUser from "./src/routes/authRoute.js";
+import authRoutes from "./src/routes/authRoute.js";
 import { ConnectDB } from "./src/db/ConnectDb.js";
 dotenv.config({ path: ".env" });
 
@@ -18,16 +18,16 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 8000;
-app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
 
-app.use("/api/auth/", authUser);
-app.listen(PORT, () => {
-  ConnectDB();
-  console.log("Server is running in " + PORT);
-});
+app.use("/api/auth/", authRoutes);
+
+ConnectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect to database", err);
+    process.exit(1); // stop the server if DB fails
+  });
