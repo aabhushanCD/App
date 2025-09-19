@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./jsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "checkJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
