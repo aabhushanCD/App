@@ -6,10 +6,10 @@ import axios from "axios";
 export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
-    localStorage.getItem("user") || null
+    JSON.parse(localStorage.getItem("user") || null)
   );
-  const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
+
   const me = async () => {
     setLoading(true);
     try {
@@ -18,43 +18,62 @@ export const AuthContextProvider = ({ children }) => {
       });
       if (res.status === 200) {
         setCurrentUser(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.message || error.message);
+      setCurrentUser(null);
+      localStorage.removeItem("user");
+      toast.error(`${error.response?.data?.message}` || `${error.message}`);
     } finally {
       setLoading(false);
     }
   };
-  const login = async (input) => {
+
+  const login = async ({ email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${ServerApi}/auth/login`, input);
+      const res = await axios.post(
+        `${ServerApi}/auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
       if (res.status === 200) {
         setCurrentUser(res.data.user);
+        toast.success(res?.data?.message);
+        return true;
       }
     } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.message || error.message);
+      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      return false;
     } finally {
       setLoading(false);
     }
   };
-  const register = async (input) => {
+
+  const register = async ({ name, email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${ServerApi}/auth/register`, input);
+      const res = await axios.post(`${ServerApi}/auth/register`, {
+        name,
+        email,
+        password,
+      });
       if (res.status === 200) {
-        toast("Successfully signup");
+        toast.success(res?.data?.message);
+        return true;
       }
-      setLoading(false);
+      return false;
     } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.message || error.message);
+      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      return false;
     } finally {
       setLoading(false);
     }
   };
+
   const logout = async () => {
     try {
       const res = await axios.post(`${ServerApi}/auth/logout`, {
@@ -64,12 +83,14 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.removeItem("user");
       }
       setCurrentUser(null);
-    } catch (error) {}
+    } catch (error) {
+      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+    }
   };
   return (
     <div>
       <AuthContext.Provider
-        value={{ isLoading, error, me, login, register, logout, currentUser }}
+        value={{ isLoading, me, login, register, logout, currentUser }}
       >
         {children}
       </AuthContext.Provider>
