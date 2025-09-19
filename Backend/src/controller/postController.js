@@ -9,7 +9,6 @@ export const createPost = async (req, res) => {
     if (!content && !filePath) {
       return res.status(400).json({ message: "Cannot empty post" });
     }
-
     const cloudinaryUrl = await uploadMedia(filePath);
     if (!cloudinaryUrl) {
       return res
@@ -28,3 +27,5 @@ export const createPost = async (req, res) => {
     return res.status(500).json({ message: "server problem while posting" });
   }
 };
+
+
