@@ -1,4 +1,5 @@
-import React, { useRef, useMemo, useState } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
+import { ServerApi } from "../constants.js";
 import profile from "../assets/profile.png";
 import {
   Camera,
@@ -13,8 +14,12 @@ import { Button } from "@/components/ui/button";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import axios from "axios";
+import { useAuth } from "@/store/AuthStore.jsx";
 
-const CreatePost = () => {
+const CreatePost = ({ setPostData }) => {
+  const { currentUser } = useAuth();
   const fileInputRef = useRef();
   const contentInputRef = useRef();
   const [form, setForm] = useState({
@@ -48,9 +53,26 @@ const CreatePost = () => {
     }
   };
 
-  const handlePostSubmit = () => {
-    console.log(form);
+  const handlePostSubmit = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("content", form.content);
+
+      form.files.forEach((file) => {
+        formData.append("media", file);
+      });
+      const res = await axios.post(`${ServerApi}/post/createPost`, formData, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setPostData(res.data);
+        toast.success("Post Successfully", res.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.message || error.message);
+    }
   };
+
   const handleFileRemove = (file, idx) => {
     setForm((prev) => ({
       ...prev,
@@ -110,8 +132,12 @@ const CreatePost = () => {
                 Create Post
               </h1>
               <div className="flex items-center gap-2 p-2">
-                <img src={profile} alt="" className="w-12 h-12 rounded-full" />
-                <span className="font-medium">{"User Name"}</span>
+                <img
+                  src={currentUser.imageUrl}
+                  alt="profile"
+                  className="w-12 h-12 rounded-full"
+                />
+                <span className="font-medium">{currentUser.name}</span>
               </div>
               <Textarea
                 name="content"

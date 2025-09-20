@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 dotenv.config();
 
 cloudinary.config({
@@ -11,7 +12,6 @@ cloudinary.config({
 
 export const uploadMedia = async (file) => {
   try {
-    console.log(file);
     const ext = path.extname(file).toLowerCase();
 
     // Determine resource_type
@@ -28,13 +28,17 @@ export const uploadMedia = async (file) => {
     }
     const uploadResponse = await cloudinary.uploader.upload(file, {
       resource_type: resourceType,
-      access_mode: "public",
-      use_filename: true,
-      unique_filename: false,
+      folder: "socialMedia/posts",
+    });
+
+    fs.unlink(file, (err) => {
+      if (err) console.error("Failed to delete local file:", err);
+      else console.log("Local file deleted:", file);
     });
     return uploadResponse;
   } catch (error) {
-    console.log(error);
+    console.log("Cloudinary Upload Error:", error.message);
+    throw error;
   }
 };
 
