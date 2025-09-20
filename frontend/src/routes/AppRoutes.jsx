@@ -6,6 +6,7 @@ import Login from "@/pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
 import CreatePost from "@/pages/CreatePost";
+import Home from "@/pages/Home";
 
 const AppRoutes = () => {
   return (
@@ -19,9 +20,16 @@ const AppRoutes = () => {
                 <Layout />
               </ProtectedRoute>
             }
-          >
-            <Route index element={<CreatePost />}></Route>
-          </Route>
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/login"
             element={
