@@ -128,9 +128,21 @@ const CreatePost = ({ setPostData }) => {
         <div className="relative flex justify-center items-center">
           <div className="absolute flex flex-col justify-between top-3 w-1/2 bg-gray-500 text-black rounded-xl h-[550px] z-10">
             <div>
-              <h1 className="text-3xl font-semibold mb-3 text-center p-4 border-b-2">
-                Create Post
-              </h1>
+              <span className=" flex justify-between items-center mb-3 p-4 border-b-2">
+                <span></span>
+                <h1 className="text-center font-semibold text-3xl">
+                  Create Post
+                </h1>
+                <span
+                  onClick={() => {
+                    setCreate(false);
+                  }}
+                  className="hover:bg-amber-200 "
+                >
+                  Close
+                </span>
+              </span>
+
               <div className="flex items-center gap-2 p-2">
                 <img
                   src={currentUser.imageUrl}

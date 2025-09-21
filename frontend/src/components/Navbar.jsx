@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import {
   Bell,
@@ -8,7 +9,19 @@ import {
   Image,
   Search,
 } from "lucide-react";
+import { useAuth } from "@/store/AuthStore";
+import { toast } from "sonner";
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      toast.success("Logout Successfully");
+      return navigate("/login");
+    }
+  };
   return (
     <>
       <div className="flex bg-gray-100 justify-around flex-wrap h-15">
@@ -19,7 +32,10 @@ const Navbar = () => {
             </Button>
           </div>
           <div className="flex gap-10 items-center  md:gap-1 sm:gap-3">
-            <Button className="bg-gray-50 h-7 text-black hover:bg-amber-300 ">
+            <Button
+              className="bg-gray-50 h-7 text-black hover:bg-amber-300 "
+              onClick={() => navigate("/home")}
+            >
               Home
             </Button>
             <Button className="bg-gray-50 h-7 text-black hover:bg-amber-300">
@@ -28,8 +44,11 @@ const Navbar = () => {
             <Button className="bg-gray-50 h-7 text-black hover:bg-amber-300">
               Account Settings
             </Button>
-            <Button className="bg-gray-50 h-7 text-black hover:bg-amber-300">
-              More Pages
+            <Button
+              className="bg-gray-50 h-7 text-black hover:bg-amber-300"
+              onClick={handleLogout}
+            >
+              Logout
             </Button>
           </div>
         </div>

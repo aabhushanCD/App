@@ -5,8 +5,8 @@ import Signup from "@/pages/Signup";
 import Login from "@/pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
-import CreatePost from "@/pages/CreatePost";
-import Home from "@/pages/Home";
+import CreatePost from "@/components/CreatePost";
+import Home from "@/components/Home";
 
 const AppRoutes = () => {
   return (

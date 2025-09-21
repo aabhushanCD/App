@@ -76,15 +76,21 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await axios.post(`${ServerApi}/auth/logout`, {
-        withCredentials: true,
-      });
-      if (res.data) {
+      const res = await axios.post(
+        `${ServerApi}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
         localStorage.removeItem("user");
+        return true;
       }
       setCurrentUser(null);
     } catch (error) {
       toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      return false;
     }
   };
   return (

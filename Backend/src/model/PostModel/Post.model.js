@@ -21,7 +21,7 @@ const mediaSchema = new mongoose.Schema({
 
 const postSchema = new mongoose.Schema(
   {
-    userId: {
+    creatorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
@@ -44,6 +44,7 @@ const postSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+postSchema.index({ content: "text" });
 const Post = mongoose.model("Post", postSchema);
 
 export default Post;
