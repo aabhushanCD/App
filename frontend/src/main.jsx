@@ -6,10 +6,10 @@ import { Toaster } from "./components/ui/sonner";
 import { AuthContextProvider } from "./store/authStore.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <AuthContextProvider>
-      <App />
-      <Toaster richColors closeButton duration={2000}></Toaster>
-    </AuthContextProvider>
-  </StrictMode>
+  // <StrictMode>
+  <AuthContextProvider>
+    <App />
+    <Toaster richColors closeButton duration={2000}></Toaster>
+  </AuthContextProvider>
+  // </StrictMode>
 );

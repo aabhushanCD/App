@@ -1,31 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreatePost from "./CreatePost";
-
+import { ServerApi } from "../constants.js";
 import PostContainer from "./PostContainer";
-var serverRecived = [
-  {
-    content: "This is new post ",
-    files: [
-      {
-        imageUrl:
-          "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/14235/production/_100058428_mediaitem100058424.jpg",
-        videoUrl:
-          "https://www.pexels.com/video/vibration-on-a-flat-surface-7859858/",
-      },
-    ],
-  },
-];
+import axios from "axios";
 
 const Home = () => {
   const [postsData, setPostData] = useState({});
+  const limit = 3;
+  const page = 1;
+  useEffect(() => {
+    const postFetch = async () => {
+      try {
+        const res = await axios.get(
+          `${ServerApi}/post/getPostPagenation?limit=${limit}&page=${page}`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status === 200) {
+          setPostData(res.data);
+          // console.log(res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error.message);
+      }
+    };
+    postFetch();
+  }, []);
+
   return (
-    <div className="flex flex-col justify-center items-center bg-amber-300">
+    <div className="flex flex-col items-center bg-black">
       <div className="w-full">
         <CreatePost setPostData={setPostData} />
       </div>
-      <PostContainer serverRecived={serverRecived} />
-
-      <PostContainer serverRecived={serverRecived} />
+      <div>
+        <PostContainer serverRecived={postsData} setPostData={setPostData} />
+      </div>
     </div>
   );
 };

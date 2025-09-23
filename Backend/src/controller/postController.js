@@ -1,6 +1,6 @@
 import Post from "../model/PostModel/Post.model.js";
 import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
-
+import User from "../model/User.model.js";
 export const createPost = async (req, res) => {
   try {
     const userId = req.userId;
@@ -44,7 +44,7 @@ export const getPostPagenation = async (req, res) => {
     const userId = req.userId;
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const posts = await Post.find()
-      .populate("creatorId", "name imageUrl")
+      .populate("creatorId", "imageUrl name ")
       .populate("media")
       .skip(skip)
       .limit(parseInt(limit))
@@ -93,7 +93,7 @@ export const getSearchedPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const { postId } = req.query;
+    const { postId } = req.params;
     const userId = req.userId;
 
     if (!postId) {
@@ -130,7 +130,7 @@ export const deletePost = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     const { newContent } = req.body;
-    const { postId } = req.query;
+    const { postId } = req.params;
     const userId = req.userId;
     if (!postId || !userId) {
       return res.status(400).json({ message: "UnAuthorized to Update Post" });
@@ -141,14 +141,14 @@ export const updatePost = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Post not found" });
     }
-    // ✅ check authorization
+    // check authorization
     if (post.creatorId.toString() !== userId) {
       return res.status(403).json({
         success: false,
         message: "Not allowed to update this post",
       });
     }
-    // ✅ update post content
+    //  update post content
     post.content = newContent?.trim().length > 0 ? newContent : post.content;
     await post.save();
 
@@ -160,5 +160,243 @@ export const updatePost = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "server error, Could't update post" });
+  }
+};
+
+// __________________InterPost_______________________
+export const like_dislikePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const userId = req.userId;
+    if (!postId || !userId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "UnAuthorized to like" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Post not found!" });
+    }
+    const user = await User.findById(userId);
+    const alreadyLiked = post.likes.some((id) => id.toString() === userId);
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else post.likes.push(userId);
+
+    await post.save();
+    return res.status(200).json({
+      success: true,
+      message: alreadyLiked ? "Post unLiked" : "Post Liked",
+      likes: post.likes,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "server error, failed to liked post" });
+  }
+};
+
+export const sendComment = async (req, res) => {
+  try {
+    const { commentText } = req.body;
+    const file = req.file;
+    const { postId } = req.params;
+    const userId = req.userId;
+    if (!postId || !userId) {
+      return res.status(400).json({ success: false, message: "UnAuthorized" });
+    }
+
+    let imageUrl = null;
+    if (file) {
+      const cloudinary = await uploadMedia(file.path);
+      imageUrl = cloudinary.secure_url;
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    const newComment = {
+      creatorId: userId,
+      text: commentText,
+      imageUrl,
+    };
+    post.comments.push(newComment);
+    await post.save();
+    return res
+      .status(200)
+      .json({ message: "Successfully commented", success: true, post });
+  } catch (error) {
+    console.error(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "server error, failed to comment" });
+  }
+};
+
+export const getAllComments = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.userId;
+
+    if (!postId || !userId) {
+      return res.status(400).json({ success: false, message: "UnAuthorized" });
+    }
+
+    const post = await Post.findById(postId).populate(
+      "comments.creatorId",
+      "name imageUrl"
+    );
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post doesn't exist" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Comments fetched successfully",
+      comments: post.comments,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "server error, Could't get comments try again!",
+    });
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    const { commentId, postId } = req.params;
+    const userId = req.userId;
+    if (!commentId || !userId || !postId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "UnAuthorized delete comment" });
+    }
+    const post = await Post.findById(postId).populate("comments");
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Comment not found" });
+    }
+
+    if (
+      comment.creatorId.toString() !== userId &&
+      post.creatorId.toString() !== userId
+    ) {
+      return res.status(403).json({ success: false, message: "UnAuthorized" });
+    }
+
+    if (comment.imageurl?.publicId) {
+      await deleteMedia(comment.imageurl.publicId);
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+
+    post.comments = post.comments.filter(
+      (c) => c && c._id.toString() !== commentId
+    );
+
+    await post.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Successfully Deleted Comment" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "server error, " });
+  }
+};
+
+export const editComment = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { commentId } = req.params;
+    const { commentText } = req.body;
+    if (!commentId || !userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Comment not found or user Doesn't exist",
+      });
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Comment doesn't exist" });
+    }
+
+    if (comment.creatorId.toString() !== userId) {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+    comment.text = commentText || comment.text;
+
+    await comment.save();
+    return res.status(200).json({
+      success: true,
+      message: "Comment updated successfully",
+      comment,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "server error, editComment error" });
+  }
+};
+
+export const likeComment = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { commentId } = req.params;
+    if (!userId || !commentId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user or comment not valid" });
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.json({ success: false, message: "Comment doesn't exist" });
+    }
+    const existingLikeIndex = comment.likes.findIndex(
+      (user) => user._id.toString() === userId
+    );
+
+    if (existingLikeIndex !== -1) {
+      // user already liked now remove
+      comment.likes.splice(existingLikeIndex, 1);
+    } else {
+      comment.likes.push({ _id: userId });
+    }
+
+    await comment.save();
+
+    return res.status(200).json({
+      success: false,
+      message: existingLikeIndex !== -1 ? "Liked removed" : "Like added",
+      totalLike: comment.likes.length,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "server error, something went wrong while like comments",
+    });
   }
 };

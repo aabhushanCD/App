@@ -137,7 +137,7 @@ const CreatePost = ({ setPostData }) => {
                   onClick={() => {
                     setCreate(false);
                   }}
-                  className="hover:bg-amber-200 "
+                  className="hover:text-red-200 cursor-pointer "
                 >
                   Close
                 </span>
