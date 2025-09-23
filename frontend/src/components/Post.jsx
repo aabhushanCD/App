@@ -8,7 +8,7 @@ import {
   X,
 } from "lucide-react";
 import axios from "axios";
-
+import { ServerApi } from "@/constants";
 import porfile from "../assets/profile.png";
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
@@ -25,8 +25,9 @@ const Post = ({ post, handlePostDelete }) => {
         {},
         { withCredentials: true }
       );
-
-      setLikes(res.data.likes);
+      if (res.status === 200) {
+        setLikes(res.data.likes);
+      }
     } catch (error) {
       console.error(error.message);
     }

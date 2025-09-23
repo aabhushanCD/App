@@ -3,7 +3,7 @@ import { ServerApi } from "../constants.js";
 import Post from "./Post";
 import axios from "axios";
 
-const PostContainer = ({ serverRecived, setPostData }) => {
+const PostContainer = ({ postsData, setPostData }) => {
   const handlePostDelete = async (postId) => {
     try {
       const res = await axios.delete(
@@ -12,20 +12,20 @@ const PostContainer = ({ serverRecived, setPostData }) => {
         { withCredentials: true }
       );
       if (res.status === 200) {
-        const newData = serverRecived.posts.filter((posts) => {
-          return posts._id !== postId;
+        const newData = postsData.posts.filter((post) => {
+          return post._id != postId;
         });
-        setPostData(newData);
+        setPostData((prev) => ({ ...prev, posts: newData }));
       }
     } catch (error) {
       console.error(error.message);
     }
   };
   return (
-    <div className=" w-[520px] mt-4 ">
-      {serverRecived?.posts?.length > 0 && (
+    <div className=" mt-4 ">
+      {postsData?.posts?.length > 0 && (
         <div className="flex flex-col gap-4  ">
-          {serverRecived.posts.map((post) => (
+          {postsData.posts.map((post) => (
             <Post
               key={post._id}
               post={post}
