@@ -7,7 +7,8 @@ import { Camera, Image, Music, Video } from "lucide-react";
 import profile from "../assets/profile.png";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import LeftSideBar from "./LeftSideBar";
+import Navbar from "./Navbar";
 
 const Home = () => {
   const [postsData, setPostData] = useState({});
@@ -83,44 +84,69 @@ const Home = () => {
       document.body.style.overflow = "auto";
     }
   }, [isCreate]);
-  return (
-    <div className="flex flex-col items-center bg-black min-h-screen">
-      <div className="w-full max-w-2xl px-2 sm:px-4 lg:px-0">
+return (
+  <>
+    <Navbar />
+    <div className="flex w-full gap-6 p-4 max-w-7xl mx-auto">
+      {/* Sidebar */}
+      <LeftSideBar />
+
+      {/* Main Feed */}
+      <div className="flex-1 max-w-2xl w-full space-y-6">
         {/* Create Post Section */}
-        <div className="bg-gray-50 border rounded-xl flex gap-3 items-start p-4">
+        <div className="bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4">
           {/* Profile image */}
           <img
             src={profile}
             alt="profile"
-            className="w-12 h-12 rounded-full object-cover"
+            className="w-12 h-12 rounded-full object-cover border"
           />
 
-          {/* Post input */}
+          {/* Post input + actions */}
           <div className="flex-1">
             <div
               onClick={handleButton}
-              className="cursor-pointer rounded-lg bg-gray-100 text-black px-3 py-2 hover:bg-gray-200"
+              className="cursor-pointer rounded-xl bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
             >
-              {form.content || "Write Something..."}
+              {form.content || "What's on your mind?"}
             </div>
 
             {/* Post actions */}
-            <div className="flex gap-3 flex-wrap justify-between items-center mt-3">
-              <div className="flex gap-3">
-                <button onClick={() => handleButton("music")}>
-                  <Music size={18} />
+            <div className="flex justify-between items-center mt-4">
+              <div className="flex gap-4 text-gray-500">
+                <button
+                  onClick={() => handleButton("music")}
+                  className="flex items-center gap-1 hover:text-blue-500 transition"
+                >
+                  <Music size={18} />{" "}
+                  <span className="hidden sm:inline">Music</span>
                 </button>
-                <button onClick={() => handleButton("image")}>
-                  <Image size={18} />
+                <button
+                  onClick={() => handleButton("image")}
+                  className="flex items-center gap-1 hover:text-green-500 transition"
+                >
+                  <Image size={18} />{" "}
+                  <span className="hidden sm:inline">Photo</span>
                 </button>
-                <button onClick={() => handleButton("video")}>
-                  <Video size={18} />
+                <button
+                  onClick={() => handleButton("video")}
+                  className="flex items-center gap-1 hover:text-red-500 transition"
+                >
+                  <Video size={18} />{" "}
+                  <span className="hidden sm:inline">Video</span>
                 </button>
-                <button onClick={() => handleButton("camera")}>
-                  <Camera size={18} />
+                <button
+                  onClick={() => handleButton("camera")}
+                  className="flex items-center gap-1 hover:text-purple-500 transition"
+                >
+                  <Camera size={18} />{" "}
+                  <span className="hidden sm:inline">Camera</span>
                 </button>
               </div>
-              <Button className="bg-blue-500 text-white px-4 h-9 rounded-lg">
+              <Button
+                onClick={handlePostSubmit}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-9 rounded-lg shadow-sm"
+              >
                 Post
               </Button>
             </div>
@@ -142,12 +168,28 @@ const Home = () => {
         )}
 
         {/* Posts */}
-        <div className="mt-6">
+        <div className="space-y-6">
           <PostContainer postsData={postsData} setPostData={setPostData} />
         </div>
       </div>
+
+      {/* Right Sidebar (Optional for balance) */}
+      <div className="hidden lg:block w-64">
+        <div className="bg-white rounded-2xl border shadow-sm p-4">
+          <h3 className="font-semibold text-gray-700 mb-3">Trending</h3>
+          <ul className="space-y-2 text-sm text-gray-600">
+            <li>#ReactJS</li>
+            <li>#TailwindCSS</li>
+            <li>#WebDev</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  );
+  </>
+);
+
+
+
 };
 
 export default Home;
