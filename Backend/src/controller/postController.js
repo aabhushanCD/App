@@ -1,6 +1,7 @@
 import Post from "../model/PostModel/Post.model.js";
 import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import User from "../model/User.model.js";
+import Comment from "../model/PostModel/Comment.model.js";
 export const createPost = async (req, res) => {
   try {
     const userId = req.userId;
@@ -101,7 +102,9 @@ export const deletePost = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Doesn't find post" });
     }
-    const postUser = await Post.findById(postId).populate("media");
+    const postUser = await Post.findById(postId)
+      .populate("media")
+      .populate("comments");
     if (postUser.creatorId.toString() !== userId) {
       return res.status(403).json({
         message: "You are not authorized to delete this post",
@@ -113,7 +116,10 @@ export const deletePost = async (req, res) => {
         postUser.media.map((file) => deleteMedia(file.publicId))
       );
     }
-
+    // Delete all related comments
+    if (postUser.comments && postUser.comments.length > 0) {
+      await Comment.deleteMany({ _id: { $in: postUser.comments } });
+    }
     await Post.deleteOne({ _id: postId });
 
     return res
@@ -224,12 +230,13 @@ export const sendComment = async (req, res) => {
         .json({ success: false, message: "Post not found" });
     }
 
-    const newComment = {
+    const newComment = await Comment.create({
       creatorId: userId,
+      postId,
       text: commentText,
       imageUrl,
-    };
-    post.comments.push(newComment);
+    });
+    post.comments.push(newComment._id);
     await post.save();
     return res
       .status(200)
@@ -251,10 +258,7 @@ export const getAllComments = async (req, res) => {
       return res.status(400).json({ success: false, message: "UnAuthorized" });
     }
 
-    const post = await Post.findById(postId).populate(
-      "comments.creatorId",
-      "name imageUrl"
-    );
+    const post = await Post.findById(postId).populate("comments");
     if (!post) {
       return res
         .status(404)
@@ -305,8 +309,8 @@ export const deleteComment = async (req, res) => {
       return res.status(403).json({ success: false, message: "UnAuthorized" });
     }
 
-    if (comment.imageurl?.publicId) {
-      await deleteMedia(comment.imageurl.publicId);
+    if (comment.imageUrl?.publicId) {
+      await deleteMedia(comment.imageUrl.publicId);
     }
 
     await Comment.findByIdAndDelete(commentId);

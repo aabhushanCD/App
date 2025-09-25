@@ -29,6 +29,7 @@ export const uploadMedia = async (file) => {
     const uploadResponse = await cloudinary.uploader.upload(file, {
       resource_type: resourceType,
       folder: "socialMedia/posts",
+ 
     });
 
     fs.unlink(file, (err) => {

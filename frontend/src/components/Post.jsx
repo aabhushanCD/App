@@ -13,11 +13,24 @@ import porfile from "../assets/profile.png";
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
+import Comment from "./Comment";
+
+const commentModel = [
+  {
+    creatorId: "",
+    postId: "",
+    text: "",
+    imageUrl: "",
+    likes: [],
+    replies: [],
+    createdAt: "",
+  },
+];
 const Post = ({ post, handlePostDelete }) => {
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
   const [isThreeDotOpen, setThreeDot] = useState(false);
-
+  const [comments, setComments] = useState(commentModel);
   const handleLike = async (postId) => {
     try {
       const res = await axios.put(
@@ -34,6 +47,26 @@ const Post = ({ post, handlePostDelete }) => {
   };
   const handleThreeDot = () => {
     setThreeDot((isThreeDotOpen) => !isThreeDotOpen);
+  };
+
+  const handleFetchComments = async () => {
+    try {
+      const postId = post._id;
+      const res = await axios.get(
+        `${ServerApi}/post/getAllComments/${postId}`,
+
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        setComments((prev) => [
+          ...prev,
+          { comments: res.data.comments },
+        ]);
+        console.log(comments);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -78,7 +111,6 @@ const Post = ({ post, handlePostDelete }) => {
           )}
         </div>
       </div>
-
       {/* content */}
       <div className=" bg-gray-50">
         <p className="text-lg mb-2 p-4">{post.content || ""}</p>
@@ -102,11 +134,11 @@ const Post = ({ post, handlePostDelete }) => {
           </div>
         )}
       </div>
-
       <div className=" flex justify-between items-center p-2">
         <span>{likes.length}</span>
-        <span>
+        <span className="flex items-center gap-1 text-sm text-gray-600">
           <MessageCircleIcon size={15} />
+          {post.comments?.length ?? 0}
         </span>
       </div>
       <div className="flex justify-around p-2 border-1">
@@ -128,6 +160,13 @@ const Post = ({ post, handlePostDelete }) => {
           Share
         </span>
       </div>
+      <Comment
+        postId={post._id}
+        serverComment={post.comments}
+        handleFetchComments={handleFetchComments}
+        comments={comments}
+        setComments={setComments}
+      />
     </div>
   );
 };
