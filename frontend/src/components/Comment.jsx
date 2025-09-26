@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Send, Image } from "lucide-react";
+import { Send, Image, CloudCog } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { ServerApi } from "@/constants";
@@ -19,6 +19,7 @@ const Comment = ({
 
   const handleTextChange = (e) => {
     setComments((prev) => ({ ...prev, text: e.target.value }));
+    console.log(comments);
   };
 
   const handleFileChange = (e) => {
@@ -48,10 +49,8 @@ const Comment = ({
       setComments({ text: "", file: null });
     }
   };
-  useEffect(() => {
-    handleFetchComments();
-  }, []);
-  const preview = comments.file ? URL.createObjectURL(comments.file) : null;
+
+  const preview = comments?.file ? URL.createObjectURL(comments.file) : null;
   return (
     <div className="p-4 border-t bg-gray-50 rounded-b-xl">
       {/* Input Section */}
@@ -85,37 +84,31 @@ const Comment = ({
           onChange={handleFileChange}
         />
       </div>
-
+      {preview && (
+        <img src={preview} width="150" alt="" className="mt-2 rounded-2xl" />
+      )}
       {/* Comment List */}
 
-      {serverComment && (
-        <div className="mt-4 space-y-3 overflow-auto">
-          <div className="flex gap-3 items-start">
-            <img
-              src="https://via.placeholder.com/32"
-              alt="user"
-              className="w-8 h-8 rounded-full"
-            />
-            <div className="bg-white border px-3 py-2 rounded-lg shadow-sm">
-              <p className="text-sm font-medium">{"John Doe"}</p>
-              <p className="text-sm text-gray-700">
-                {"This is a sample comment ✨"}
-              </p>
-              <img src={preview} alt="" />
+      {comments?.length > 0 && (
+        <div>
+          {comments.map((comment) => (
+            <div className="mt-4 space-y-3 overflow-auto" key={comment._id}>
+              <div className="flex gap-3 items-start">
+                <img
+                  src={comment.creatorId.imageUrl}
+                  alt="user"
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="bg-white border px-3 py-2 rounded-lg shadow-sm">
+                  <p className="text-sm font-medium">
+                    {comment.creatorId.name}
+                  </p>
+                  <p className="text-sm text-gray-700">{comment.text}</p>
+                  <img src={comment.imageUrl} alt="" />
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div className="flex gap-3 items-start">
-            <img
-              src="https://via.placeholder.com/32"
-              alt="user"
-              className="w-8 h-8 rounded-full"
-            />
-            <div className="bg-white border px-3 py-2 rounded-lg shadow-sm">
-              <p className="text-sm font-medium">Jane Smith</p>
-              <p className="text-sm text-gray-700">Looks great! 🔥</p>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>

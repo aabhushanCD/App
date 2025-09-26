@@ -258,7 +258,15 @@ export const getAllComments = async (req, res) => {
       return res.status(400).json({ success: false, message: "UnAuthorized" });
     }
 
-    const post = await Post.findById(postId).populate("comments");
+    const post = await Post.findById(postId).populate({
+      path: "comments",
+      options: { sort: { createdAt: -1 } },
+      populate: {
+        path: "creatorId",
+        select: "name imageUrl",
+      },
+    });
+
     if (!post) {
       return res
         .status(404)

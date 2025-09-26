@@ -15,22 +15,12 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import Comment from "./Comment";
 
-const commentModel = [
-  {
-    creatorId: "",
-    postId: "",
-    text: "",
-    imageUrl: "",
-    likes: [],
-    replies: [],
-    createdAt: "",
-  },
-];
 const Post = ({ post, handlePostDelete }) => {
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
   const [isThreeDotOpen, setThreeDot] = useState(false);
-  const [comments, setComments] = useState(commentModel);
+  const [comments, setComments] = useState(null);
+  const [showCommentBox, setShowCommentBox] = useState(false);
   const handleLike = async (postId) => {
     try {
       const res = await axios.put(
@@ -50,6 +40,7 @@ const Post = ({ post, handlePostDelete }) => {
   };
 
   const handleFetchComments = async () => {
+    setShowCommentBox((showCommentBox) => !showCommentBox);
     try {
       const postId = post._id;
       const res = await axios.get(
@@ -58,10 +49,7 @@ const Post = ({ post, handlePostDelete }) => {
         { withCredentials: true }
       );
       if (res.status === 200) {
-        setComments((prev) => [
-          ...prev,
-          { comments: res.data.comments },
-        ]);
+        setComments(res.data.comments);
         console.log(comments);
       }
     } catch (error) {
@@ -152,7 +140,7 @@ const Post = ({ post, handlePostDelete }) => {
           Like
         </span>
         <span className="flex gap-2 cursor-pointer  ">
-          <MessageCircle />
+          <MessageCircle onClick={handleFetchComments} />
           Comment
         </span>
         <span className="flex gap-2 cursor-pointer ">
@@ -160,13 +148,15 @@ const Post = ({ post, handlePostDelete }) => {
           Share
         </span>
       </div>
-      <Comment
-        postId={post._id}
-        serverComment={post.comments}
-        handleFetchComments={handleFetchComments}
-        comments={comments}
-        setComments={setComments}
-      />
+      {showCommentBox && (
+        <Comment
+          postId={post._id}
+          serverComment={post.comments}
+          handleFetchComments={handleFetchComments}
+          comments={comments}
+          setComments={setComments}
+        />
+      )}
     </div>
   );
 };
