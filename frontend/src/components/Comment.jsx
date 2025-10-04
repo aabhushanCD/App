@@ -7,16 +7,10 @@ import axios from "axios";
 import { ServerApi } from "@/constants";
 import { toast } from "sonner";
 
-const Comment = ({
-  postId,
-  comments,
-  setComments,
-  serverComment,
-  handleFetchComments,
-}) => {
+const Comment = ({ postId, comments, setComments }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
-
+  const [commentThreeDot, setCommentThreeDot] = useState(false);
   const handleTextChange = (e) => {
     setComments((prev) => ({ ...prev, text: e.target.value }));
     console.log(comments);
@@ -49,14 +43,29 @@ const Comment = ({
       setComments({ text: "", file: null });
     }
   };
-
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const res = await axios.delete(
+        `${ServerApi}/post/deleteComment/${postId}/comment/${commentId}`,
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        toast.success("Comment Deleted Successfully");
+      }
+    } catch (error) {
+      toast.error(response.error.message);
+    }
+  };
+  const handleCommentThreeDot = () => {
+    setCommentThreeDot((commentThreeDot) => !commentThreeDot);
+  };
   const preview = comments?.file ? URL.createObjectURL(comments.file) : null;
   return (
-    <div className="p-4 border-t bg-gray-50 rounded-b-xl">
+    <div className=" p-4 border-t bg-gray-50 rounded-b-xl ">
       {/* Input Section */}
-      <div className="flex items-center gap-2">
+      <div className=" flex items-center gap-2">
         {/* Comment Input */}
-        <div className="flex flex-1 items-center bg-white border rounded-full  shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
+        <div className=" flex flex-1 items-center bg-white border rounded-full  shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
           <Input
             className="flex-1 border-none focus:!outline-none focus:!ring-0 text-sm"
             placeholder={"Write a comment..."}
@@ -92,15 +101,25 @@ const Comment = ({
       {comments?.length > 0 && (
         <div>
           {comments.map((comment) => (
-            <div className="mt-4 space-y-3 overflow-auto" key={comment._id}>
-              <div className="flex gap-3 items-start">
+            <div className="mt-4 space-y-3 overflow-auto " key={comment._id}>
+              <div className="relative flex gap-3 items-start ">
+                <span className="absolute right-2 cursor-pointer">
+                  <button onClick={handleCommentThreeDot}>...</button>
+                  {commentThreeDot && (
+                    <ul className="absolute right-2 top-5">
+                      <li onClick={() => handleDeleteComment(comment._id)}>
+                        Delete
+                      </li>
+                    </ul>
+                  )}
+                </span>
                 <img
                   src={comment.creatorId.imageUrl}
                   alt="user"
                   className="w-8 h-8 rounded-full"
                 />
-                <div className="bg-white border px-3 py-2 rounded-lg shadow-sm">
-                  <p className="text-sm font-medium">
+                <div className="bg-white border px-3 py-2 rounded-lg shadow-sm w-sm">
+                  <p className="p-1 text-sm font-medium">
                     {comment.creatorId.name}
                   </p>
                   <p className="text-sm text-gray-700">{comment.text}</p>
