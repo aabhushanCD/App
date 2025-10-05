@@ -21,6 +21,21 @@ const PostContainer = ({ postsData, setPostData }) => {
       console.error(error.message);
     }
   };
+  const updatePostCommentCount = (postId, delta) => {
+    setPostData((prev) => {
+      const updatedPosts = prev.posts.map((post) => {
+        if (post._id === postId) {
+          const currentCount = post.comments?.length ?? 0;
+          return {
+            ...post,
+            comments: Array(currentCount + delta).fill({}), // just to make length update
+          };
+        }
+        return post;
+      });
+      return { ...prev, posts: updatedPosts };
+    });
+  };
   return (
     <div className=" mt-4 ">
       {postsData?.posts?.length > 0 && (
@@ -30,6 +45,7 @@ const PostContainer = ({ postsData, setPostData }) => {
               key={post._id}
               post={post}
               handlePostDelete={handlePostDelete}
+              updatePostCommentCount={updatePostCommentCount}
             />
           ))}
         </div>

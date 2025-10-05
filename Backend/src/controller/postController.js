@@ -214,8 +214,18 @@ export const sendComment = async (req, res) => {
     const file = req.file;
     const { postId } = req.params;
     const userId = req.userId;
-    if (!postId || !userId) {
-      return res.status(400).json({ success: false, message: "UnAuthorized" });
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    if (!postId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Post ID required" });
+    }
+    if (!commentText && !file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Comment text or image required" });
     }
 
     let imageUrl = null;
@@ -238,9 +248,16 @@ export const sendComment = async (req, res) => {
     });
     post.comments.push(newComment._id);
     await post.save();
-    return res
-      .status(200)
-      .json({ message: "Successfully commented", success: true, post });
+    const savedComment = await Comment.findById(newComment._id).populate(
+      "creatorId",
+      "name imageUrl"
+    );
+
+    return res.status(200).json({
+      message: "Successfully commented",
+      success: true,
+      newComment: savedComment,
+    });
   } catch (error) {
     console.error(error.message);
     return res

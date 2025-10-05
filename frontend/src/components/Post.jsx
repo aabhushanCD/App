@@ -14,7 +14,7 @@ import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
 
-const Post = ({ post, handlePostDelete }) => {
+const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
   const [isThreeDotOpen, setThreeDot] = useState(false);
@@ -33,6 +33,9 @@ const Post = ({ post, handlePostDelete }) => {
     };
   }, [showCommentBox]);
 
+  useEffect(() => {
+    post;
+  }, [setComments]);
   const handleLike = async (postId) => {
     try {
       const res = await axios.put(
@@ -72,6 +75,9 @@ const Post = ({ post, handlePostDelete }) => {
     setShowCommentBox(false);
   };
 
+  const handleShare = () => {
+    
+  };
   return (
     <div className="relative">
       <div className="flex flex-col border rounded-lg bg-white shadow-sm">
@@ -196,6 +202,7 @@ const Post = ({ post, handlePostDelete }) => {
               handleFetchComments={handleFetchComments}
               comments={comments}
               setComments={setComments}
+              updatePostCommentCount={updatePostCommentCount}
             />
           </div>
         </div>

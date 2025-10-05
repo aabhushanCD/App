@@ -7,26 +7,26 @@ import axios from "axios";
 import { ServerApi } from "@/constants";
 import { toast } from "sonner";
 
-const Comment = ({ postId, comments, setComments }) => {
+const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
+  const [comment, setComment] = useState();
   const [commentThreeDot, setCommentThreeDot] = useState(false);
   const handleTextChange = (e) => {
-    setComments((prev) => ({ ...prev, text: e.target.value }));
-    console.log(comments);
+    setComment((prev) => ({ ...prev, text: e.target.value }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setComments((prev) => ({ ...prev, file }));
+      setComment((prev) => ({ ...prev, file }));
     }
   };
   const handleSendComment = async () => {
     try {
       const formData = new FormData();
-      formData.append("commentText", comments.text);
-      if (comments.file) formData.append("file", comments.file);
+      formData.append("commentText", comment.text);
+      if (comment.file) formData.append("file", comment.file);
 
       console.log(formData);
       const res = await axios.post(
@@ -36,11 +36,14 @@ const Comment = ({ postId, comments, setComments }) => {
       );
       if (res.status === 200) {
         toast.success("comment Success");
+        setComments((prev) => [res.data.newComment, ...(prev || [])]);
+        updatePostCommentCount?.(postId, +1);
       }
     } catch (error) {
+      toast.error("something went wrong to send comment", error.message);
       console.error(error.message);
     } finally {
-      setComments({ text: "", file: null });
+      setComment({ text: "", file: null });
     }
   };
   const handleDeleteComment = async (commentId) => {
@@ -51,6 +54,10 @@ const Comment = ({ postId, comments, setComments }) => {
       );
       if (res.status === 200) {
         toast.success("Comment Deleted Successfully");
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment._id !== commentId)
+        );
+        updatePostCommentCount?.(postId, -1);
       }
     } catch (error) {
       toast.error(response.error.message);
@@ -114,13 +121,13 @@ const Comment = ({ postId, comments, setComments }) => {
                   )}
                 </span>
                 <img
-                  src={comment.creatorId.imageUrl}
+                  src={comment.creatorId?.imageUrl}
                   alt="user"
                   className="w-8 h-8 rounded-full"
                 />
                 <div className="bg-white border px-3 py-2 rounded-lg shadow-sm w-sm">
                   <p className="p-1 text-sm font-medium">
-                    {comment.creatorId.name}
+                    {comment.creatorId?.name}
                   </p>
                   <p className="text-sm text-gray-700">{comment.text}</p>
                   <img src={comment.imageUrl} alt="" />
