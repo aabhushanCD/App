@@ -11,7 +11,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
   const [comment, setComment] = useState({ text: "", file: null });
-  const [commentThreeDot, setCommentThreeDot] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -65,9 +65,10 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       toast.error(error.response?.data?.message || "Failed to delete comment");
     }
   };
-  const handleCommentThreeDot = () => {
-    setCommentThreeDot((commentThreeDot) => !commentThreeDot);
+  const toggleMenu = (id) => {
+    setActiveMenu((prev) => (prev === id ? null : id));
   };
+
   const preview = comment?.file ? URL.createObjectURL(comment.file) : null;
   return (
     <div className=" p-4 border-t bg-gray-50 rounded-b-xl ">
@@ -113,8 +114,8 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
             <div className="mt-4 space-y-3 overflow-auto " key={comment._id}>
               <div className="relative flex gap-3 items-start ">
                 <span className="absolute right-2 cursor-pointer">
-                  <button onClick={handleCommentThreeDot}>...</button>
-                  {commentThreeDot && (
+                  <button onClick={() => toggleMenu(comment._id)}>...</button>
+                  {activeMenu === comment._id && (
                     <ul className="absolute right-2 top-5">
                       <li onClick={() => handleDeleteComment(comment._id)}>
                         Delete
