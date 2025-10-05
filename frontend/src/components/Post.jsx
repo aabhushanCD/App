@@ -13,6 +13,7 @@ import porfile from "../assets/profile.png";
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
+import { toast } from "sonner";
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();
@@ -75,8 +76,29 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
     setShowCommentBox(false);
   };
 
-  const handleShare = () => {
-    
+  const handleShare = async (postId) => {
+    const shareUrl = `${window.location.origin}/post/${postId}`;
+    const shareData = {
+      title: "Check out this post!",
+      text: "I found something interesting on Smart Learn 👀",
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        toast.success("Post shared successfully!");
+      } else {
+        // Fallback for unsupported browsers
+        await navigator.clipboard.writeText(shareUrl);
+        toast.info("Browser doesn’t support sharing. Link copied instead!");
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Error sharing:", error);
+        toast.error("Failed to share post.");
+      }
+    }
   };
   return (
     <div className="relative">
@@ -173,7 +195,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
             Comment
           </span>
           <span className="flex gap-2 cursor-pointer ">
-            <Share2 />
+            <Share2 onClick={() => handleShare(post._id)} />
             Share
           </span>
         </div>

@@ -10,11 +10,8 @@ import { toast } from "sonner";
 const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState({ text: "", file: null });
   const [commentThreeDot, setCommentThreeDot] = useState(false);
-  const handleTextChange = (e) => {
-    setComment((prev) => ({ ...prev, text: e.target.value }));
-  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -23,12 +20,16 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
     }
   };
   const handleSendComment = async () => {
+    const text = textinputRef.current.value;
+    if (!text && !comment.file) {
+      toast.error("Cannot send empty comment");
+      return;
+    }
     try {
       const formData = new FormData();
-      formData.append("commentText", comment.text);
+      formData.append("commentText", text);
       if (comment.file) formData.append("file", comment.file);
 
-      console.log(formData);
       const res = await axios.post(
         `${ServerApi}/post/sendComment/${postId}`,
         formData,
@@ -38,12 +39,12 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
         toast.success("comment Success");
         setComments((prev) => [res.data.newComment, ...(prev || [])]);
         updatePostCommentCount?.(postId, +1);
+        textinputRef.current.value = "";
+        setComment({ text: "", file: null });
       }
     } catch (error) {
-      toast.error("something went wrong to send comment", error.message);
       console.error(error.message);
-    } finally {
-      setComment({ text: "", file: null });
+      toast.error("Something went wrong while sending comment");
     }
   };
   const handleDeleteComment = async (commentId) => {
@@ -60,13 +61,14 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
         updatePostCommentCount?.(postId, -1);
       }
     } catch (error) {
-      toast.error(response.error.message);
+      console.error("Something went wrong to delete comment");
+      toast.error(error.response?.data?.message || "Failed to delete comment");
     }
   };
   const handleCommentThreeDot = () => {
     setCommentThreeDot((commentThreeDot) => !commentThreeDot);
   };
-  const preview = comments?.file ? URL.createObjectURL(comments.file) : null;
+  const preview = comment?.file ? URL.createObjectURL(comment.file) : null;
   return (
     <div className=" p-4 border-t bg-gray-50 rounded-b-xl ">
       {/* Input Section */}
@@ -77,7 +79,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
             className="flex-1 border-none focus:!outline-none focus:!ring-0 text-sm"
             placeholder={"Write a comment..."}
             ref={textinputRef}
-            onChange={handleTextChange}
+            // onChange={handleTextChange}
           />
           <Button
             size="icon"

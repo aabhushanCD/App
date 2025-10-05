@@ -169,6 +169,29 @@ export const updatePost = async (req, res) => {
   }
 };
 
+export const getSinglePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    if (!postId) {
+      return res
+        .status(400)
+        .json({ message: "something please provide valid data" });
+    }
+    const post = await Post.findById(postId).populate(
+      "creatorId",
+      "name imageUrl"
+    );
+    return res.status(200).json({
+      post,
+    });
+  } catch (error) {
+    console.error("something went wrong servererror in getsingle post");
+    return res
+      .status(500)
+      .json({ message: "Something went wrong on shared post" });
+  }
+};
 // __________________InterPost_______________________
 export const like_dislikePost = async (req, res) => {
   try {
