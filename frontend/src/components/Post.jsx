@@ -14,6 +14,7 @@ import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();
@@ -21,7 +22,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const [isThreeDotOpen, setThreeDot] = useState(false);
   const [comments, setComments] = useState(null);
   const [showCommentBox, setShowCommentBox] = useState(false);
-
+  const navigate = useNavigate();
   // 🔹 Lock/unlock scroll when modal opens/closes
   useEffect(() => {
     if (showCommentBox) {
@@ -111,6 +112,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               alt="profile"
               width={50}
               className="rounded-full"
+              onClick={() => navigate("/profile")}
             />
             <span>
               <h1 className="font-semibold">{post.creatorId.name}</h1>

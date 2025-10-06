@@ -1,6 +1,7 @@
 import User from "../model/User.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 export const Register = async (req, res) => {
   try {
     const { name, email, password } = req.body;

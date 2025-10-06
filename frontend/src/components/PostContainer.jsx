@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ServerApi } from "../constants.js";
 import Post from "./Post";
 import axios from "axios";
+import { toast } from "sonner";
 
 const PostContainer = ({ postsData, setPostData }) => {
   const handlePostDelete = async (postId) => {
@@ -19,6 +20,7 @@ const PostContainer = ({ postsData, setPostData }) => {
       }
     } catch (error) {
       console.error(error.message);
+      toast.error(error.response?.data?.message);
     }
   };
   const updatePostCommentCount = (postId, delta) => {

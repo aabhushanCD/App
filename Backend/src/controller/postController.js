@@ -44,6 +44,7 @@ export const getPostPagenation = async (req, res) => {
     const { page = 1, limit = 3 } = req.query;
     const userId = req.userId;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+    const totalPosts = await Post.countDocuments();
     const posts = await Post.find()
       .populate("creatorId", "imageUrl name ")
       .populate("media")
@@ -51,10 +52,14 @@ export const getPostPagenation = async (req, res) => {
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
 
+    const hasMore = skip + posts.length < totalPosts;
+
     return res.status(200).json({
       success: true,
-      message: "Successfully get all posts",
+      message: "Successfully fetched posts",
       posts,
+      hasMore,
+      totalPosts,
       userId,
     });
   } catch (error) {

@@ -1,54 +1,60 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Layout from "../components/layout/Layout";
 import Signup from "@/pages/Signup";
 import Login from "@/pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
-import CreatePost from "@/components/CreatePost";
 import Home from "@/components/Home";
+import Profile from "@/components/Profile";
 
 const AppRoutes = () => {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
+    <BrowserRouter>
+      <Routes>
+        {/* Protected Routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Nested routes inside Layout */}
+          <Route index element={<Navigate to="/home" replace />} />
+          <Route path="home" element={<Home />} />
+          <Route path="profile" element={<Profile />} />
+          {/* Add more protected routes here */}
+        </Route>
 
-          <Route
-            path="/login"
-            element={
-              <PublicRoutes>
-                <Login />
-              </PublicRoutes>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicRoutes>
-                <Signup />
-              </PublicRoutes>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </>
+        {/* Public Routes */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoutes>
+              <Login />
+            </PublicRoutes>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoutes>
+              <Signup />
+            </PublicRoutes>
+          }
+        />
+
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/store/AuthStore.jsx";
 
 const CreatePost = ({
+  loading,
   setForm,
   form,
   fileInputRef,
@@ -147,12 +148,14 @@ const CreatePost = ({
                     <Camera size={18} />
                   </button>
 
-                  <Button
-                    className="bg-blue-400 text-white h-8"
-                    onClick={handlePostSubmit}
-                  >
-                    Post
-                  </Button>
+                  {!loading && (
+                    <Button
+                      className="bg-blue-400 text-white h-8"
+                      onClick={handlePostSubmit}
+                    >
+                      Post
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

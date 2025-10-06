@@ -4,23 +4,38 @@ import { ServerApi } from "../constants.js";
 import PostContainer from "./PostContainer";
 import axios from "axios";
 import { Camera, Image, Music, Video } from "lucide-react";
-import profile from "../assets/profile.png";
+
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import LeftSideBar from "./LeftSideBar";
-import Navbar from "./Navbar";
+
+import { useAuth } from "@/store/AuthStore";
 
 const Home = () => {
-  const [postsData, setPostData] = useState({});
+  const { currentUser } = useAuth();
+  const [postsData, setPostData] = useState({
+    posts: [],
+    hasMore: true,
+    totalPosts: 0,
+    userId: null,
+  });
   const [form, setForm] = useState({
     content: "",
     files: [],
   });
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const observerRef = useRef(null);
+
   const [isCreate, setCreate] = useState(false);
   const fileInputRef = useRef();
   const contentInputRef = useRef();
+
   const handlePostSubmit = async () => {
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("content", form.content);
 
@@ -32,7 +47,6 @@ const Home = () => {
       });
       // res.data;
       if (res.status === 200) {
-        console.log(res.data.newPost);
         setPostData((prev) => ({
           ...prev,
           posts: [res.data.newPost, ...prev.posts],
@@ -43,6 +57,8 @@ const Home = () => {
       }
     } catch (error) {
       toast.error(error.response?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   };
   const handleContent = (e) => {
@@ -51,10 +67,11 @@ const Home = () => {
   };
 
   const limit = 3;
-  const page = 1;
+
   useEffect(() => {
     const postFetch = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(
           `${ServerApi}/post/getPostPagenation?limit=${limit}&page=${page}`,
           {
@@ -62,15 +79,24 @@ const Home = () => {
           }
         );
         if (res.status === 200) {
-          setPostData(res.data);
-          // console.log(res.data);
+          setPostData((prev) => ({
+            ...prev,
+            posts: [...(prev.posts || []), ...res.data.posts],
+            hasMore: res.data.hasMore,
+            totalPosts: res.data.totalPosts,
+            userId: res.data.userId,
+          }));
+          setHasMore(res.data.hasMore);
         }
       } catch (error) {
         console.error("Error fetching posts:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
     postFetch();
-  }, []);
+  }, [page]);
+
   const handleButton = () => {
     setCreate(true);
     if (fileInputRef.current) {
@@ -84,112 +110,142 @@ const Home = () => {
       document.body.style.overflow = "auto";
     }
   }, [isCreate]);
-return (
-  <>
-    <Navbar />
-    <div className="flex w-full gap-6 p-4 max-w-7xl mx-auto">
-      {/* Sidebar */}
-      <LeftSideBar />
 
-      {/* Main Feed */}
-      <div className="flex-1 max-w-2xl w-full space-y-6">
-        {/* Create Post Section */}
-        <div className="bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4">
-          {/* Profile image */}
-          <img
-            src={profile}
-            alt="profile"
-            className="w-12 h-12 rounded-full object-cover border"
-          />
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
 
-          {/* Post input + actions */}
-          <div className="flex-1">
-            <div
-              onClick={handleButton}
-              className="cursor-pointer rounded-xl bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
-            >
-              {form.content || "What's on your mind?"}
-            </div>
+    if (observerRef.current) observer.observe(observerRef.current);
 
-            {/* Post actions */}
-            <div className="flex justify-between items-center mt-4">
-              <div className="flex gap-4 text-gray-500">
-                <button
-                  onClick={() => handleButton("music")}
-                  className="flex items-center gap-1 hover:text-blue-500 transition"
-                >
-                  <Music size={18} />{" "}
-                  <span className="hidden sm:inline">Music</span>
-                </button>
-                <button
-                  onClick={() => handleButton("image")}
-                  className="flex items-center gap-1 hover:text-green-500 transition"
-                >
-                  <Image size={18} />{" "}
-                  <span className="hidden sm:inline">Photo</span>
-                </button>
-                <button
-                  onClick={() => handleButton("video")}
-                  className="flex items-center gap-1 hover:text-red-500 transition"
-                >
-                  <Video size={18} />{" "}
-                  <span className="hidden sm:inline">Video</span>
-                </button>
-                <button
-                  onClick={() => handleButton("camera")}
-                  className="flex items-center gap-1 hover:text-purple-500 transition"
-                >
-                  <Camera size={18} />{" "}
-                  <span className="hidden sm:inline">Camera</span>
-                </button>
-              </div>
-              <Button
-                onClick={handlePostSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-9 rounded-lg shadow-sm"
+    return () => {
+      if (observerRef.current) observer.unobserve(observerRef.current);
+    };
+  }, [hasMore, loading]);
+  return (
+    <>
+      <div className="flex w-full gap-6 p-4 max-w-7xl mx-auto">
+        {/* Sidebar */}
+        <LeftSideBar />
+
+        {/* Main Feed */}
+        <div className="flex-1 max-w-2xl w-full space-y-6">
+          {/* Create Post Section */}
+          <div className="bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4">
+            {/* Profile image */}
+            <img
+              src={currentUser.imageUrl}
+              alt="profile"
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+
+            {/* Post input + actions */}
+            <div className="flex-1">
+              <div
+                onClick={handleButton}
+                className="cursor-pointer rounded-xl bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
               >
-                Post
-              </Button>
+                {form.content || "What's on your mind?"}
+              </div>
+
+              {/* Post actions */}
+              <div className="flex justify-between items-center mt-4">
+                <div className="flex gap-4 text-gray-500">
+                  <button
+                    onClick={() => handleButton("music")}
+                    className="flex items-center gap-1 hover:text-blue-500 transition"
+                  >
+                    <Music size={18} />{" "}
+                    <span className="hidden sm:inline">Music</span>
+                  </button>
+                  <button
+                    onClick={() => handleButton("image")}
+                    className="flex items-center gap-1 hover:text-green-500 transition"
+                  >
+                    <Image size={18} />{" "}
+                    <span className="hidden sm:inline">Photo</span>
+                  </button>
+                  <button
+                    onClick={() => handleButton("video")}
+                    className="flex items-center gap-1 hover:text-red-500 transition"
+                  >
+                    <Video size={18} />{" "}
+                    <span className="hidden sm:inline">Video</span>
+                  </button>
+                  <button
+                    onClick={() => handleButton("camera")}
+                    className="flex items-center gap-1 hover:text-purple-500 transition"
+                  >
+                    <Camera size={18} />{" "}
+                    <span className="hidden sm:inline">Camera</span>
+                  </button>
+                </div>
+                <Button
+                  onClick={handlePostSubmit}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-9 rounded-lg shadow-sm"
+                >
+                  Post
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Create modal */}
+          {isCreate && (
+            <CreatePost
+              setForm={setForm}
+              loading={loading}
+              form={form}
+              fileInputRef={fileInputRef}
+              contentInputRef={contentInputRef}
+              setCreate={setCreate}
+              handleContent={handleContent}
+              handleButton={handleButton}
+              handlePostSubmit={handlePostSubmit}
+            />
+          )}
+
+          {/* Posts */}
+          <div className="space-y-6">
+            <PostContainer postsData={postsData} setPostData={setPostData} />
+
+            <div
+              ref={observerRef}
+              className="h-12 flex justify-center items-center"
+            >
+              {loading && (
+                <p className="text-gray-500 text-sm animate-pulse">
+                  Loading more posts...
+                </p>
+              )}
+              {!hasMore && (
+                <p className="text-gray-400 text-sm">
+                  You’ve reached the end 🎉
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Create modal */}
-        {isCreate && (
-          <CreatePost
-            setForm={setForm}
-            form={form}
-            fileInputRef={fileInputRef}
-            contentInputRef={contentInputRef}
-            setCreate={setCreate}
-            handleContent={handleContent}
-            handleButton={handleButton}
-            handlePostSubmit={handlePostSubmit}
-          />
-        )}
-
-        {/* Posts */}
-        <div className="space-y-6">
-          <PostContainer postsData={postsData} setPostData={setPostData} />
+        {/* Right Sidebar (Optional for balance) */}
+        <div className="hidden lg:block w-64">
+          <div className="bg-white rounded-2xl border shadow-sm p-4">
+            <h3 className="font-semibold text-gray-700 mb-3">Trending</h3>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li>#ReactJS</li>
+              <li>#TailwindCSS</li>
+              <li>#WebDev</li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      {/* Right Sidebar (Optional for balance) */}
-      <div className="hidden lg:block w-64">
-        <div className="bg-white rounded-2xl border shadow-sm p-4">
-          <h3 className="font-semibold text-gray-700 mb-3">Trending</h3>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li>#ReactJS</li>
-            <li>#TailwindCSS</li>
-            <li>#WebDev</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </>
-);
-
-
-
+    </>
+  );
 };
 
 export default Home;
