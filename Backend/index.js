@@ -5,13 +5,21 @@ import cors from "cors";
 import authRoutes from "./src/routes/authRoute.js";
 import { ConnectDB } from "./src/db/ConnectDb.js";
 import postRoutes from "./src/routes/postRoute.js";
+import { server, app } from "./socketIo.js";
+import { allowedOrigins } from "./constant.js";
 dotenv.config({ path: ".env" });
-
-const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      // allow requests with no origin (like Postman or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -25,7 +33,7 @@ app.use("/api/post/", postRoutes);
 
 ConnectDB()
   .then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, "0.0.0.0", () => {
       console.log(`✅ Server is running on port ${PORT}`);
     });
   })

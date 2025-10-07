@@ -8,8 +8,7 @@ import { Camera } from "lucide-react";
 const Profile = () => {
   const { currentUser, setCurrentUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState(currentUser?.name || "");
-  const [email, setEmail] = useState(currentUser?.email || "");
+  
   const [profileImage, setProfileImage] = useState(currentUser?.imageUrl || "");
   const [file, setFile] = useState(null);
   const fileInputRef = useRef();

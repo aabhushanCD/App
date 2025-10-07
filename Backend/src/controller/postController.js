@@ -2,6 +2,8 @@ import Post from "../model/PostModel/Post.model.js";
 import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import User from "../model/User.model.js";
 import Comment from "../model/PostModel/Comment.model.js";
+import { io } from "../../socketIo.js";
+
 export const createPost = async (req, res) => {
   try {
     const userId = req.userId;
@@ -32,6 +34,7 @@ export const createPost = async (req, res) => {
     });
 
     await newPost.save();
+    io.emit("newPost", newPost);
     return res.status(200).json({ message: "Successfully Posted!", newPost });
   } catch (error) {
     console.log("Something went wrong!", error.message);

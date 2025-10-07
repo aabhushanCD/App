@@ -1,5 +1,5 @@
 import React, { useContext, useState, createContext } from "react";
-import { ServerApi } from "../constants.js";
+import  {ServerApi}  from "../constants.js";
 import { toast } from "sonner";
 
 import axios from "axios";
@@ -93,6 +93,9 @@ export const AuthContextProvider = ({ children }) => {
       return false;
     }
   };
+  // const socket = io("http://localhost:8000", {
+  //   withCredentials: true,
+  // });
   return (
     <div>
       <AuthContext.Provider
