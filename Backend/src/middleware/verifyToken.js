@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 export const verifyToken = (req, res, next) => {
-  console.log(req.cookies);
   try {
     const accessToken = req.cookies?.accessToken;
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);

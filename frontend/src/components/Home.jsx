@@ -66,14 +66,12 @@ const Home = () => {
     setForm((prev) => ({ ...prev, content }));
   };
 
-  const limit = 3;
-
   useEffect(() => {
     const postFetch = async () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `${ServerApi}/post/getPostPagenation?limit=${limit}&page=${page}`,
+          `${ServerApi}/post/getPostPagenation?limit=${3}&page=${page}`,
           {
             withCredentials: true,
           }

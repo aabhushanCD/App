@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, socket } = useAuth();
   const [likes, setLikes] = useState(post.likes);
   const [isThreeDotOpen, setThreeDot] = useState(false);
   const [comments, setComments] = useState(null);
@@ -38,6 +38,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   useEffect(() => {
     post;
   }, [setComments]);
+
   const handleLike = async (postId) => {
     try {
       const res = await axios.put(
@@ -111,7 +112,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               src={post.creatorId?.imageUrl || porfile}
               alt="profile"
               width={50}
-              className="rounded-full"
+              className="w-15 h-15 rounded-full overflow-hidden object-cover"
               onClick={() => navigate("/profile")}
             />
             <span>

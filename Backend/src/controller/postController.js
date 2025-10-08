@@ -3,6 +3,7 @@ import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import User from "../model/User.model.js";
 import Comment from "../model/PostModel/Comment.model.js";
 import { io } from "../../socketIo.js";
+import { Notification } from "../model/Notification.model.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -217,22 +218,41 @@ export const like_dislikePost = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Post not found!" });
     }
-    const user = await User.findById(userId);
-    const alreadyLiked = post.likes.some((id) => id.toString() === userId);
-    if (alreadyLiked) {
-      post.likes = post.likes.filter(
-        (id) => id.toString() !== userId.toString()
-      );
-    } else post.likes.push(userId);
 
+    const alreadyLiked = post.likes.includes(userId);
+    if (alreadyLiked) {
+      post.likes.pull(userId);
+    } else {
+      post.likes.push(userId);
+    }
     await post.save();
+
+    // Notification for liked post
+
+    if (!alreadyLiked && post.creatorId.toString() !== userId) {
+      const notification = await Notification.create({
+        type: "liked",
+        senderId: userId,
+        receiverId: post.creatorId,
+        postId,
+        message: "Liked your post ❤️",
+      });
+      const populatedNotification = await Notification.findById(
+        notification._id
+      ).populate("senderId", "name imageUrl");
+      io.to(post.creatorId.toString()).emit(
+        "notification",
+        populatedNotification
+      );
+    }
+
     return res.status(200).json({
       success: true,
       message: alreadyLiked ? "Post unLiked" : "Post Liked",
       likes: post.likes,
     });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.message + "/liked post");
     return res
       .status(500)
       .json({ success: false, message: "server error, failed to liked post" });
@@ -279,11 +299,24 @@ export const sendComment = async (req, res) => {
     });
     post.comments.push(newComment._id);
     await post.save();
+
     const savedComment = await Comment.findById(newComment._id).populate(
       "creatorId",
       "name imageUrl"
     );
 
+    if (post.creatorId.toString() !== newComment.creatorId.toString()) {
+      const notification = await Notification.create({
+        type: "comment",
+        senderId: userId,
+        receiverId: post.creatorId,
+        postId,
+        commentId: newComment._id,
+        message: "Comment on your post",
+      });
+
+      io.to(post.creatorId.toString()).emit("notification", notification);
+    }
     return res.status(200).json({
       message: "Successfully commented",
       success: true,

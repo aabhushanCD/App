@@ -5,21 +5,25 @@ import { useAuth } from "@/store/AuthStore";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { isLoading, register } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
   const handleSignup = async (e) => {
     e.preventDefault();
-
+    if (!emailPattern.test(form.email)) {
+      toast.error("Please Enter Valid Email");
+      return;
+    }
     const success = await register(form);
     if (success) navigate("/login");
-
   };
 
   return (

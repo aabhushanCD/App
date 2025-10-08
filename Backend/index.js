@@ -7,6 +7,8 @@ import { ConnectDB } from "./src/db/ConnectDb.js";
 import postRoutes from "./src/routes/postRoute.js";
 import { server, app } from "./socketIo.js";
 import { allowedOrigins } from "./constant.js";
+import notificationRoute from "./src/routes/notificationRoute.js";
+
 dotenv.config({ path: ".env" });
 
 app.use(
@@ -30,7 +32,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use("/api/auth/", authRoutes);
 app.use("/api/post/", postRoutes);
-
+app.use("/api/notification/", notificationRoute);
 ConnectDB()
   .then(() => {
     server.listen(PORT, "0.0.0.0", () => {

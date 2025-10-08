@@ -12,7 +12,7 @@ import Login from "@/pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
-import Profile from "@/components/Profile";
+import Profile from "@/pages/Profile";
 
 const AppRoutes = () => {
   return (

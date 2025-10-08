@@ -12,12 +12,17 @@ const Login = () => {
   const { login, isLoading } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
 
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!emailPattern.test(form.email)) {
+      return toast.error("Please Enter Valid Email");
+    }
     const success = await login(form);
     if (success) {
       navigate("/");

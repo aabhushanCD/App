@@ -3,6 +3,7 @@ import http from "http";
 import express from "express";
 import dotenv from "dotenv";
 import { allowedOrigins } from "./constant.js";
+import { Notification } from "./src/model/Notification.model.js";
 dotenv.config();
 
 const app = express();
@@ -15,13 +16,14 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("Socket Server is connected", socket.id);
-  socket.on("message", (data) => {
-    console.log("Message from client:", data);
-    io.emit("message", data);
-  });
+  const userId = socket.handshake.query.userId;
+  if (userId) socket.join(userId);
+  console.log("A user connected");
+
+ 
+
   socket.on("disconnect", () => {
-    console.log("User disconnect", socket.id);
+    console.log("User disconnected");
   });
 });
 export { io, server, app };

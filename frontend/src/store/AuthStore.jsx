@@ -1,8 +1,9 @@
 import React, { useContext, useState, createContext } from "react";
-import  {ServerApi}  from "../constants.js";
+import { ServerApi } from "../constants.js";
 import { toast } from "sonner";
 
 import axios from "axios";
+
 export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
@@ -93,9 +94,12 @@ export const AuthContextProvider = ({ children }) => {
       return false;
     }
   };
-  // const socket = io("http://localhost:8000", {
+
+  // = io(`${SocketApi}`, {
+  //   query: { userId: currentUser?.userId },
   //   withCredentials: true,
   // });
+
   return (
     <div>
       <AuthContext.Provider
