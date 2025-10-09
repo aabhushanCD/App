@@ -16,11 +16,9 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  const userId = socket.handshake.query.userId;
+  const userId = socket.handshake.auth.userId;
   if (userId) socket.join(userId);
-  console.log("A user connected");
-
- 
+  console.log(`User ${userId} joined their room`);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");

@@ -22,7 +22,7 @@ export const NotificationProvider = ({ children }) => {
     // Prevent duplicate connection
     if (!socketRef.current) {
       const newSocket = io(SocketApi, {
-        query: { userId: currentUser.userId },
+        auth: { userId: currentUser.userId },
         withCredentials: true,
       });
 

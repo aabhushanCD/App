@@ -10,7 +10,7 @@ export const createPost = async (req, res) => {
     const userId = req.userId;
     const { content } = req.body;
     const files = req.files;
-    console.log(files);
+
     if (!content && (!files || files.length === 0)) {
       return res.status(400).json({ message: "Cannot empty post" });
     }
@@ -35,7 +35,22 @@ export const createPost = async (req, res) => {
     });
 
     await newPost.save();
-    io.emit("newPost", newPost);
+    // const allUsers = await User.find({ _id: { $ne: newPost.creatorId } });
+    // if (allUsers) {
+    //   const notification = await Promise.all(
+    //     allUsers.map((user) =>
+    //       Notification.create({
+    //         type: "newPost",
+    //         senderId: userId,
+    //         receiverId: user._id,
+    //         postId: newPost._id,
+    //         message: "Has Created New Post",
+    //       })
+    //     )
+    //   );
+
+    //   io.emit("notification", notification);
+    // }
     return res.status(200).json({ message: "Successfully Posted!", newPost });
   } catch (error) {
     console.log("Something went wrong!", error.message);
@@ -312,7 +327,7 @@ export const sendComment = async (req, res) => {
         receiverId: post.creatorId,
         postId,
         commentId: newComment._id,
-        message: "Comment on your post",
+        message: "Comments on your post",
       });
 
       io.to(post.creatorId.toString()).emit("notification", notification);

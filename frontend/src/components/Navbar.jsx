@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import {
@@ -9,12 +9,15 @@ import {
   Search,
   Ellipsis,
   X,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
 import { ServerApi } from "@/constants";
 import axios from "axios";
 import { useNotify } from "@/store/NotificationStore";
+import MessangerContainer from "@/components/MessangerContainer";
+import MiniMessanger from "./MiniMessanger";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -23,6 +26,12 @@ const Navbar = () => {
   const [isNotification, setNotification] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
+  const [showMessanger, setShowMessanger] = useState(false);
+  const [isMiniMessagner, setMiniMessagner] = useState({
+    open: false,
+    user: {},
+  });
+  const [allUsers, setAllUsers] = useState([]);
   const socket = useNotify();
   const handleLogout = async () => {
     const success = await logout();
@@ -68,6 +77,20 @@ const Navbar = () => {
     setBellOpen(false);
   };
 
+  const fetchUsers = async () => {
+    setShowMessanger(!showMessanger);
+    try {
+      const res = await axios.get(`${ServerApi}/message/all/user`, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setAllUsers(res.data.users);
+      }
+    } catch (error) {
+      console.error(error.response.message || "cannot fetch ");
+    }
+  };
+
   return (
     <div className="flex justify-between items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
@@ -106,7 +129,29 @@ const Navbar = () => {
       <div className="flex items-center gap-5">
         <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
-        <MessageCircle className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
+        <div className="relative">
+          <MessageCircle
+            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
+            onClick={fetchUsers}
+          />
+          {showMessanger && (
+            <div className="absolute  w-90 min-h-70 -left-61">
+              <MessangerContainer
+                allUsers={allUsers}
+                setMiniMessagner={setMiniMessagner}
+                setShowMessanger={setShowMessanger}
+              />
+            </div>
+          )}
+          {isMiniMessagner.open && (
+            <div className="absolute -left-61 top-40 ">
+              <MiniMessanger
+                user={isMiniMessagner.user}
+                setMiniMessagner={setMiniMessagner}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Bell */}
         <div className="flex items-center gap-1 md:gap-6 ml-6">
@@ -163,8 +208,8 @@ const Navbar = () => {
                                 </div>
                               )}
                               {item?.type == "comment" && (
-                                <div className="absolute right-0 -bottom-3 text-2xl">
-                                  💬
+                                <div className="absolute right-0 -bottom-3 text-2xl ">
+                                  <MessageSquare className="text-green-500 " />
                                 </div>
                               )}
                             </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Ellipsis,
+  Heart,
   MessageCircle,
   MessageCircleIcon,
   Share2,
@@ -190,7 +191,13 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
             }`}
             onClick={() => handleLike(post._id)}
           >
-            <ThumbsUp />
+            <Heart
+              className={`w-5 h-5 ${
+                likes.includes(currentUser.userId)
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            />
             Like
           </span>
           <span className="flex gap-2 cursor-pointer">
