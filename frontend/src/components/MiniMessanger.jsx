@@ -3,6 +3,7 @@ import { useAuth } from "@/store/AuthStore";
 import { useNotify } from "@/store/NotificationStore";
 import axios from "axios";
 import {
+  BookImage,
   GalleryHorizontal,
   LucideVoicemail,
   Phone,
@@ -10,13 +11,16 @@ import {
   X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const MiniMessanger = ({ setMiniMessagner, user }) => {
   const { currentUser } = useAuth();
   const socket = useNotify();
   const [messages, setMessages] = useState([]);
   const textInputRef = useRef();
+  const mediaInputRef = useRef();
   const chatContainerRef = useRef();
+  const [preview, setPreview] = useState(null);
   useEffect(() => {
     const fetchMessages = async () => {
       const res = await axios.get(`${ServerApi}/message/${user._id}`, {
@@ -27,13 +31,31 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     fetchMessages();
   }, [user]);
 
+  const handleMedia = () => {
+    if (!mediaInputRef.current.value) {
+      mediaInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = () => {
+    const file = mediaInputRef.current.files[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
+    }
+  };
   const handleSentMessage = async () => {
+    let formData = new FormData();
     const text = textInputRef.current.value;
-    if (!text) return;
+    const file = mediaInputRef.current.files[0];
+    if (file || text) {
+      formData.append("text", text);
+      formData.append("media", file);
+    } else return toast.error("Cannot Empty Message");
     try {
       const res = await axios.post(
         `${ServerApi}/message/sent/to/${user._id}`,
-        { text },
+        formData,
         { withCredentials: true }
       );
       if (res.status === 200) {
@@ -43,6 +65,10 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       console.error(error.response.message || error.message);
     }
   };
+
+  useEffect(() => {
+    textInputRef.current.focus();
+  }, [handleSentMessage]);
 
   useEffect(() => {
     if (!socket) return;
@@ -66,21 +92,29 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     }
   }, [messages]);
   return (
-    <div className="bg-gray-200 p-4 rounded-2xl">
-      <div className="w-100 max-h-100">
-        <div className="flex justify-between">
-          <div className="flex gap-2 ">
-            <img
-              src={null}
-              alt=""
-              className="w-12 h-12 overflow-hidden  rounded-full object-cover "
-            />
-            <h1 className="font-semibold">{"Aabhushan Dhakal"}</h1>
+    <div className="flex flex-col  h-full max-h-screen">
+      <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">
+        {/* Header */}
+        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-white rounded-t-2xl">
+          <div className="flex gap-2 items-center">
+            {user.imageUrl ? (
+              <img
+                src={user.imageUrl}
+                alt=""
+                className="w-12 h-12 rounded-full object-cover "
+              />
+            ) : (
+              <span className="w-12 h-12 rounded-3xl  border-2 flex items-center justify-center text-gray-100">
+                {"U"}
+              </span>
+            )}
+            <h1 className="font-semibold">{user.name || "User"}</h1>
           </div>
-          <div className="flex gap-3">
-            <Phone />
-            <Video />
+          <div className="flex gap-3 ">
+            <Phone className="cursor-pointer" />
+            <Video className="cursor-pointer" />
             <X
+              className="cursor-pointer"
               onClick={() => {
                 setMiniMessagner((prev) => ({ open: false }));
               }}
@@ -91,32 +125,72 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
 
         <div
           ref={chatContainerRef}
-          className="flex flex-col gap-2 p-3 rounded-2xl overflow-auto h-50 bg-white"
+          className="flex flex-col flex-1 bg-white p-3 space-y-2 overflow-y-auto"
         >
           {messages.map((dd) => (
             <div
               key={dd._id}
               className={`${
                 dd.senderId === currentUser.userId
-                  ? "self-end bg-blue-400 text-white"
+                  ? "self-end bg-blue-400 text-white "
                   : "self-start bg-gray-200 text-gray-800"
-              } px-3 py-2 rounded-lg max-w-[70%]`}
+              } px-3 py-2 rounded-lg max-w-[80%]  `}
             >
+              
+              {dd.media && (
+                <img
+                  src={dd.media}
+                  alt="media"
+                  className="w-40 rounded-md mb-1"
+                />
+              )}
               {dd.text}
             </div>
           ))}
         </div>
-
-        <div className="flex justify-center gap-2 p-2 items-center">
+        {preview && (
+          <div className="relative p-2 bg-gray-100">
+            <img src={preview} alt="" className="w-24 rounded-md" />
+            <X
+              size={20}
+              className="absolute top-0 left-20 cursor-pointer text-white hover:text-red-500"
+              onClick={() =>
+                setPreview(() => (mediaInputRef.current.value = null))
+              }
+            />
+          </div>
+        )}
+        <div className="sticky bottom-0 bg-white border-t border-gray-300 flex items-center gap-2 p-2">
           <LucideVoicemail />
-          <GalleryHorizontal />
+          <GalleryHorizontal
+            className="cursor-pointer text-gray-600"
+            onClick={handleMedia}
+          />
           <input
             type="text"
             ref={textInputRef}
-            placeholder="Write message"
-            className="bg-blue-400 rounded-2xl p-2"
+            placeholder="Write message..."
+            className="flex-1 p-2 bg-gray-100 rounded-2xl focus:outline-none"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSentMessage();
+              }
+            }}
           />
-          <button onClick={handleSentMessage}> Sent</button>
+          <input
+            type="file"
+            ref={mediaInputRef}
+            onChange={handleFileChange}
+            hidden
+          />
+
+          <button
+            className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
+            onClick={handleSentMessage}
+          >
+            Sent
+          </button>
         </div>
       </div>
     </div>

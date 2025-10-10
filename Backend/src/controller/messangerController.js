@@ -25,13 +25,13 @@ export const sendMessage = async (req, res) => {
 
     let media = null;
     if (filePath) {
-      const mediaUrl = await uploadMedia(filePath);
-
-      if (!mediaUrl) {
-        console.error("Cloudinary error", error.message);
-        return res.status(500).json({ message: "Cloudinary problem:" });
+      const cloudinaryResult = await uploadMedia(filePath);
+      if (!cloudinaryResult) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to upload media" });
       }
-      media = mediaUrl;
+      media = cloudinaryResult.secure_url;
     }
 
     const newMessage = await Messenger.create({

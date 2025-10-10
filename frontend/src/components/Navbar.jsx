@@ -54,6 +54,7 @@ const Navbar = () => {
     return () => socket.off("notification");
   }, [socket]);
 
+ 
   const fetchNotification = async () => {
     try {
       const res = await axios.get(`${ServerApi}/notification`, {
@@ -61,7 +62,6 @@ const Navbar = () => {
       });
       if (res.status === 200) {
         setNotificationData(res.data.notifications);
-        console.log(res.data.notifications);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error.message);
@@ -135,7 +135,7 @@ const Navbar = () => {
             onClick={fetchUsers}
           />
           {showMessanger && (
-            <div className="absolute  w-90 min-h-70 -left-61">
+            <div className="absolute w-90 min-h-70 -left-61">
               <MessangerContainer
                 allUsers={allUsers}
                 setMiniMessagner={setMiniMessagner}
@@ -144,7 +144,15 @@ const Navbar = () => {
             </div>
           )}
           {isMiniMessagner.open && (
-            <div className="absolute -left-61 top-40 ">
+            <div
+              className="
+                     fixed bottom-0 right-3 
+                      w-[95%] h-[90vh] 
+                      md:w-[380px] md:h-[75vh] md:right-4 md:bottom-4 
+                      bg-white shadow-2xl rounded-t-2xl border border-gray-200
+                      z-[60] flex flex-col transition-all duration-300 overflow-hidden
+                    "
+            >
               <MiniMessanger
                 user={isMiniMessagner.user}
                 setMiniMessagner={setMiniMessagner}
