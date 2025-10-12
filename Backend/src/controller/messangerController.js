@@ -43,6 +43,7 @@ export const sendMessage = async (req, res) => {
 
     io.to(receiverId.toString()).emit("newMessage", newMessage);
     io.to(userId).emit("newMessage", newMessage);
+    io.to(receiverId).emit("newMessageNotify", newMessage.text);
     return res.status(200).json({
       success: true,
       message: "Message sent successfully",

@@ -27,10 +27,15 @@ const Navbar = () => {
   const [bellOpen, setBellOpen] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
   const [showMessanger, setShowMessanger] = useState(false);
+  const [newMessageNotification, setNewMessageNotification] = useState({
+    open: false,
+    newMessage: [],
+  });
   const [isMiniMessagner, setMiniMessagner] = useState({
     open: false,
     user: {},
   });
+
   const [allUsers, setAllUsers] = useState([]);
   const socket = useNotify();
   const handleLogout = async () => {
@@ -40,6 +45,8 @@ const Navbar = () => {
       navigate("/login");
     }
   };
+
+  // Audio/video calling setup
 
   useEffect(() => {
     if (!socket) return;
@@ -51,10 +58,17 @@ const Navbar = () => {
         console.log("🔔 NEW NOTIFICATION ! ", data);
       }
     });
+    socket.on("newMessageNotify", (data) => {
+      if (data) {
+        setNewMessageNotification((prev) => ({
+          open: !prev.open,
+          newMessage: data,
+        }));
+      }
+    });
     return () => socket.off("notification");
   }, [socket]);
 
- 
   const fetchNotification = async () => {
     try {
       const res = await axios.get(`${ServerApi}/notification`, {
@@ -131,12 +145,18 @@ const Navbar = () => {
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <div className="relative">
           <MessageCircle
-            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
+            className={`w-5 h-5 ${
+              newMessageNotification ? "relative" : ""
+            } text-gray-600 cursor-pointer hover:text-blue-500`}
             onClick={fetchUsers}
-          />
+          ></MessageCircle>
+          {newMessageNotification.open && (
+            <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
+          )}
           {showMessanger && (
             <div className="absolute w-90 min-h-70 -left-61">
               <MessangerContainer
+                newMessageNotification={newMessageNotification}
                 allUsers={allUsers}
                 setMiniMessagner={setMiniMessagner}
                 setShowMessanger={setShowMessanger}

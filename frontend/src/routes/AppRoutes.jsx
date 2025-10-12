@@ -13,6 +13,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
 import Profile from "@/pages/Profile";
+import Audio_Video from "@/components/Audio_Video";
 
 const AppRoutes = () => {
   return (
@@ -30,6 +31,7 @@ const AppRoutes = () => {
           <Route index element={<Navigate to="/home" replace />} />
           <Route path="home" element={<Home />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="/web" element={<Audio_Video />} />
           {/* Add more protected routes here */}
         </Route>
 
@@ -42,6 +44,7 @@ const AppRoutes = () => {
             </PublicRoutes>
           }
         />
+
         <Route
           path="/signup"
           element={

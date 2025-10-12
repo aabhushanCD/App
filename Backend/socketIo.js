@@ -3,7 +3,7 @@ import http from "http";
 import express from "express";
 import dotenv from "dotenv";
 import { allowedOrigins } from "./constant.js";
-import { Notification } from "./src/model/Notification.model.js";
+
 dotenv.config();
 
 const app = express();
@@ -19,6 +19,32 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.auth.userId;
   if (userId) socket.join(userId);
   console.log(`User ${userId} joined their room`);
+
+  // when one user calls another
+  socket.on("call-user", (data) => {
+    io.to(data.receiverId).emit("incoming-call", {
+      from: userId,
+      name: data.name,
+    });
+  });
+
+  // when caller sends offer SDP
+  socket.on("offer", (data) => {
+    io.to(data.receiverId).emit("offer", { sdp: data.sdp, from: userId });
+  });
+
+  // when callee sends answer SDP
+  socket.on("answer", (data) => {
+    io.to(data.receiverId).emit("answer", { sdp: data.sdp, from: userId });
+  });
+
+  // send ICE candidates
+  socket.on("ice-candidate", (data) => {
+    io.to(data.receiverId).emit("ice-candidates", {
+      candidate: data.candidate,
+      from: userId,
+    });
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");

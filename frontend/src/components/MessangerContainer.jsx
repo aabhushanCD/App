@@ -4,6 +4,7 @@ import { Ellipsis, Search } from "lucide-react";
 import React, { useState } from "react";
 
 const MessangerContainer = ({
+
   setMiniMessagner,
   setShowMessanger,
   allUsers,
@@ -64,7 +65,7 @@ const MessangerContainer = ({
               </div>
               <div className="p-2">
                 <h1 className="font-semibold">{uj.name}</h1>
-                <p>{"message me......"}</p>
+                <p>{"Write a message..."}</p>
               </div>
             </div>
           ))}

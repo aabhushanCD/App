@@ -6,7 +6,7 @@ export const Register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    if (!name && !email && !password) {
+    if (!name || !email || !password) {
       return res
         .status(400)
         .json({ success: false, message: "Please Provide All Fields" });
@@ -22,15 +22,16 @@ export const Register = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Password must be greater than 8" });
     }
-    const pass = await bcrypt.hash(password, 10);
-    const user = new User({
+    const hashedPass = await bcrypt.hash(password, 10);
+    const user = await User.create({
       name,
       email,
-      password: pass,
+      password: hashedPass,
     });
-    await user.save();
+    await Friend.create({ userId: user._id });
+
     return res
-      .status(200)
+      .status(201)
       .json({ success: true, message: "Successfully Created Account" });
   } catch (error) {
     return res.status(500).json({

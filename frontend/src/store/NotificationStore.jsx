@@ -29,14 +29,14 @@ export const NotificationProvider = ({ children }) => {
       socketRef.current = newSocket;
       setSocket(newSocket); // ✅ updates context value
 
-      console.log("✅ Socket Connected:", currentUser.userId);
+      // console.log("✅ Socket Connected:", currentUser.userId);
 
       newSocket.on("connect_error", (err) => {
         console.error("❌ Socket connection error:", err.message);
       });
 
       newSocket.on("disconnect", () => {
-        console.log("🔌 Socket Disconnected");
+        // console.log("🔌 Socket Disconnected");
       });
     }
 
@@ -44,7 +44,7 @@ export const NotificationProvider = ({ children }) => {
       socketRef.current?.disconnect();
       socketRef.current = null;
       setSocket(null);
-      console.log("🧹 Socket Cleaned up");
+      // console.log("🧹 Socket Cleaned up");
     };
   }, [currentUser]);
 
@@ -58,9 +58,7 @@ export const NotificationProvider = ({ children }) => {
 export const useNotify = () => {
   const socket = useContext(NotificationContext);
   if (!socket) {
-    console.warn(
-      "⚠️ useNotify must be used within NotificationProvider or socket not connected yet."
-    );
+    // console.warn("⚠️ useNotify must be used within NotificationProvider or socket not connected yet.");  
   }
   return socket;
 };

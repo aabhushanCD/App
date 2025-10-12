@@ -13,6 +13,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import AudioVideo from "./Audio_Video";
+
 const MiniMessanger = ({ setMiniMessagner, user }) => {
   const { currentUser } = useAuth();
   const socket = useNotify();
@@ -21,6 +23,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
   const mediaInputRef = useRef();
   const chatContainerRef = useRef();
   const [preview, setPreview] = useState(null);
+  const [videoCall, setVideoCall] = useState(false);
   useEffect(() => {
     const fetchMessages = async () => {
       const res = await axios.get(`${ServerApi}/message/${user._id}`, {
@@ -30,7 +33,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     };
     fetchMessages();
   }, [user]);
-
+  console.log(messages);
   const handleMedia = () => {
     if (!mediaInputRef.current.value) {
       mediaInputRef.current.click();
@@ -91,6 +94,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+  console.log(` me: ${currentUser.userId} to:${user._id}`);
   return (
     <div className="flex flex-col  h-full max-h-screen">
       <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">
@@ -112,7 +116,10 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
           </div>
           <div className="flex gap-3 ">
             <Phone className="cursor-pointer" />
-            <Video className="cursor-pointer" />
+            <Video
+              className="cursor-pointer"
+              onClick={() => setVideoCall((prev) => !prev)}
+            />
             <X
               className="cursor-pointer"
               onClick={() => {
@@ -134,9 +141,8 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
                 dd.senderId === currentUser.userId
                   ? "self-end bg-blue-400 text-white "
                   : "self-start bg-gray-200 text-gray-800"
-              } px-3 py-2 rounded-lg max-w-[80%]  `}
+              } relative px-3 py-2 rounded-lg max-w-[80%]  `}
             >
-              
               {dd.media && (
                 <img
                   src={dd.media}
@@ -192,6 +198,11 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
             Sent
           </button>
         </div>
+        {videoCall && (
+          <div className="absolute w-full h-full top-20">
+            <AudioVideo remoteUserId={user._id} />
+          </div>
+        )}
       </div>
     </div>
   );

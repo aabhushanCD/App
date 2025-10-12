@@ -10,9 +10,11 @@ import { toast } from "sonner";
 import LeftSideBar from "./LeftSideBar";
 
 import { useAuth } from "@/store/AuthStore";
+import { useNotify } from "@/store/NotificationStore";
 
 const Home = () => {
   const { currentUser } = useAuth();
+  const socket = useNotify();
   const [postsData, setPostData] = useState({
     posts: [],
     hasMore: true,
@@ -65,6 +67,8 @@ const Home = () => {
     const content = contentInputRef.current.value;
     setForm((prev) => ({ ...prev, content }));
   };
+
+
 
   useEffect(() => {
     const postFetch = async () => {

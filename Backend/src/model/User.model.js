@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+
     preferences: {},
   },
   { timestamps: true }
