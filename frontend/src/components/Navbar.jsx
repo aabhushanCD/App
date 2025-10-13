@@ -86,22 +86,30 @@ const Navbar = () => {
     setNotification(false);
     fetchNotification();
     setBellOpen(true);
+    setShowMessanger(false);
   };
   const handleNotificationClose = () => {
     setBellOpen(false);
   };
 
   const fetchUsers = async () => {
+    if (showMessanger) return setShowMessanger(false);
     setShowMessanger(!showMessanger);
+    setBellOpen(false);
     try {
-      const res = await axios.get(`${ServerApi}/message/all/user`, {
+      const res = await axios.get(`${ServerApi}/friend/getAllFriends`, {
         withCredentials: true,
       });
       if (res.status === 200) {
-        setAllUsers(res.data.users);
+        setAllUsers(res.data.friend);
       }
     } catch (error) {
-      console.error(error.response.message || "cannot fetch ");
+      console.error(
+        error?.response?.data?.message || "Problem in getting All friend "
+      );
+      toast.error(
+        error?.response?.data?.message || "Problem in getting All friend"
+      );
     }
   };
 

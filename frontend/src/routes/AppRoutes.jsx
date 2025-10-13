@@ -14,6 +14,7 @@ import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
 import Profile from "@/pages/Profile";
 import Audio_Video from "@/components/Audio_Video";
+import FriendContainer from "@/pages/FriendContainer";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +33,8 @@ const AppRoutes = () => {
           <Route path="home" element={<Home />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/web" element={<Audio_Video />} />
+          <Route path="/friend" element={<FriendContainer />} />
+          <Route path="/newsfeeds" element={<Home />} />
           {/* Add more protected routes here */}
         </Route>
 

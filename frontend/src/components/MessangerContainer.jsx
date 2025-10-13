@@ -71,9 +71,7 @@ const MessangerContainer = ({
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-center border-t-2 text-blue-400 p-2 ">
-        See all in Messanger
-      </div>
+      
     </div>
   );
 };

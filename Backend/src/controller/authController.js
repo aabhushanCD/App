@@ -192,3 +192,20 @@ export const authUser = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
+export const getUsers = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const users = await User.find({
+      _id: { $ne: userId },
+    }).select("-password");
+    return res.status(200).json({ success: true, users });
+  } catch (error) {
+    console.error("Something went wrong!", error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server Error! to get users" });
+  }
+};
+
+

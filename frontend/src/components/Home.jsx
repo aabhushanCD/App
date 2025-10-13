@@ -11,10 +11,11 @@ import LeftSideBar from "./LeftSideBar";
 
 import { useAuth } from "@/store/AuthStore";
 import { useNotify } from "@/store/NotificationStore";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const { currentUser } = useAuth();
-  const socket = useNotify();
+
   const [postsData, setPostData] = useState({
     posts: [],
     hasMore: true,
@@ -34,7 +35,7 @@ const Home = () => {
   const [isCreate, setCreate] = useState(false);
   const fileInputRef = useRef();
   const contentInputRef = useRef();
-
+  const location = useLocation();
   const handlePostSubmit = async () => {
     try {
       setLoading(true);
@@ -67,8 +68,6 @@ const Home = () => {
     const content = contentInputRef.current.value;
     setForm((prev) => ({ ...prev, content }));
   };
-
-
 
   useEffect(() => {
     const postFetch = async () => {
@@ -138,7 +137,11 @@ const Home = () => {
         {/* Main Feed */}
         <div className="flex-1 max-w-2xl w-full space-y-6">
           {/* Create Post Section */}
-          <div className="bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4">
+          <div
+            className={`bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4 ${
+              location.pathname === "/newsfeeds" ? "hidden" : ""
+            }`}
+          >
             {/* Profile image */}
             <img
               src={currentUser.imageUrl}
@@ -156,7 +159,7 @@ const Home = () => {
               </div>
 
               {/* Post actions */}
-              <div className="flex justify-between items-center mt-4">
+              <div className={` flex justify-between items-center mt-4 `}>
                 <div className="flex gap-4 text-gray-500">
                   <button
                     onClick={() => handleButton("music")}

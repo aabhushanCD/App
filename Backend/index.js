@@ -9,6 +9,7 @@ import { server, app } from "./socketIo.js";
 import { allowedOrigins } from "./constant.js";
 import notificationRoute from "./src/routes/notificationRoute.js";
 import messangerRoutes from "./src/routes/messangerRoute.js";
+import friendRoutes from "./src/routes/friendRoute.js";
 dotenv.config({ path: ".env" });
 
 app.use(
@@ -34,6 +35,7 @@ app.use("/api/auth/", authRoutes);
 app.use("/api/post/", postRoutes);
 app.use("/api/notification/", notificationRoute);
 app.use("/api/message/", messangerRoutes);
+app.use("/api/friend/", friendRoutes);
 ConnectDB()
   .then(() => {
     server.listen(PORT, "0.0.0.0", () => {
