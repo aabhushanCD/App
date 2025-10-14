@@ -87,6 +87,7 @@ const Home = () => {
             totalPosts: res.data.totalPosts,
             userId: res.data.userId,
           }));
+          console.log(res.data.posts);
           setHasMore(res.data.hasMore);
         }
       } catch (error) {
@@ -130,10 +131,11 @@ const Home = () => {
   }, [hasMore, loading]);
   return (
     <>
-      <div className="flex w-full gap-6 p-4 max-w-7xl mx-auto">
+      <div className="flex  w-full gap-6 p-4 max-w-7xl mx-auto">
         {/* Sidebar */}
-        <LeftSideBar />
-
+        <div className="sticky top-15 w-[21%] h-[100vh]">
+          <LeftSideBar />
+        </div>
         {/* Main Feed */}
         <div className="flex-1 max-w-2xl w-full space-y-6">
           {/* Create Post Section */}
@@ -162,28 +164,21 @@ const Home = () => {
               <div className={` flex justify-between items-center mt-4 `}>
                 <div className="flex gap-4 text-gray-500">
                   <button
-                    onClick={() => handleButton("music")}
-                    className="flex items-center gap-1 hover:text-blue-500 transition"
-                  >
-                    <Music size={18} />{" "}
-                    <span className="hidden sm:inline">Music</span>
-                  </button>
-                  <button
-                    onClick={() => handleButton("image")}
+                    onClick={() => handleButton()}
                     className="flex items-center gap-1 hover:text-green-500 transition"
                   >
                     <Image size={18} />{" "}
                     <span className="hidden sm:inline">Photo</span>
                   </button>
                   <button
-                    onClick={() => handleButton("video")}
+                    onClick={() => handleButton()}
                     className="flex items-center gap-1 hover:text-red-500 transition"
                   >
                     <Video size={18} />{" "}
                     <span className="hidden sm:inline">Video</span>
                   </button>
                   <button
-                    onClick={() => handleButton("camera")}
+                    onClick={() => handleButton()}
                     className="flex items-center gap-1 hover:text-purple-500 transition"
                   >
                     <Camera size={18} />{" "}

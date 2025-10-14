@@ -30,6 +30,7 @@ const CreatePost = ({
     }));
   }, [form.files]);
 
+  console.log(form);
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setForm((prev) => ({ ...prev, files: [...prev.files, ...selectedFiles] }));
@@ -135,9 +136,6 @@ const CreatePost = ({
                 />
 
                 <div className="flex gap-3 ">
-                  <button onClick={() => handleButton("music")}>
-                    <Music size={18} />
-                  </button>
                   <button onClick={() => handleButton("image")}>
                     <Image size={18} />
                   </button>

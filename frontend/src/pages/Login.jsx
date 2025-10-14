@@ -35,7 +35,7 @@ const Login = () => {
           <h1 className="text-xl font-semibold">Login</h1>
         </div>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
             <Label>Email</Label>
             <Input
@@ -64,6 +64,7 @@ const Login = () => {
               Submit
             </Button>
           )}
+          <span className="m-auto" >Forget Password?</span>
         </form>
 
         <div className="flex justify-center flex-col items-center gap-2 mt-4">

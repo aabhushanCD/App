@@ -46,13 +46,13 @@ const AudioVideo = ({ remoteUserId }) => {
 
   return (
     <div className=" w-full h-full bg-gray-600">
-      <div className="flex gap-2 flex-col items-center justify-center w-full relative border-2 h-full p-4">
+      <div className="flex gap-2 flex-col items-center  w-full relative border-2 h-full p-4">
         <div className=" flex h-[70%] rounded-md ">
           <video
             autoPlay
             muted
             playsInline
-            className="w-full border rounded-md"
+            className="w-full  rounded-md"
             ref={(v) => v && (v.srcObject = localStream)}
           />
         </div>
@@ -60,7 +60,7 @@ const AudioVideo = ({ remoteUserId }) => {
           <video
             autoPlay
             playsInline
-            className="top-0 right-0  w-30 border rounded-md"
+            className="top-0 right-0  w-30  rounded-md"
             ref={(v) => v && (v.srcObject = remoteStream)}
           />
         </div>

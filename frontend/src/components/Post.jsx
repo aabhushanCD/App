@@ -163,10 +163,17 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               {post.media.map((m, i) => (
                 <div key={i}>
                   {m.type === "image" && (
-                    <img src={m.url} alt="post" className="w-full max-h-200" />
+                    <img
+                      src={m.url}
+                      alt="post"
+                      className="w-full max-h-200 object-cover"
+                    />
                   )}
                   {m.type === "video" && (
-                    <video src={m.url} controls className="" />
+                    <video src={m.url} controls className="object-cover" />
+                  )}
+                  {m.type === "audio" && (
+                    <audio src={m.url} controls className="" />
                   )}
                 </div>
               ))}

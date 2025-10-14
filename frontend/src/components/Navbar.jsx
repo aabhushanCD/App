@@ -10,6 +10,7 @@ import {
   Ellipsis,
   X,
   MessageSquare,
+  LogOut,
 } from "lucide-react";
 import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
@@ -143,7 +144,7 @@ const Navbar = () => {
           className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100"
           onClick={handleLogout}
         >
-          Logout
+          <LogOut />
         </Button>
       </div>
 

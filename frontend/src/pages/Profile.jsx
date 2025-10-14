@@ -8,7 +8,7 @@ import { Camera } from "lucide-react";
 const Profile = () => {
   const { currentUser, setCurrentUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
-  
+
   const [profileImage, setProfileImage] = useState(currentUser?.imageUrl || "");
   const [file, setFile] = useState(null);
   const fileInputRef = useRef();
@@ -78,7 +78,7 @@ const Profile = () => {
             />
           </div>
           {!editMode && (
-            <p className="mt-4 text-lg font-semibold">{currentUser.name}</p>
+            <p className="mt-4 text-2xl  font-semibold">{currentUser.name}</p>
           )}
         </div>
 
@@ -96,13 +96,13 @@ const Profile = () => {
 
           <div className="flex flex-col gap-3">
             <label className="text-gray-600 font-medium">Name</label>
-            {<p className="text-gray-800">{currentUser.name}</p>}
+            {<p className="text-gray-800 font-bold">{currentUser.name}</p>}
           </div>
 
           <div className="flex flex-col gap-3">
             <label className="text-gray-600 font-medium">Email</label>
 
-            <p className="text-gray-800">{currentUser.email}</p>
+            <p className="text-gray-800 font-bold">{currentUser.email}</p>
           </div>
 
           {editMode && (

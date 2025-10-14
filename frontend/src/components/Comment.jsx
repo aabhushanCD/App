@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Send, Image, CloudCog } from "lucide-react";
+import { Send, Image, CloudCog, Heart } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { ServerApi } from "@/constants";
@@ -47,6 +47,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       toast.error("Something went wrong while sending comment");
     }
   };
+
   const handleDeleteComment = async (commentId) => {
     try {
       const res = await axios.delete(
@@ -68,6 +69,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const toggleMenu = (id) => {
     setActiveMenu((prev) => (prev === id ? null : id));
   };
+  console.log(comments);
 
   const preview = comment?.file ? URL.createObjectURL(comment.file) : null;
   return (
@@ -77,6 +79,12 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
         {/* Comment Input */}
         <div className=" flex flex-1 items-center bg-white border rounded-full  shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
           <Input
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSendComment();
+              }
+            }}
             className="flex-1 border-none focus:!outline-none focus:!ring-0 text-sm"
             placeholder={"Write a comment..."}
             ref={textinputRef}
@@ -112,7 +120,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
         <div>
           {comments.map((comment) => (
             <div className="mt-4 space-y-3 overflow-auto " key={comment._id}>
-              <div className="relative flex gap-3 items-start ">
+              <div className="relative flex   gap-3 items-start ">
                 <span className="absolute right-2 cursor-pointer">
                   <button onClick={() => toggleMenu(comment._id)}>...</button>
                   {activeMenu === comment._id && (
@@ -128,12 +136,29 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                   alt="user"
                   className="w-8 h-8 rounded-full"
                 />
-                <div className="bg-white border px-3 py-2 rounded-lg shadow-sm w-sm">
-                  <p className="p-1 text-sm font-medium">
-                    {comment.creatorId?.name}
-                  </p>
-                  <p className="text-sm text-gray-700">{comment.text}</p>
-                  <img src={comment.imageUrl} alt="" />
+                <div className="flex flex-col  ">
+                  <div className=" w-sm  border  rounded-2xl p-2">
+                    <p className=" text-sm font-medium">
+                      {comment.creatorId?.name}
+                    </p>
+                    <p className="text-sm text-gray-700">{comment.text}</p>
+                    {comment.imageUrl && (
+                      <img
+                        src={comment.imageUrl}
+                        className="object-cover w-40 h-40"
+                        alt=""
+                      />
+                    )}
+                  </div>
+                  <div className=" flex gap-3">
+                    <span>
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </span>
+                    <span className=" flex">
+                      <Heart className="p-1 text-red-400"></Heart>
+                      {comment.likes?.length}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
