@@ -24,7 +24,19 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
-
+    bio: {
+      type: String,
+      default: "This is your bio",
+      maxlength: 50,
+      trim: true,
+    },
+    highlight: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Post",
+        text: "",
+      },
+    ],
     preferences: {},
   },
   { timestamps: true }

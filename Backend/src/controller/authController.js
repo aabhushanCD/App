@@ -2,6 +2,7 @@ import User from "../model/User.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
+import Friend from "../model/Friend.model.js";
 export const Register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -118,11 +119,15 @@ export const profileUpdate = async (req, res) => {
   try {
     const userId = req.userId;
     const file = req.file?.path;
+    const { bio, name } = req.body;
 
-    if (!file) {
+    if (!userId) {
+      return res.status(404).json({ message: "UnAuthorized", success: false });
+    }
+    if (!file && !bio && !name) {
       return res
         .status(400)
-        .json({ success: false, message: "error! select a image" });
+        .json({ success: false, message: "Nothing changed" });
     }
     const user = await User.findById(userId).select("-password");
     if (!user) {
@@ -131,27 +136,33 @@ export const profileUpdate = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    const cloudinaryResult = await uploadMedia(file);
-    if (!cloudinaryResult || !cloudinaryResult.secure_url) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to upload image, retry!" });
+    if (file) {
+      const cloudinaryResult = await uploadMedia(file);
+      if (!cloudinaryResult || !cloudinaryResult.secure_url) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Image upload failed" });
+      }
+      user.imageUrl = cloudinaryResult.secure_url;
     }
 
-    user.imageUrl = cloudinaryResult.secure_url;
+    if (bio) user.bio = bio.trim();
+    if (name) user.name = name.trim();
+
     await user.save({ validateBeforeSave: false });
 
     return res.status(200).json({
       success: true,
-      message: "Successfully uploaded profile picture",
+      message: "Profile Update Successfully",
       user: {
-        name: user.name,
         userId: user._id,
+        name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
         imageUrl: user.imageUrl,
         address: user.address,
         preferences: user.preferences,
+        bio: user.bio,
       },
     });
   } catch (error) {
@@ -182,6 +193,7 @@ export const authUser = async (req, res) => {
         imageUrl: user.imageUrl,
         address: user.address,
         preferences: user.preferences,
+        bio: user.bio,
       },
       message: "Authorized User",
     });
@@ -208,4 +220,14 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// export const myAllDetilsforProfile = async (req, res) => {
+//   try {
+//     const userId = req.userId;
 
+//     if (!userId) {
+//       return res.status(404).json({ success: false, message: "UnAuthorized" });
+//     }
+
+//     const fiends = await Friend.findOne({ userId });
+//   } catch (error) {}
+// };

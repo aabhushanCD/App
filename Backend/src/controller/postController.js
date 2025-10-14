@@ -216,6 +216,24 @@ export const getSinglePost = async (req, res) => {
       .json({ message: "Something went wrong on shared post" });
   }
 };
+
+// used in profile to get all post of users
+export const getSingleUserAllPost = async (req, res) => {
+  try {
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(404).json({ success: false, message: "UnAuthorized" });
+    }
+
+    const posts = await Post.find({ creatorId: userId });
+    return res.status(200).json({ success: true, posts });
+  } catch (error) {
+    console.error(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error to get all post!" });
+  }
+};
 // __________________InterPost_______________________
 export const like_dislikePost = async (req, res) => {
   try {

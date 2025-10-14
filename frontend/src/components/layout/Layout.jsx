@@ -6,7 +6,7 @@ import LeftSideBar from "../LeftSideBar";
 
 const Layout = () => {
   const location = useLocation();
-  const hideFooter = location.pathname === "/home";
+  const hideFooter = location.pathname === "/home" || "/newsfeeds";
   return (
     <>
       <Navbar />

@@ -9,6 +9,7 @@ import {
   getPostPagenation,
   getSearchedPost,
   getSinglePost,
+  getSingleUserAllPost,
   like_dislikePost,
   likeComment,
   sendComment,
@@ -25,6 +26,8 @@ router.get("/getSearchedPost", verifyToken, getSearchedPost);
 router.delete("/deletePost/:postId", verifyToken, deletePost);
 router.put("/updatePost", verifyToken, updatePost);
 router.get("/getSinglePost/:postId", getSinglePost);
+router.get("/myPost", verifyToken, getSingleUserAllPost);
+
 //___________________ interPost_________________________
 
 router.put("/like_dislikePost/:postId", verifyToken, like_dislikePost);
