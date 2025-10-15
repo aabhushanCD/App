@@ -32,9 +32,22 @@ const userSchema = new mongoose.Schema(
     },
     highlight: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: "Post",
-        text: "",
+        post: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Post",
+          required: true,
+        },
+        meidaIndex: {
+          type: Number,
+          default: 0,
+          required: true,
+        },
+        type: { type: String, enum: ["image", "video"], default: "image" },
+        memo: {
+          type: String,
+          maxLength: 24,
+          trim: true,
+        },
       },
     ],
     preferences: {},

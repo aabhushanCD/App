@@ -36,6 +36,7 @@ app.use("/api/post/", postRoutes);
 app.use("/api/notification/", notificationRoute);
 app.use("/api/message/", messangerRoutes);
 app.use("/api/friend/", friendRoutes);
+app.use("/api/highlight/", authRoutes);
 ConnectDB()
   .then(() => {
     server.listen(PORT, "0.0.0.0", () => {

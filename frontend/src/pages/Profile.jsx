@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ServerApi } from "@/constants";
 import { useAuth } from "@/store/AuthStore";
 import axios from "axios";
 import { Bookmark, Grid2x2, Settings, Tags, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const Profile = () => {
@@ -15,10 +16,12 @@ const Profile = () => {
     bio: "",
     image: null,
   });
-  const [totalFriend, setTotalFriend] = useState();
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState(null);
+  const [highlightMemo, setHighlightMemo] = useState("");
   const [addHighlight, setAddHighlight] = useState({
     open: false,
-    data: [],
+    state: 1,
   });
 
   // Fetch user posts
@@ -72,9 +75,55 @@ const Profile = () => {
     }
   };
   const handleAddHighlight = () => {
-    setAddHighlight((prev) => ({ open: true }));
+    setAddHighlight((prev) => ({ open: true, state: 1 }));
+    document.body.style.overflow = "hidden";
+  };
+  const handleHighlightChange = (postId, mediaIndex) => {
+    setSelectedPostId(postId);
+    setSelectedMediaIndex(mediaIndex);
   };
 
+  const handleAddHighlightSubmit = async (postId, mediaIndex) => {
+    try {
+      if (!highlightMemo) {
+        toast.error("Please write a memo");
+        return;
+      }
+
+      await axios.post(
+        `${ServerApi}/highlight/addHighlight`,
+        { postId, mediaIndex, memo: highlightMemo, type: "image" },
+        { withCredentials: true }
+      );
+
+      toast.success("Highlight added successfully!");
+      setAddHighlight({ open: false, state: 1 });
+      document.body.style.overflow = "auto";
+      setHighlightMemo(""); // clear input
+      fetchHighlights(); // refresh highlights
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add highlight");
+    }
+  };
+  const [highlights, setHighlights] = useState([]);
+
+  const fetchHighlights = async () => {
+    try {
+      const res = await axios.get(`${ServerApi}/highlight/getHighlights`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        setHighlights(res.data.highlights);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch highlights");
+    }
+  };
+  useEffect(() => {
+    fetchHighlights();
+  }, []);
   return (
     <div className="flex justify-center mt-5">
       <div>
@@ -96,7 +145,6 @@ const Profile = () => {
               <Button>View archive</Button>
               <Settings />
             </div>
-
             <div className="flex gap-4 items-center">
               <span>
                 <span className="font-bold">{myPost?.length || 0}</span> posts
@@ -172,23 +220,101 @@ const Profile = () => {
         )}
 
         {/* --- Story / Highlights --- */}
-        <div className="flex gap-4 overflow-auto p-4 ">
-          <div className="">
-            <div className="w-30 h-30 rounded-full border-4 bg-gray-400">
-              <img
-                className="w-full h-full rounded-full p-2"
-                src={currentUser.imageUrl}
-                alt=""
-              />
-            </div>
-            <p className="text-center">{"dkf"}</p>
+        <div
+          className={` ${
+            addHighlight.open ? "relative" : ""
+          } flex gap-4 overflow-auto p-4 `}
+        >
+          <div className="flex gap-4 overflow-auto p-4">
+            {highlights.map((h, i) => (
+              <div key={i} className="flex flex-col items-center">
+                {h.mediaUrl && (
+                  <img
+                    src={h.mediaUrl}
+                    alt="highlight"
+                    className="w-30 h-30 rounded-full border-4 object-cover"
+                  />
+                )}
+                {h.memo && (
+                  <span className="text-sm text-center mt-1">{h.memo}</span>
+                )}
+              </div>
+            ))}
           </div>
+
           <div
             className="flex justify-center p-4  w-30 h-30 rounded-full border-4 text-6xl text-white cursor-pointer bg-gray-400"
             onClick={handleAddHighlight}
           >
             <p>+</p>
           </div>
+          {addHighlight.open && (
+            <div className="fixed flex flex-col justify-between self-center  p-2 w-200 h-150 top-20 rounded-2xl overflow-hidden bg-orange-300">
+              <X
+                className="absolute right-2 hover:bg-gray-400 rounded-full"
+                onClick={() => {
+                  setAddHighlight({ open: false, state: 1 });
+                  document.body.style.overflow = "auto";
+                }}
+              />
+              {addHighlight.state === 1 && (
+                <div>
+                  <h1>Write a Memo</h1>
+                  <Input
+                    type="text"
+                    maxLength={24}
+                    className="mt-3"
+                    placeholder="Write Your Memories Here..."
+                    value={highlightMemo}
+                    onChange={(e) => setHighlightMemo(e.target.value)}
+                  />
+                </div>
+              )}
+              {addHighlight.state === 2 && (
+                <div className=" flex  flex-wrap gap-2 border  h-full overflow-auto w-full">
+                  {myPost.map((post) => (
+                    <div key={post._id}>
+                      {post.media &&
+                        post.media.map((m, i) => (
+                          <img
+                            src={m.url}
+                            key={i}
+                            className="w-50 border p-2 transition:transform hover:scale-101 duration-300 "
+                            onClick={() => handleHighlightChange(post._id, i)}
+                          />
+                        ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2 justify-end">
+                <Button
+                  onClick={() => setAddHighlight({ open: true, state: 1 })}
+                >
+                  {"<-- Previous"}
+                </Button>
+                {addHighlight.state === 2 ? (
+                  <Button
+                    disabled={!selectedPostId || selectedMediaIndex === null}
+                    onClick={() =>
+                      handleAddHighlightSubmit(
+                        selectedPostId,
+                        selectedMediaIndex
+                      )
+                    }
+                  >
+                    {"Create"}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => setAddHighlight({ open: true, state: 2 })}
+                  >
+                    {"Next -->"}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* --- Tabs Section --- */}
