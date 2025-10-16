@@ -32,7 +32,7 @@ const MessangerContainer = ({
             placeholder="Write Something..."
           />
         </div>
-        <div className="flex gap-4 font-semibold justify-center">
+        <div className="flex  font-semibold flex-wrap ">
           <button className="rounded-2xl active:bg-gray-200 p-2 ">All</button>
           <button className="rounded-2xl active:bg-gray-200 p-2 ">
             Unread

@@ -301,6 +301,125 @@ export const getHighlights = async (req, res) => {
   }
 };
 
+// pass Id and get profile
+export const getUserProfile = async (req, res) => {
+  try {
+    const { Id } = req.params;
+
+    // 🔍 Validate ID early
+    if (!Id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
+
+    // ⚡ Fetch posts & creator info in one go (no second user query)
+    const posts = await Post.find({ creatorId: Id })
+      .populate({
+        path: "creatorId",
+        select:
+          "name imageUrl email bio highlight.post highlight.meidaIndex highlight.memo highlight.type",
+        populate: {
+          path: "highlight.post",
+          select: "media content", // load only what's needed
+        },
+      })
+      .lean(); // ✅ lean() improves performance (plain JS objects)
+
+    // 🧠 If user has no posts, still fetch minimal user info for profile display
+    if (!posts || posts.length === 0) {
+      const user = await User.findById(Id)
+        .select(
+          "name imageUrl email bio highlight.post highlight.meidaIndex highlight.memo highlight.type"
+        )
+        .populate({
+          path: "highlight.post",
+          select: "media content",
+        })
+        .lean();
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // Still count friends
+      const friend = await Friend.findOne({ userId: Id }).select("allFriends");
+      const totalFriends = friend?.allFriends?.length || 0;
+
+      const highlights = (user.highlight || []).map((h) => {
+        const post = h.post;
+        const media = post?.media?.[h.meidaIndex];
+        return {
+          postId: post?._id || null,
+          caption: post?.content || "",
+          mediaUrl: media?.url || null,
+          memo: h.memo || "",
+          type: media?.type || h.type || "image",
+        };
+      });
+
+      return res.status(200).json({
+        success: true,
+        user: {
+          _id: user._id,
+          name: user.name || "",
+          email: user.email || "",
+          imageUrl: user.imageUrl || "",
+          bio: user.bio || "",
+          totalFriends,
+        },
+        posts: [],
+        highlights,
+      });
+    }
+
+    // ✅ If posts exist, extract user info from the first post
+    const user = posts[0].creatorId;
+
+    // 🧩 Count friends (only once)
+    const friend = await Friend.findOne({ userId: Id }).select("allFriends");
+    const totalFriends = friend?.allFriends?.length || 0;
+
+    // 🎨 Extract highlights cleanly
+    const highlights = (user.highlight || []).map((h) => {
+      const post = h.post;
+      const media = post?.media?.[h.meidaIndex];
+      return {
+        postId: post?._id || null,
+        caption: post?.content || "",
+        mediaUrl: media?.url || null,
+        memo: h.memo || "",
+        type: media?.type || h.type || "image",
+      };
+    });
+
+    // 🚀 Send response
+    return res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        imageUrl: user.imageUrl,
+        bio: user.bio,
+        totalFriends,
+      },
+      posts,
+      highlights,
+    });
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching profile",
+    });
+  }
+};
+
 // export const myAllDetilsforProfile = async (req, res) => {
 //   try {
 //     const userId = req.userId;

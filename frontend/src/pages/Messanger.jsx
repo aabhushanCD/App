@@ -39,7 +39,7 @@ const Messanger = () => {
   }, []);
   return (
     <div className="flex h-screen">
-      <div className="w-[33.33%] ">
+      <div className="w-[30%] ">
         <MessangerContainer
           allUsers={allUsers}
           setMiniMessagner={setMiniMessagner}
@@ -47,7 +47,7 @@ const Messanger = () => {
         />
       </div>
       {isMiniMessagner.open && (
-        <div className="w-[66%]">
+        <div className="w-[70%]">
           <MiniMessanger
             user={isMiniMessagner.user}
             setMiniMessagner={setMiniMessagner}

@@ -191,7 +191,7 @@ const FriendContainer = () => {
           {allUsers?.data?.map((user) => (
             <div
               key={user._id}
-              className="w-56 h-80 border rounded-2xl flex flex-col justify-between items-center
+              className="w-56  border rounded-2xl flex flex-col  items-center
              hover:scale-105 transition-transform duration-300 "
             >
               {user.imageUrl ? (
@@ -204,7 +204,7 @@ const FriendContainer = () => {
                   U
                 </span>
               )}
-              <div className="flex  justify-center">
+              <div className="flex  justify-center ">
                 <h1 className={" font-semibold"}>{user.name}</h1>
               </div>
             </div>

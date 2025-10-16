@@ -118,12 +118,12 @@ const Navbar = () => {
     <div className="flex justify-between items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <Button
+        <a
+          href="/home"
           className="bg-transparent text-blue-500 text-2xl font-bold hover:bg-transparent"
-          onClick={() => navigate("/home")}
         >
           Hell'O
-        </Button>
+        </a>
       </div>
 
       {/* Center Navigation */}

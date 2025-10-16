@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/store/AuthStore.jsx";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = ({
   loading,
@@ -19,7 +20,7 @@ const CreatePost = ({
   handlePostSubmit,
 }) => {
   const { currentUser } = useAuth();
-
+  const navigate = useNavigate();
   // const [isCreate, setCreate] = useState(false);
 
   const previews = useMemo(() => {
@@ -71,6 +72,7 @@ const CreatePost = ({
                     src={currentUser.imageUrl}
                     alt="profile"
                     className="w-12 h-12 rounded-full"
+                    onClick={() => navigate("/profile")}
                   />
                   <span className="font-medium">{currentUser.name}</span>
                 </div>

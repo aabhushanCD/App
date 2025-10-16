@@ -108,13 +108,15 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
       <div className="flex flex-col border rounded-lg bg-white shadow-sm">
         {/* header */}
         <div className="flex justify-between items-center border-b p-4">
-          <div className="flex gap-2 items-center">
+          <div
+            className="flex gap-2 items-center"
+            onClick={() => navigate(`/user/profile/${post.creatorId._id}`)}
+          >
             <img
               src={post.creatorId?.imageUrl || porfile}
               alt="profile"
               width={50}
               className="w-15 h-15 rounded-full overflow-hidden object-cover"
-              onClick={() => navigate("/profile")}
             />
             <span>
               <h1 className="font-semibold">{post.creatorId.name}</h1>
@@ -183,7 +185,10 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
 
         {/* likes/comments count */}
         <div className="flex justify-between items-center p-2">
-          <span>{likes.length}</span>
+          <span className="flex gap-1">
+            <Heart />
+            {likes.length}
+          </span>
           <span className="flex items-center gap-1 text-sm text-gray-600">
             <MessageCircleIcon size={15} />
             {post.comments?.length ?? 0}

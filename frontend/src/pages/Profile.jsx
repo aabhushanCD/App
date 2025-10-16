@@ -4,12 +4,12 @@ import { ServerApi } from "@/constants";
 import { useAuth } from "@/store/AuthStore";
 import axios from "axios";
 import { Bookmark, Grid2x2, Settings, Tags, X } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { toast } from "sonner";
 
 const Profile = () => {
   const [myPost, setMypost] = useState([]);
-  const { currentUser, setCurrentUser } = useAuth(); // Make sure AuthStore allows updating user
+  const { currentUser, setCurrentUser } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -125,7 +125,7 @@ const Profile = () => {
     fetchHighlights();
   }, []);
   return (
-    <div className="md:flex md:items-center md:justify-center">
+    <div className="md:flex md:items-center md:justify-center ">
       <div className="p-2 md:w-[50%]">
         {/* --- Profile Info Section --- */}
         <div className="flex rounded-full gap-4 md:gap-20 items-center">
@@ -223,8 +223,14 @@ const Profile = () => {
         <div
           className={` ${
             addHighlight.open ? "relative" : ""
-          } flex gap-4 p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400`}
+          } flex flex-row-reverse  gap-4 p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400`}
         >
+          <div
+            className="flex-shrink-0 w-24 h-24 flex items-center justify-center rounded-full border bg-gray-500 text-white font-bold cursor-pointer"
+            onClick={handleAddHighlight}
+          >
+            <span className="text-2xl">+</span>
+          </div>
           {highlights.map((h, i) => (
             <div
               key={i}
@@ -242,15 +248,9 @@ const Profile = () => {
               )}
             </div>
           ))}
-          <div
-            className="flex-shrink-0 w-24 h-24 flex items-center justify-center rounded-full border bg-gray-500 text-white font-bold cursor-pointer"
-            onClick={handleAddHighlight}
-          >
-            <span className="text-2xl">+</span>
-          </div>
 
           {addHighlight.open && (
-            <div className="fixed flex flex-col justify-between self-center  p-2 w-200 h-150 top-20 rounded-2xl overflow-hidden bg-orange-300">
+            <div className="fixed flex flex-col justify-between self-center w-90   z-1 p-2  md:w-[100vh] h-150 top-20 rounded-2xl overflow-hidden bg-orange-300">
               <X
                 className="absolute right-2 hover:bg-gray-400 rounded-full"
                 onClick={() => {
@@ -259,7 +259,7 @@ const Profile = () => {
                 }}
               />
               {addHighlight.state === 1 && (
-                <div>
+                <div className="">
                   <h1>Write a Memo</h1>
                   <Input
                     type="text"
@@ -272,17 +272,19 @@ const Profile = () => {
                 </div>
               )}
               {addHighlight.state === 2 && (
-                <div className=" flex  flex-wrap gap-2 border  h-full overflow-auto w-full">
+                <div className="grid md:grid-cols-3 gap-2 grid-cols-2 border  overflow-y-auto ">
                   {myPost.map((post) => (
-                    <div key={post._id}>
+                    <div key={post._id} className="flex">
                       {post.media &&
                         post.media.map((m, i) => (
-                          <img
-                            src={m.url}
-                            key={i}
-                            className="w-50 border p-2 transition:transform hover:scale-101 duration-300 "
-                            onClick={() => handleHighlightChange(post._id, i)}
-                          />
+                          <div className="max-h-75 border">
+                            <img
+                              src={m.url}
+                              key={i}
+                              className="h-70 p-2 transition:transform hover:scale-101 duration-300 object-cover"
+                              onClick={() => handleHighlightChange(post._id, i)}
+                            />
+                          </div>
                         ))}
                     </div>
                   ))}
@@ -327,31 +329,40 @@ const Profile = () => {
 
         {/* --- My Posts --- */}
         {myPost?.length > 0 && (
-          <div className="border flex gap-1  flex-wrap">
+          <div className="grid md:grid-cols-3 grid-cols-2 gap-2 p-2">
             {myPost.map((post) => (
-              <div key={post._id} className="flex-1 ">
-                {post?.media?.map((m, index) => (
-                  <div
-                    key={index}
-                    className="w-full h-full min-w-35 md:max-w-100 md:min-w-50 md:h-full flex  justify-center items-center"
-                  >
-                    {m.type === "image" && (
+              <div
+                key={post._id}
+                className="relative aspect-square bg-gray-200 overflow-hidden rounded-md cursor-pointer group"
+              >
+                {post?.media?.length > 0 ? (
+                  <>
+                    {post.media[0].type === "image" ? (
                       <img
-                        src={m.url}
+                        src={post.media[0].url}
                         alt="post"
-                        className="w-full h-full object-cover rounded"
+                        className="w-full h-full object-cover group-hover:opacity-90 transition"
+                      />
+                    ) : (
+                      <video
+                        src={post.media[0].url}
+                        className="w-full h-full object-cover group-hover:opacity-90 transition"
+                        controls
                       />
                     )}
-                    {m.type === "video" && (
-                      <video
-                        controls
-                        className="w-full h-full object-cover rounded"
-                      >
-                        <source src={m.url} type="video/mp4" />
-                      </video>
+
+                    {/* Show overlay if multiple media */}
+                    {post.media.length > 1 && (
+                      <div className="absolute top-[50%] right-[50%] bg-black/60 text-white text-lg px-2 py-1 rounded-md">
+                        +{post.media.length - 1}
+                      </div>
                     )}
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500">
+                    No Media
                   </div>
-                ))}
+                )}
               </div>
             ))}
           </div>

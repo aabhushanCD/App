@@ -16,6 +16,7 @@ import Profile from "@/pages/Profile";
 import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/messanger";
+import OtherProfile from "@/pages/OtherProfile";
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,7 @@ const AppRoutes = () => {
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
           <Route path="/messanger" element={<Messanger />} />
+          <Route path="/user/profile/:Id" element={<OtherProfile />} />
           {/* Add more protected routes here */}
         </Route>
 

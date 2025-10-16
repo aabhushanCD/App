@@ -11,7 +11,7 @@ import LeftSideBar from "./LeftSideBar";
 
 import { useAuth } from "@/store/AuthStore";
 import { useNotify } from "@/store/NotificationStore";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -36,6 +36,7 @@ const Home = () => {
   const fileInputRef = useRef();
   const contentInputRef = useRef();
   const location = useLocation();
+  const navigate = useNavigate();
   const handlePostSubmit = async () => {
     try {
       setLoading(true);
@@ -149,6 +150,7 @@ const Home = () => {
               src={currentUser.imageUrl}
               alt="profile"
               className="w-12 h-12 rounded-full object-cover border"
+              onClick={() => navigate("/profile")}
             />
 
             {/* Post input + actions */}
@@ -224,9 +226,7 @@ const Home = () => {
                 </p>
               )}
               {!hasMore && (
-                <p className="text-gray-400 text-sm">
-                  You’ve reached the end 🎉
-                </p>
+                <p className="text-gray-400 text-sm">You’ve reached the end</p>
               )}
             </div>
           </div>
