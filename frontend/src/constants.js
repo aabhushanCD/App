@@ -8,8 +8,8 @@ if (window.location.hostname === "localhost") {
 } else {
   // Frontend is opened on LAN IP
   // Replace with your LAN IP backend address
-  ServerApi = "http://192.168.1.66:8000/api";
-  SocketApi = "http://192.168.1.66:8000";
+  ServerApi = "http://192.168.1.64:8000/api";
+  SocketApi = "http://192.168.1.64:8000";
 }
 
 export { ServerApi, SocketApi };

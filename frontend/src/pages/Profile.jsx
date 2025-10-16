@@ -56,7 +56,7 @@ const Profile = () => {
 
       if (res.status === 200) {
         setCurrentUser(res.data.user);
-        setTotalFriend(res.data.totalFriend); // Update user in auth store
+        // Update user in auth store
         setIsEdit((prev) => !prev);
         setFormData({ name: "", bio: "", image: null });
         toast.success("Profile Update Successfully");
@@ -125,13 +125,13 @@ const Profile = () => {
     fetchHighlights();
   }, []);
   return (
-    <div className="flex justify-center mt-5">
-      <div>
+    <div className="md:flex md:items-center md:justify-center">
+      <div className="p-2 md:w-[50%]">
         {/* --- Profile Info Section --- */}
-        <div className="flex gap-10 items-center">
+        <div className="flex rounded-full gap-4 md:gap-20 items-center">
           {currentUser.imageUrl ? (
             <img
-              className="w-40 h-40 rounded-full object-cover"
+              className="w-25 h-25 md:h-50 md:w-50 rounded-full object-cover"
               src={currentUser.imageUrl}
               alt="profile"
             />
@@ -223,31 +223,32 @@ const Profile = () => {
         <div
           className={` ${
             addHighlight.open ? "relative" : ""
-          } flex gap-4 overflow-auto p-4 `}
+          } flex gap-4 p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400`}
         >
-          <div className="flex gap-4 overflow-auto p-4">
-            {highlights.map((h, i) => (
-              <div key={i} className="flex flex-col items-center">
-                {h.mediaUrl && (
-                  <img
-                    src={h.mediaUrl}
-                    alt="highlight"
-                    className="w-30 h-30 rounded-full border-4 object-cover"
-                  />
-                )}
-                {h.memo && (
-                  <span className="text-sm text-center mt-1">{h.memo}</span>
-                )}
-              </div>
-            ))}
-          </div>
-
+          {highlights.map((h, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-24 flex flex-col items-center"
+            >
+              {h.mediaUrl && (
+                <img
+                  src={h.mediaUrl}
+                  alt="highlight"
+                  className="w-24 h-24 rounded-full border-4 object-cover"
+                />
+              )}
+              {h.memo && (
+                <span className="text-sm text-center mt-1">{h.memo}</span>
+              )}
+            </div>
+          ))}
           <div
-            className="flex justify-center p-4  w-30 h-30 rounded-full border-4 text-6xl text-white cursor-pointer bg-gray-400"
+            className="flex-shrink-0 w-24 h-24 flex items-center justify-center rounded-full border bg-gray-500 text-white font-bold cursor-pointer"
             onClick={handleAddHighlight}
           >
-            <p>+</p>
+            <span className="text-2xl">+</span>
           </div>
+
           {addHighlight.open && (
             <div className="fixed flex flex-col justify-between self-center  p-2 w-200 h-150 top-20 rounded-2xl overflow-hidden bg-orange-300">
               <X
@@ -318,7 +319,7 @@ const Profile = () => {
         </div>
 
         {/* --- Tabs Section --- */}
-        <div className="flex justify-around border bg-gray-500 text-2xl rounded p-2 items-center">
+        <div className="flex  bg-gray-400 justify-around p-3 ">
           <Grid2x2 />
           <Bookmark />
           <Tags />
@@ -326,13 +327,13 @@ const Profile = () => {
 
         {/* --- My Posts --- */}
         {myPost?.length > 0 && (
-          <div className="border w-[101vh] flex flex-wrap">
+          <div className="border flex gap-1  flex-wrap">
             {myPost.map((post) => (
-              <div key={post._id} className="w-[50vh] h-[50vh]">
+              <div key={post._id} className="flex-1 ">
                 {post?.media?.map((m, index) => (
                   <div
                     key={index}
-                    className="w-full h-full flex justify-center items-center"
+                    className="w-full h-full min-w-35 md:max-w-100 md:min-w-50 md:h-full flex  justify-center items-center"
                   >
                     {m.type === "image" && (
                       <img

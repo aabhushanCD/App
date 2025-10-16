@@ -160,5 +160,3 @@ export const acceptRequest = async (req, res) => {
     });
   }
 };
-
-

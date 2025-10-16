@@ -87,7 +87,7 @@ const Home = () => {
             totalPosts: res.data.totalPosts,
             userId: res.data.userId,
           }));
-          console.log(res.data.posts);
+
           setHasMore(res.data.hasMore);
         }
       } catch (error) {
@@ -131,13 +131,13 @@ const Home = () => {
   }, [hasMore, loading]);
   return (
     <>
-      <div className="flex  w-full gap-6 p-4 max-w-7xl mx-auto">
+      <div className="flex  w-full gap-0 md:gap-5 p-4 max-w-7xl mx-auto dark:bg-black dark:text-white">
         {/* Sidebar */}
-        <div className="sticky top-15 w-[21%] h-[100vh]">
+        <div className="hidden md:block sticky top-15 w-[21%] h-[100vh]">
           <LeftSideBar />
         </div>
         {/* Main Feed */}
-        <div className="flex-1 max-w-2xl w-full space-y-6">
+        <div className=" flex-1 max-w-2xl w-full space-y-6">
           {/* Create Post Section */}
           <div
             className={`bg-white border rounded-2xl shadow-sm flex gap-3 items-start p-4 ${

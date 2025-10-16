@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { data, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import {
   Bell,
@@ -23,7 +23,7 @@ import MiniMessanger from "./MiniMessanger";
 const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [isNotification, setNotification] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
@@ -152,7 +152,11 @@ const Navbar = () => {
       <div className="flex items-center gap-5">
         <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
-        <div className="relative">
+        <div
+          className={`relative ${
+            location.pathname === "/messanger" && "hidden"
+          }`}
+        >
           <MessageCircle
             className={`w-5 h-5 ${
               newMessageNotification ? "relative" : ""

@@ -14,7 +14,9 @@ const LeftSideBar = () => {
 
         <button onClick={() => navigate("/friend")}>Friends</button>
 
-        <button className="line-through">Messages</button>
+        <button className="" onClick={() => navigate("/messanger")}>
+          Messanger
+        </button>
         <button className="line-through">Notifications</button>
 
         <button>Logout</button>

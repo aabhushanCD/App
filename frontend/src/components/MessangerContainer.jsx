@@ -2,15 +2,20 @@ import { ServerApi } from "@/constants";
 import axios from "axios";
 import { Ellipsis, Search } from "lucide-react";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const MessangerContainer = ({
-
   setMiniMessagner,
   setShowMessanger,
   allUsers,
 }) => {
+  const location = useLocation();
   return (
-    <div className=" bg-gray-50 rounded-2xl shadow-2xl ">
+    <div
+      className={`${
+        location.pathname === "/messanger" && "h-screen"
+      } bg-gray-50 rounded-2xl  shadow-2xl `}
+    >
       <div className="flex flex-col gap-3 p-4  h-130">
         <div className=" flex gap-3 justify-between items-center ">
           <h1 className="flex font-bold text-3xl">Chats</h1>
@@ -71,7 +76,6 @@ const MessangerContainer = ({
           ))}
         </div>
       </div>
-      
     </div>
   );
 };

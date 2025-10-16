@@ -33,7 +33,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     };
     fetchMessages();
   }, [user]);
-  console.log(messages);
+
   const handleMedia = () => {
     if (!mediaInputRef.current.value) {
       mediaInputRef.current.click();
@@ -94,7 +94,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
-  console.log(` me: ${currentUser.userId} to:${user._id}`);
+  
   return (
     <div className="flex flex-col  h-full max-h-screen">
       <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">
