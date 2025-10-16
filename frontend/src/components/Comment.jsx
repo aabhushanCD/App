@@ -12,7 +12,8 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const textinputRef = useRef();
   const [comment, setComment] = useState({ text: "", file: null });
   const [activeMenu, setActiveMenu] = useState(null);
-
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingText, setEditingText] = useState("");
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -87,11 +88,33 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       console.error("Failed to like comment", error);
     }
   };
+  const handleEditComment = async (commentId) => {
+    if (!editingText.trim()) return toast.error("Comment cannot be empty");
+    try {
+      const res = await axios.put(
+        `${ServerApi}/post/editComment/${commentId}`,
+        { commentText: editingText },
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        setComments((prev) =>
+          prev.map((c) =>
+            c._id === commentId ? { ...c, text: res.data.comment.text } : c
+          )
+        );
+        setEditingCommentId(null);
+        setEditingText("");
+        toast.success("Comment updated!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to edit comment");
+    }
+  };
 
   const toggleMenu = (id) => {
     setActiveMenu((prev) => (prev === id ? null : id));
   };
-  console.log(comments);
 
   const preview = comment?.file ? URL.createObjectURL(comment.file) : null;
   return (
@@ -150,6 +173,15 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                       <li onClick={() => handleDeleteComment(comment._id)}>
                         Delete
                       </li>
+                      <li
+                        onClick={() => {
+                          setEditingCommentId(comment._id);
+                          setEditingText(comment.text);
+                          toggleMenu(comment._id);
+                        }}
+                      >
+                        Edit
+                      </li>
                     </ul>
                   )}
                 </span>
@@ -163,7 +195,20 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                     <p className=" text-sm font-medium">
                       {comment.creatorId?.name}
                     </p>
-                    <p className="text-sm text-gray-700">{comment.text}</p>
+                    {editingCommentId === comment._id ? (
+                      <div className="flex gap-2 mt-1">
+                        <input
+                          className="border p-1 rounded flex-1"
+                          value={editingText}
+                          onChange={(e) => setEditingText(e.target.value)}
+                        />
+                        <Button onClick={() => handleEditComment(comment._id)}>
+                          Save
+                        </Button>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-700">{comment.text}</p>
+                    )}
                     {comment.imageUrl && (
                       <img
                         src={comment.imageUrl}
