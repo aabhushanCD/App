@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Send, Image, CloudCog, Heart } from "lucide-react";
+import { Send, Image, CloudCog, Heart, Server } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { ServerApi } from "@/constants";
 import { toast } from "sonner";
-
+import { timeAgo } from "@/constants";
 const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
@@ -66,6 +66,28 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       toast.error(error.response?.data?.message || "Failed to delete comment");
     }
   };
+
+  const likeComment = async (commentId) => {
+    try {
+      const res = await axios.put(
+        `${ServerApi}/post/likeComment/${commentId}`,
+        {},
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        // Update comment likes locally
+        setComments((prev) =>
+          prev.map((c) =>
+            c._id === commentId ? { ...c, likes: res.data.totalLike } : c
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Failed to like comment", error);
+    }
+  };
+
   const toggleMenu = (id) => {
     setActiveMenu((prev) => (prev === id ? null : id));
   };
@@ -151,12 +173,13 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                     )}
                   </div>
                   <div className=" flex gap-3">
-                    <span>
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </span>
-                    <span className=" flex">
+                    <span>{timeAgo(comment.createdAt)}</span>
+                    <span
+                      className="flex"
+                      onClick={() => likeComment(comment._id)}
+                    >
                       <Heart className="p-1 text-red-400"></Heart>
-                      {comment.likes?.length}
+                      {comment.likes.length || 0}
                     </span>
                   </div>
                 </div>

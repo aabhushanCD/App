@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import axios from "axios";
-import { ServerApi } from "@/constants";
+import { ServerApi, timeAgo } from "@/constants";
 
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
@@ -134,7 +134,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
                   (post.creatorId._id === currentUser._id && currentUser.name)}
               </h1>
               <h2 className="text-sm text-gray-500">
-                {new Date(post.createdAt).toLocaleString()}
+                {timeAgo(post.createdAt)}
               </h2>
             </span>
           </div>

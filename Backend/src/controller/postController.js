@@ -516,7 +516,7 @@ export const likeComment = async (req, res) => {
     return res.status(200).json({
       success: false,
       message: existingLikeIndex !== -1 ? "Liked removed" : "Like added",
-      totalLike: comment.likes.length,
+      totalLike: comment.likes,
     });
   } catch (error) {
     console.error(error.message);
