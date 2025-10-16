@@ -7,7 +7,6 @@ import {
   Menu,
   MessageCircle,
   Search,
-  Ellipsis,
   X,
   MessageSquare,
   LogOut,

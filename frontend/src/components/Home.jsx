@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import LeftSideBar from "./LeftSideBar";
 
 import { useAuth } from "@/store/AuthStore";
-import { useNotify } from "@/store/NotificationStore";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Home = () => {

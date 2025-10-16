@@ -31,7 +31,6 @@ const CreatePost = ({
     }));
   }, [form.files]);
 
-  console.log(form);
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setForm((prev) => ({ ...prev, files: [...prev.files, ...selectedFiles] }));

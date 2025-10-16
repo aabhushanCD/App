@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { ServerApi } from "@/constants";
-import porfile from "../assets/profile.png";
+
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
-  const { currentUser, socket } = useAuth();
+  const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
   const [isThreeDotOpen, setThreeDot] = useState(false);
   const [comments, setComments] = useState(null);
@@ -110,16 +110,29 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
         <div className="flex justify-between items-center border-b p-4">
           <div
             className="flex gap-2 items-center"
-            onClick={() => navigate(`/user/profile/${post.creatorId._id}`)}
+            onClick={() => {
+              const isCurrentUser = currentUser.userId !== post.creatorId._id;
+              navigate(
+                isCurrentUser
+                  ? `/user/profile/${post.creatorId._id}`
+                  : "/profile/"
+              );
+            }}
           >
             <img
-              src={post.creatorId?.imageUrl || porfile}
+              src={
+                post.creatorId?.imageUrl ||
+                (post.creatorId._id === currentUser._id && currentUser.imageUrl)
+              }
               alt="profile"
               width={50}
               className="w-15 h-15 rounded-full overflow-hidden object-cover"
             />
             <span>
-              <h1 className="font-semibold">{post.creatorId.name}</h1>
+              <h1 className="font-semibold">
+                {post.creatorId.name ||
+                  (post.creatorId._id === currentUser._id && currentUser.name)}
+              </h1>
               <h2 className="text-sm text-gray-500">
                 {new Date(post.createdAt).toLocaleString()}
               </h2>
