@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Send, Image, CloudCog, Heart, Server } from "lucide-react";
+import { Send, Image, Heart, SendIcon } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { ServerApi } from "@/constants";
@@ -190,21 +190,24 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                   alt="user"
                   className="w-8 h-8 rounded-full"
                 />
-                <div className="flex flex-col  ">
-                  <div className=" w-sm  border  rounded-2xl p-2">
+                <div className="flex flex-col   ">
+                  <div className=" border  rounded-2xl p-2">
                     <p className=" text-sm font-medium">
                       {comment.creatorId?.name}
                     </p>
                     {editingCommentId === comment._id ? (
-                      <div className="flex gap-2 mt-1">
+                      <div className="md:flex gap-2 mt-1">
                         <input
-                          className="border p-1 rounded flex-1"
+                          className="border p-1 rounded "
                           value={editingText}
                           onChange={(e) => setEditingText(e.target.value)}
                         />
-                        <Button onClick={() => handleEditComment(comment._id)}>
+                        <SendIcon
+                          onClick={() => handleEditComment(comment._id)}
+                          className="mt-2 "
+                        >
                           Save
-                        </Button>
+                        </SendIcon>
                       </div>
                     ) : (
                       <p className="text-sm text-gray-700">{comment.text}</p>
