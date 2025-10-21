@@ -149,7 +149,14 @@ const Navbar = () => {
 
       {/* Right Icons */}
       <div className="flex items-center gap-5">
-        <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
+        <div className="border w-[200px]  h-8 rounded-2xl flex p-1">
+          <input
+            type="text"
+            className="w-full h-full border-none rounded-none outline-none text-xs font-semibold"
+          />
+          <Search className="w-5 h-5  text-gray-600 cursor-pointer hover:text-blue-500" />
+        </div>
+
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <div
           className={`relative ${

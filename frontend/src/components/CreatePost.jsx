@@ -1,6 +1,5 @@
-import React, { useRef, useMemo, useState, useEffect } from "react";
-import { ServerApi } from "../constants.js";
-import profile from "../assets/profile.png";
+import React, { useMemo } from "react";
+
 import { Camera, CircleX, Image, Music, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,7 +69,7 @@ const CreatePost = ({
                   <img
                     src={currentUser.imageUrl}
                     alt="profile"
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 object-cover  rounded-full"
                     onClick={() => navigate("/profile")}
                   />
                   <span className="font-medium">{currentUser.name}</span>
