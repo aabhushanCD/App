@@ -18,6 +18,7 @@ import axios from "axios";
 import { useNotify } from "@/store/NotificationStore";
 import MessangerContainer from "@/components/MessangerContainer";
 import MiniMessanger from "./MiniMessanger";
+import SearchBox from "./SearchBox";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -31,10 +32,12 @@ const Navbar = () => {
     open: false,
     newMessage: [],
   });
+  const [search, setSearch] = useState();
   const [isMiniMessagner, setMiniMessagner] = useState({
     open: false,
     user: {},
   });
+  const searchRef = useRef();
 
   const [allUsers, setAllUsers] = useState([]);
   const socket = useNotify();
@@ -113,6 +116,22 @@ const Navbar = () => {
     }
   };
 
+  const handleSearchChange = async () => {
+    setSearch(searchRef.current.value.trim());
+  };
+  const handleSearch = async () => {
+    try {
+      const res = await axios.post(
+        `${ServerApi}/auth/search`,
+        { text },
+        { withCredentials: true }
+      );
+      console.log(res.data);
+    } catch (error) {
+      toast.error("Invalid Search!");
+    }
+  };
+
   return (
     <div className="flex justify-between items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
@@ -148,14 +167,22 @@ const Navbar = () => {
       </div>
 
       {/* Right Icons */}
-      <div className="flex items-center gap-5">
+      <div className=" flex items-center gap-5">
         <div className="border w-[200px]  h-8 rounded-2xl flex p-1">
           <input
             type="text"
             className="w-full h-full border-none rounded-none outline-none text-xs font-semibold"
+            ref={searchRef}
+            onChange={handleSearch}
           />
           <Search className="w-5 h-5  text-gray-600 cursor-pointer hover:text-blue-500" />
         </div>
+
+        {
+          <div className="absolute top-15 right-16 bg-gray-100">
+            <SearchBox />
+          </div>
+        }
 
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <div
