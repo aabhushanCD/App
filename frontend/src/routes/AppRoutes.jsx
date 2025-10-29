@@ -17,6 +17,7 @@ import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/messanger";
 import OtherProfile from "@/pages/OtherProfile";
+import ForgetPassword from "@/pages/ForgetPassword";
 
 const AppRoutes = () => {
   return (
@@ -48,6 +49,14 @@ const AppRoutes = () => {
           element={
             <PublicRoutes>
               <Login />
+            </PublicRoutes>
+          }
+        />
+        <Route
+          path="/forget-password"
+          element={
+            <PublicRoutes>
+              <ForgetPassword />
             </PublicRoutes>
           }
         />

@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -10,7 +11,6 @@ import { allowedOrigins } from "./constant.js";
 import notificationRoute from "./src/routes/notificationRoute.js";
 import messangerRoutes from "./src/routes/messangerRoute.js";
 import friendRoutes from "./src/routes/friendRoute.js";
-dotenv.config({ path: ".env" });
 
 app.use(
   cors({

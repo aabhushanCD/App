@@ -32,7 +32,11 @@ const Navbar = () => {
     open: false,
     newMessage: [],
   });
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState({
+    open: false,
+    text: "",
+    result: [{ _id: "", name: "", imageUrl: "" }],
+  });
   const [isMiniMessagner, setMiniMessagner] = useState({
     open: false,
     user: {},
@@ -117,16 +121,25 @@ const Navbar = () => {
   };
 
   const handleSearchChange = async () => {
-    setSearch(searchRef.current.value.trim());
+    setSearch((prev) => ({ ...prev, text: searchRef.current.value.trim() }));
   };
   const handleSearch = async () => {
+    if (searchRef.current.value.trim() === "") {
+      return;
+    }
     try {
       const res = await axios.post(
         `${ServerApi}/auth/search`,
-        { text },
-        { withCredentials: true }
+        { text: search.text },
+        {
+          withCredentials: true,
+        }
       );
-      console.log(res.data);
+      setSearch((prev) => ({
+        open: true,
+        text: prev.text,
+        result: Array.isArray(res.data) ? res.data : res.data.users || null,
+      }));
     } catch (error) {
       toast.error("Invalid Search!");
     }
@@ -173,16 +186,35 @@ const Navbar = () => {
             type="text"
             className="w-full h-full border-none rounded-none outline-none text-xs font-semibold"
             ref={searchRef}
-            onChange={handleSearch}
+            value={search.text}
+            onChange={handleSearchChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSearch();
+              }
+            }}
           />
-          <Search className="w-5 h-5  text-gray-600 cursor-pointer hover:text-blue-500" />
+          <Search
+            className="w-5 h-5  text-gray-600 cursor-pointer hover:text-blue-500"
+            onClick={handleSearch}
+          />
         </div>
 
-        {
+        {search.open && (
           <div className="absolute top-15 right-16 bg-gray-100">
-            <SearchBox />
+            <div className="w-100 h-100 border p-5 ">
+              {search.result.map((data) => (
+                <SearchBox
+                  data={data}
+                  key={data._id}
+                  setSearch={setSearch}
+                  search={search}
+                />
+              ))}
+            </div>
           </div>
-        }
+        )}
 
         <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
         <div
@@ -212,7 +244,7 @@ const Navbar = () => {
           {isMiniMessagner.open && (
             <div
               className="
-                     fixed bottom-0 right-3 
+                    fixed bottom-0 right-3 
                       w-[95%] h-[90vh] 
                       md:w-[380px] md:h-[75vh] md:right-4 md:bottom-4 
                       bg-white shadow-2xl rounded-t-2xl border border-gray-200

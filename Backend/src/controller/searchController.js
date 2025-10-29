@@ -28,7 +28,7 @@ export const Search = async (req, res) => {
           ],
         },
       ],
-    }).select("name  profileImage");
+    }).select("name  imageUrl");
 
     if (users.length === 0) {
       return res
@@ -38,7 +38,7 @@ export const Search = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Users found", success: true, data: users });
+      .json({ message: "Users found", success: true, users });
   } catch (error) {
     console.error("Search Error:", error.message);
     return res

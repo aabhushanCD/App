@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import Friend from "../model/Friend.model.js";
 import Post from "../model/PostModel/Post.model.js";
+import nodemailer from "nodemailer";
+// signUp
 export const Register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -42,6 +44,7 @@ export const Register = async (req, res) => {
     });
   }
 };
+// Login
 export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,6 +94,7 @@ export const Login = async (req, res) => {
       .json({ success: false, message: "Internal server error login" });
   }
 };
+// Logout
 export const LogOut = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -116,6 +120,7 @@ export const LogOut = async (req, res) => {
   }
 };
 
+// update user Profile
 export const profileUpdate = async (req, res) => {
   try {
     const userId = req.userId;
@@ -174,6 +179,7 @@ export const profileUpdate = async (req, res) => {
   }
 };
 
+// Check auth
 export const authUser = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
@@ -206,6 +212,7 @@ export const authUser = async (req, res) => {
   }
 };
 
+// get all Users
 export const getUsers = async (req, res) => {
   try {
     const userId = req.userId;
@@ -221,6 +228,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// Add or update Highlights
 export const addHighlight = async (req, res) => {
   try {
     const { postId, mediaIndex, memo, type } = req.body;
@@ -262,6 +270,7 @@ export const addHighlight = async (req, res) => {
   }
 };
 
+// get own highlights
 export const getHighlights = async (req, res) => {
   try {
     const userId = req.userId;
@@ -416,6 +425,58 @@ export const getUserProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error while fetching profile",
+    });
+  }
+};
+
+// send mail for forget password link sends
+
+export const sendPassResetMail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Provide a valid Mail", success: false });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    const testAccount = await nodemailer.createTestAccount();
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+
+    // Wrap in an async IIFE so we can use await.
+
+    const info = await transporter.sendMail({
+      from: '"Hell`O", <Hell`O.California@gmail.com>',
+      to: user.email,
+      subject: "Forget Password",
+      text: `Click To Change Password`, // plain‑text body
+      html: `<a href='${process.env.CLIENT_URL_1}/reset/${user._id}/${token}'>Click Here</b>`, // HTML body
+    });
+    console.log("Message sent:", info.messageId);
+    console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+
+    return res
+      .status(200)
+      .json({ message: "Successfully Send Reset Link", success: true });
+  } catch (error) {
+    console.error("Server Error While Sending Reset Link", error.message);
+    return res.status(500).json({
+      message: "Server Error While Sending Reset Link",
+      success: false,
     });
   }
 };
