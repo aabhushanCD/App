@@ -18,6 +18,7 @@ import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/messanger";
 import OtherProfile from "@/pages/OtherProfile";
 import ForgetPassword from "@/pages/ForgetPassword";
+import ResetPassword from "@/pages/ResetPassword";
 
 const AppRoutes = () => {
   return (
@@ -57,6 +58,14 @@ const AppRoutes = () => {
           element={
             <PublicRoutes>
               <ForgetPassword />
+            </PublicRoutes>
+          }
+        />
+        <Route
+          path="/reset/:id/:token"
+          element={
+            <PublicRoutes>
+              <ResetPassword />
             </PublicRoutes>
           }
         />

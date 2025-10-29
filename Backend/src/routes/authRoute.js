@@ -9,6 +9,7 @@ import {
   getHighlights,
   getUserProfile,
   sendPassResetMail,
+  resetPass,
 } from "../controller/authController.js";
 import upload from "../middleware/multer.js";
 import { verifyToken } from "../middleware/verifyToken.js";
@@ -23,6 +24,7 @@ router.post("/logout", verifyToken, LogOut);
 router.get("/me", verifyToken, authUser);
 router.post("/search", verifyToken, Search);
 router.post("/sendPassResetMail", sendPassResetMail);
+router.post("/reset/:id/:token", resetPass);
 
 // -------------profile-----------------------
 

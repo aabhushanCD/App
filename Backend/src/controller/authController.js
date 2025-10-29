@@ -443,7 +443,7 @@ export const sendPassResetMail = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "15m",
     });
     const testAccount = await nodemailer.createTestAccount();
 
@@ -481,6 +481,52 @@ export const sendPassResetMail = async (req, res) => {
   }
 };
 
+export const resetPass = async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const { newPass } = req.body;
+
+    let decode;
+    try {
+      decode = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired token", success: false });
+    }
+    // Check if token matches the same user
+    if (decode.userId !== id) {
+      return res
+        .status(403)
+        .json({ message: "UnAuthorized request", success: false });
+    }
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+    const hashedPass = await bcrypt.hash(newPass, 10);
+
+    user.password = hashedPass;
+    user.validateBeforeSave = false;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password reset successful. You can now log in.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Something went wrong!", error.message);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
 // export const myAllDetilsforProfile = async (req, res) => {
 //   try {
 //     const userId = req.userId;
