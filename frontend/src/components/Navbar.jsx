@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
-import { ServerApi } from "@/constants";
+import { ServerApi, timeAgo } from "@/constants";
 import axios from "axios";
 import { useNotify } from "@/store/NotificationStore";
 import MessangerContainer from "@/components/MessangerContainer";
@@ -270,9 +270,10 @@ const Navbar = () => {
               <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
             )}
 
+
             {/* Notification Popup */}
             {bellOpen && (
-              <div className="absolute right-3 mt-2 border w-80 rounded-2xl bg-amber-100 shadow-lg">
+              <div className="absolute right-3 mt-2 border w-80 rounded-2xl bg-blue-400 shadow-lg">
                 <div className="p-3">
                   <div className="flex justify-between items-center">
                     <h1 className="text-xl font-bold">Notifications</h1>
@@ -286,7 +287,7 @@ const Navbar = () => {
                     <button className="font-semibold">Unread</button>
                   </div>
 
-                  <div className="mt-3  space-y-3 max-h-100 overflow-y-auto">
+                  <div className="mt-3  space-y-3 max-h-100 overflow-y-auto ">
                     {notificationData.length > 0 ? (
                       notificationData.map((item, index) => (
                         <div
@@ -321,12 +322,12 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div>
-                            <span className="font-semibold">
+                            <span className="font-semibold text-[20px]">
                               {item.senderId?.name || "Someone"}
                             </span>{" "}
                             {item.message || "sent you a notification"}
-                            <p className="text-xs text-gray-500">
-                              {new Date(item.createdAt).toLocaleTimeString()}
+                            <p className="text-xs text-gray-700">
+                              {timeAgo(item.createdAt)}
                             </p>
                           </div>
                         </div>

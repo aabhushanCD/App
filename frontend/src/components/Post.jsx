@@ -10,13 +10,14 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { ServerApi, timeAgo } from "@/constants";
-
+import like from "../../public/preview.m4a";
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
+const likeAudio = new Audio(like);
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
@@ -50,6 +51,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
       if (res.status === 200) {
         setLikes(res.data.likes);
       }
+      likes.includes(currentUser.userId) ? "":likeAudio.play();
     } catch (error) {
       console.error(error.message);
     }

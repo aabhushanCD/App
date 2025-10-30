@@ -188,7 +188,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
                 <img
                   src={comment.creatorId?.imageUrl}
                   alt="user"
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full object-cover"
                 />
                 <div className="flex flex-col   ">
                   <div className=" border  rounded-2xl p-2">

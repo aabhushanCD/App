@@ -23,8 +23,8 @@ export const timeAgo = (dateString) => {
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60)
     return diffInMinutes === 1
-      ? "1 minute ago"
-      : `${diffInMinutes} minutes ago`;
+      ? "1 min ago"
+      : `${diffInMinutes} min ago`;
 
   const diffInHours = Math.floor(diffInMinutes / 60);
   if (diffInHours < 24)

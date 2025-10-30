@@ -99,7 +99,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     <div className="flex flex-col  h-full max-h-screen">
       <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">
         {/* Header */}
-        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-white rounded-t-2xl">
+        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 rounded-t-2xl">
           <div className="flex gap-2 items-center">
             {user.imageUrl ? (
               <img

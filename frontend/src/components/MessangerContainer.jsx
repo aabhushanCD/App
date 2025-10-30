@@ -14,7 +14,7 @@ const MessangerContainer = ({
     <div
       className={`${
         location.pathname === "/messanger" && "h-screen"
-      } bg-gray-50 rounded-2xl  shadow-2xl `}
+      } bg-blue-400 rounded-2xl  shadow-2xl `}
     >
       <div className="flex flex-col gap-3 p-4  h-130">
         <div className=" flex gap-3 justify-between items-center ">
@@ -49,7 +49,7 @@ const MessangerContainer = ({
           {allUsers.map((uj) => (
             <div
               key={uj._id}
-              className="flex items-center rounded-2xl hover:bg-gray-100"
+              className="flex items-center rounded-2xl hover:bg-blue-500 cursor-pointer"
               onClick={() => {
                 setMiniMessagner({ open: true, user: uj });
                 setShowMessanger(false);
