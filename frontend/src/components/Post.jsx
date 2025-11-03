@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { ServerApi, timeAgo } from "@/constants";
-import like from "../../public/preview.m4a";
+import like from "@/preview.m4a";
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
