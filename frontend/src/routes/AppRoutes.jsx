@@ -15,7 +15,7 @@ import Home from "@/components/Home";
 import Profile from "@/pages/Profile";
 import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
-import Messanger from "@/pages/messanger";
+import Messanger from "@/pages/Messanger";
 import OtherProfile from "@/pages/OtherProfile";
 import ForgetPassword from "@/pages/ForgetPassword";
 import ResetPassword from "@/pages/ResetPassword";
