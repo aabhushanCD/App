@@ -39,7 +39,7 @@ const PostContainer = ({ postsData, setPostData }) => {
     });
   };
   return (
-    <div className=" mt-4 ">
+    <div className="  ">
       {postsData?.posts?.length > 0 && (
         <div className="flex flex-col gap-4  ">
           {postsData.posts.map((post) => (

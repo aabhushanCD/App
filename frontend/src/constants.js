@@ -3,7 +3,7 @@ var ServerApi;
 var SocketApi;
 if (window.location.hostname === "localhost") {
   // Frontend is opened on localhost
-  ServerApi = "https://hello-social-connect.onrender.com/api";
+  ServerApi = "http://localhost:8000/api";
   SocketApi = "http://localhost:8000";
 } else {
   // Frontend is opened on LAN IP

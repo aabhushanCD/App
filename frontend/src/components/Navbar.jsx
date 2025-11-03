@@ -146,7 +146,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
+    <div className="flex justify-between flex-wrap  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
       <div className="flex items-center gap-3">
         <a
@@ -215,50 +215,53 @@ const Navbar = () => {
             </div>
           </div>
         )}
-
-        <House className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
-        <div
-          className={`relative ${
-            location.pathname === "/messanger" && "hidden"
-          }`}
-        >
-          <MessageCircle
-            className={`w-5 h-5 ${
-              newMessageNotification ? "relative" : ""
-            } text-gray-600 cursor-pointer hover:text-blue-500`}
-            onClick={fetchUsers}
-          ></MessageCircle>
-          {newMessageNotification.open && (
-            <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
-          )}
-          {showMessanger && (
-            <div className="absolute w-90 min-h-70 -left-61">
-              <MessangerContainer
-                newMessageNotification={newMessageNotification}
-                allUsers={allUsers}
-                setMiniMessagner={setMiniMessagner}
-                setShowMessanger={setShowMessanger}
-              />
-            </div>
-          )}
-          {isMiniMessagner.open && (
-            <div
-              className="
+        <div className="hidden md:flex gap-2">
+          <House
+            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
+            onClick={() => navigate("/home")}
+          />
+          <div
+            className={`relative ${
+              location.pathname === "/messanger" && "hidden"
+            }`}
+          >
+            <MessageCircle
+              className={`w-5 h-5 ${
+                newMessageNotification ? "relative" : ""
+              } text-gray-600 cursor-pointer hover:text-blue-500`}
+              onClick={fetchUsers}
+            ></MessageCircle>
+            {newMessageNotification.open && (
+              <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
+            )}
+            {showMessanger && (
+              <div className="absolute w-90 min-h-70 -left-61">
+                <MessangerContainer
+                  newMessageNotification={newMessageNotification}
+                  allUsers={allUsers}
+                  setMiniMessagner={setMiniMessagner}
+                  setShowMessanger={setShowMessanger}
+                />
+              </div>
+            )}
+            {isMiniMessagner.open && (
+              <div
+                className="
                     fixed bottom-0 right-3 
                       w-[95%] h-[90vh] 
                       md:w-[380px] md:h-[75vh] md:right-4 md:bottom-4 
                       bg-white shadow-2xl rounded-t-2xl border border-gray-200
                       z-[60] flex flex-col transition-all duration-300 overflow-hidden
                     "
-            >
-              <MiniMessanger
-                user={isMiniMessagner.user}
-                setMiniMessagner={setMiniMessagner}
-              />
-            </div>
-          )}
+              >
+                <MiniMessanger
+                  user={isMiniMessagner.user}
+                  setMiniMessagner={setMiniMessagner}
+                />
+              </div>
+            )}
+          </div>
         </div>
-
         {/* Bell */}
         <div className="flex items-center gap-1 md:gap-6 ml-6">
           <div className="relative">
@@ -270,10 +273,9 @@ const Navbar = () => {
               <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
             )}
 
-
             {/* Notification Popup */}
             {bellOpen && (
-              <div className="absolute right-3 mt-2 border w-80 rounded-2xl bg-blue-400 shadow-lg">
+              <div className="absolute -right-8 mt-2 border w-80 rounded-2xl bg-blue-400 shadow-lg">
                 <div className="p-3">
                   <div className="flex justify-between items-center">
                     <h1 className="text-xl font-bold">Notifications</h1>
@@ -287,7 +289,7 @@ const Navbar = () => {
                     <button className="font-semibold">Unread</button>
                   </div>
 
-                  <div className="mt-3  space-y-3 max-h-100 overflow-y-auto ">
+                  <div className="mt-3 space-y-3 max-h-100 overflow-y-auto ">
                     {notificationData.length > 0 ? (
                       notificationData.map((item, index) => (
                         <div

@@ -156,57 +156,62 @@ const FriendContainer = () => {
         </button>
       </div>
       {allUsers.title === "Add Friends" && (
-        <div className="flex flex-wrap gap-4 p-3 overflow-auto justify-center md:justify-start">
+        <div className=" grid grid-cols-2 md:flex flex-wrap gap-4 p-3 overflow-auto justify-center md:justify-start">
           {allUsers?.data?.map((user) => (
             <div
               key={user._id}
-              className="w-56 h-80 border rounded-2xl  flex flex-col justify-between items-center
-             hover:scale-105 transition-transform duration-300"
+              className="md:w-56 max-h-70 min-h-70 border  flex flex-col justify-between items-center
+              hover:scale-105 transition-transform duration-300"
             >
               {user.imageUrl ? (
                 <img
                   src={user.imageUrl}
-                  className="min-w-full max-h-40  min-h-40 rounded-t-2xl object-cover"
+                  className="min-w-full max-h-40  min-h-40  object-cover"
                 />
               ) : (
-                <span className=" flex items-center justify-center border min-w-40 max-h-40 max-w-40 min-h-40 rounded-full bg-gray-500 ">
+                <span className=" flex items-center justify-center border min-w-full md:min-w-full max-h-40 max-w-40 min-h-40  bg-gray-500 ">
                   U
                 </span>
               )}
-              <div className="flex  justify-center">
-                <h1 className={" font-semibold"}>{user.name}</h1>
-              </div>
+
+              <h1 className={" font-bold text-center"}>{user.name}</h1>
+
               <div className="flex gap-1 p-2  flex-col justify-center">
-                <Button onClick={() => handleSendRequest(user)}>
+                <Button
+                  onClick={() => handleSendRequest(user)}
+                  className={
+                    "hover:text-blue-400 bg-blue-400 active:bg-green-600 active:text-white"
+                  }
+                >
                   Send Request
                 </Button>
-                <Button className={"bg-gray-400 text-white "}>Remove</Button>
+                <Button className={" text-white bg-red-400"}>Remove</Button>
               </div>
             </div>
           ))}
         </div>
       )}
       {allUsers.title === "All Friends" && (
-        <div className="flex flex-wrap gap-4 p-3 overflow-auto">
+        <div className=" grid grid-cols-2 md:flex flex-wrap gap-4 p-3 overflow-auto">
           {allUsers?.data?.map((user) => (
             <div
               key={user._id}
-              className="w-56  border rounded-2xl flex flex-col  items-center
-             hover:scale-105 transition-transform duration-300 "
+              className="md:w-56  border flex flex-col  items-center
+            hover:scale-105 transition-transform duration-300 "
             >
               {user.imageUrl ? (
                 <img
                   src={user.imageUrl}
-                  className="min-w-full max-h-40  min-h-40 rounded-t-2xl object-cover"
+                  className="min-w-full max-h-40  min-h-40  object-cover"
                 />
               ) : (
-                <span className=" flex items-center justify-center border min-w-40 max-h-40 max-w-40 min-h-40 rounded-full bg-gray-500 ">
+                <span className=" flex items-center justify-center border h-40  w-full  bg-gray-500 ">
                   U
                 </span>
               )}
-              <div className="flex  justify-center ">
-                <h1 className={" font-semibold"}>{user.name}</h1>
-              </div>
+            
+                <h1 className={" font-semibold text-center"}>{user.name}</h1>
+        
             </div>
           ))}
         </div>

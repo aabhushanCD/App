@@ -53,7 +53,7 @@ const AudioVideo = ({ remoteUserId }) => {
             muted
             playsInline
             className="w-full  rounded-md"
-            ref={(v) => v && (v.srcObject = localStream)}
+            ref={(v) => v && (v.srcObject = remoteStream)}
           />
         </div>
         <div className="absolute top-5 right-5">
@@ -61,7 +61,7 @@ const AudioVideo = ({ remoteUserId }) => {
             autoPlay
             playsInline
             className="top-0 right-0  w-30  rounded-md"
-            ref={(v) => v && (v.srcObject = remoteStream)}
+            ref={(v) => v && (v.srcObject = localStream)}
           />
         </div>
         <div className="flex gap-4">

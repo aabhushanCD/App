@@ -10,14 +10,13 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { ServerApi, timeAgo } from "@/constants";
-import like from "@/preview.m4a";
+
 import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-const likeAudio = new Audio(like);
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(post.likes);
@@ -51,7 +50,6 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
       if (res.status === 200) {
         setLikes(res.data.likes);
       }
-      likes.includes(currentUser.userId) ? "":likeAudio.play();
     } catch (error) {
       console.error(error.message);
     }
@@ -107,7 +105,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   };
   return (
     <div className="relative">
-      <div className="flex flex-col border rounded-lg bg-white shadow-sm">
+      <div className="flex flex-col border-t  border-b rounded-lg bg-white shadow-sm">
         {/* header */}
         <div className="flex justify-between items-center border-b p-4">
           <div
@@ -128,7 +126,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               }
               alt="profile"
               width={50}
-              className="w-15 h-15 rounded-full overflow-hidden object-cover"
+              className="w-15 h-15 rounded-full overflow-hidden object-cover "
             />
             <span>
               <h1 className="font-semibold">
@@ -183,7 +181,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
                     <img
                       src={m.url}
                       alt="post"
-                      className="w-full max-h-200 object-cover"
+                      className="w-full max-h-200 object-cover filter "
                     />
                   )}
                   {m.type === "video" && (
