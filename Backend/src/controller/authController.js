@@ -97,7 +97,7 @@ export const Login = async (req, res) => {
 // Logout
 export const LogOut = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const user = await User.findById(userId).select("-password");
     if (!user) {
       return res
@@ -107,6 +107,7 @@ export const LogOut = async (req, res) => {
     res.cookie("accessToken", "", {
       httpOnly: true,
       sameSite: "none",
+      secure: true,
       maxAge: 0,
     });
     return res
