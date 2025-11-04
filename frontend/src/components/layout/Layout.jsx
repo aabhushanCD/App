@@ -25,7 +25,13 @@ const Layout = () => {
             location.pathname === "/friend" ? "text-blue-400" : ""
           }`}
         />
-        <MessageCircle size={20} />
+        <MessageCircle
+          size={20}
+          onClick={() => navigate("/messanger")}
+          className={`${
+            location.pathname === "/messanger" ? "text-blue-400" : ""
+          }`}
+        />
       </div>
       <Outlet />
 

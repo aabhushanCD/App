@@ -14,14 +14,14 @@ const MessangerContainer = ({
     <div
       className={`${
         location.pathname === "/messanger" && "h-screen"
-      } bg-blue-400 rounded-2xl  shadow-2xl `}
+      } bg-blue-400 md:rounded-2xl w-full  shadow-2xl  `}
     >
       <div className="flex flex-col gap-3 p-4  h-130">
         <div className=" flex gap-3 justify-between items-center ">
           <h1 className="flex font-bold text-3xl">Chats</h1>
           <div className="flex gap-3">
-            <Ellipsis />
-            <button>B</button>
+            {/* <Ellipsis />
+            <button>B</button> */}
           </div>
         </div>
         <div className="flex gap-2 bg-gray-200 text-gray-500 rounded-2xl p-1">
@@ -32,7 +32,7 @@ const MessangerContainer = ({
             placeholder="Write Something..."
           />
         </div>
-        <div className="flex  font-semibold flex-wrap ">
+        <div className=" hidden md:flex  font-semibold flex-wrap ">
           <button className="rounded-2xl active:bg-gray-200 p-2 ">All</button>
           <button className="rounded-2xl active:bg-gray-200 p-2 ">
             Unread
@@ -45,17 +45,17 @@ const MessangerContainer = ({
           </button>
         </div>
 
-        <div className="overflow-auto h-auto">
+        <div className="overflow-auto h-auto flex flex-col gap-2">
           {allUsers.map((uj) => (
             <div
               key={uj._id}
-              className="flex items-center rounded-2xl hover:bg-blue-500 cursor-pointer"
+              className=" flex flex-wrap gap-2 items-center rounded-2xl hover:bg-blue-500 cursor-pointer"
               onClick={() => {
                 setMiniMessagner({ open: true, user: uj });
                 setShowMessanger(false);
               }}
             >
-              <div className=" flex w-12 h-12 border-2 rounded-full overflow-hidden ">
+              <div className=" flex  w-12 h-12 border-2 rounded-full overflow-hidden ">
                 {uj.imageUrl ? (
                   <img
                     src={uj.imageUrl}
@@ -68,9 +68,9 @@ const MessangerContainer = ({
                   </span>
                 )}
               </div>
-              <div className="p-2">
+              <div className="p-1">
                 <h1 className="font-semibold">{uj.name}</h1>
-                <p>{"Write a message..."}</p>
+                <p className="hidden md:block">{"Write a message..."}</p>
               </div>
             </div>
           ))}

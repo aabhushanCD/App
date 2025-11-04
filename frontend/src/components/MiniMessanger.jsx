@@ -94,7 +94,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
-  
+
   return (
     <div className="flex flex-col  h-full max-h-screen">
       <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">

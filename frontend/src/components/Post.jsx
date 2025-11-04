@@ -165,7 +165,11 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
 
         {/* content */}
         <div className="bg-gray-50">
-          <p className="text-lg mb-2 p-4">{post.content || ""}</p>
+          <p
+            className={`text-lg mb-2 p-4 ${post.content ? "" : "hidden"}`}
+          >
+            {post.content || ""}
+          </p>
 
           {post.media?.length > 0 && (
             <div
