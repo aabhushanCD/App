@@ -143,7 +143,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
             />
             <X
               className="cursor-pointer"
-              onClick={() => setMiniMessagner((prev) => ({ open: false }))}
+              onClick={() => setMiniMessagner(() => ({ open: false }))}
             />
           </div>
         </div>

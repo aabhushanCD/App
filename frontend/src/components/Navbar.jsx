@@ -19,6 +19,7 @@ import { useNotify } from "@/store/NotificationStore";
 import MessangerContainer from "@/components/MessangerContainer";
 import MiniMessanger from "./MiniMessanger";
 import SearchBox from "./SearchBox";
+import { Input } from "./ui/input";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -146,12 +147,12 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between flex-wrap  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
+    <div className="flex justify-between flex-1  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
       <div className="flex items-center gap-3">
         <a
           href="/home"
-          className="bg-transparent text-blue-500 text-2xl font-bold hover:bg-transparent"
+          className="bg-transparent text-blue-500 mr-2 text-2xl font-bold hover:bg-transparent"
         >
           Hell'O
         </a>
@@ -180,14 +181,15 @@ const Navbar = () => {
       </div>
 
       {/* Right Icons */}
-      <div className=" flex items-center gap-5">
-        <div className="border w-[200px]  h-8 rounded-2xl flex p-1">
+      <div className=" flex  gap-5 items-center ">
+        <div className={`border w-auto  h-8 rounded-2xl flex p-1`}>
           <input
             type="text"
-            className="w-full h-full border-none rounded-none outline-none text-xs font-semibold"
+            className="w-full h-full border-none rounded-none outline-none text-xs font-semibold "
             ref={searchRef}
             value={search.text}
             onChange={handleSearchChange}
+            placeholder="Search..."
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();

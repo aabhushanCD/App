@@ -41,6 +41,7 @@ const AppRoutes = () => {
           <Route path="/newsfeeds" element={<Home />} />
           <Route path="/messanger" element={<Messanger />} />
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
+
           {/* Add more protected routes here */}
         </Route>
 
