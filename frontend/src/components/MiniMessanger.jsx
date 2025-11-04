@@ -3,16 +3,14 @@ import { useAuth } from "@/store/AuthStore";
 import { useNotify } from "@/store/NotificationStore";
 import axios from "axios";
 import {
-  BookImage,
-  GalleryHorizontal,
   LucideVoicemail,
+  GalleryHorizontal,
   Phone,
   Video,
   X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-
 import AudioVideo from "./Audio_Video";
 
 const MiniMessanger = ({ setMiniMessagner, user }) => {
@@ -24,16 +22,23 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
   const chatContainerRef = useRef();
   const [preview, setPreview] = useState(null);
   const [videoCall, setVideoCall] = useState(false);
+
+  // Fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
-      const res = await axios.get(`${ServerApi}/message/${user._id}`, {
-        withCredentials: true,
-      });
-      setMessages(res.data.messages);
+      try {
+        const res = await axios.get(`${ServerApi}/message/${user._id}`, {
+          withCredentials: true,
+        });
+        setMessages(res.data.messages);
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchMessages();
   }, [user]);
 
+  // Media file select
   const handleMedia = () => {
     if (!mediaInputRef.current.value) {
       mediaInputRef.current.click();
@@ -47,6 +52,8 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       setPreview(objectUrl);
     }
   };
+
+  // Send message
   const handleSentMessage = async () => {
     let formData = new FormData();
     const text = textInputRef.current.value;
@@ -54,7 +61,8 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     if (file || text) {
       formData.append("text", text);
       formData.append("media", file);
-    } else return toast.error("Cannot Empty Message");
+    } else return toast.error("Cannot send empty message");
+
     try {
       const res = await axios.post(
         `${ServerApi}/message/sent/to/${user._id}`,
@@ -63,31 +71,32 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       );
       if (res.status === 200) {
         textInputRef.current.value = "";
+        mediaInputRef.current.value = null;
+        setPreview(null);
       }
     } catch (error) {
-      console.error(error.response.message || error.message);
+      console.error(error.response?.message || error.message);
     }
   };
 
+  // Auto focus on input
   useEffect(() => {
-    textInputRef.current.focus();
-  }, [handleSentMessage]);
+    textInputRef.current?.focus();
+  }, []);
 
+  // Socket listener
   useEffect(() => {
     if (!socket) return;
-
     const handleNewMessage = (data) => {
       if (data.senderId === user._id || data.receiverId === user._id) {
         setMessages((prev) => [...prev, data]);
       }
     };
-
     socket.on("newMessage", handleNewMessage);
-
-    return () => {
-      socket.off("newMessage");
-    };
+    return () => socket.off("newMessage");
   }, [socket, user._id]);
+
+  // Auto scroll to bottom when messages update
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -95,26 +104,38 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     }
   }, [messages]);
 
+  // Handle viewport resize (for mobile keyboard)
+  useEffect(() => {
+    const handleResize = () => {
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="flex flex-col  h-full max-h-screen">
-      <div className="  flex flex-col bg-gray-200 rounded-2xl h-full">
+    <div className="flex flex-col h-[100dvh] max-h-[100dvh] bg-gray-100 overflow-hidden">
+      <div className="flex flex-col bg-gray-200 rounded-2xl flex-1 max-h-[100dvh]">
         {/* Header */}
-        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 rounded-t-2xl">
+        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 rounded-t-2xl text-white">
           <div className="flex gap-2 items-center">
             {user.imageUrl ? (
               <img
                 src={user.imageUrl}
                 alt=""
-                className="w-12 h-12 rounded-full object-cover "
+                className="w-12 h-12 rounded-full object-cover"
               />
             ) : (
-              <span className="w-12 h-12 rounded-3xl  border-2 flex items-center justify-center text-gray-100">
-                {"U"}
+              <span className="w-12 h-12 rounded-3xl border-2 flex items-center justify-center text-gray-100">
+                U
               </span>
             )}
             <h1 className="font-semibold">{user.name || "User"}</h1>
           </div>
-          <div className="flex gap-3 ">
+          <div className="flex gap-3">
             <Phone className="cursor-pointer" />
             <Video
               className="cursor-pointer"
@@ -122,26 +143,24 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
             />
             <X
               className="cursor-pointer"
-              onClick={() => {
-                setMiniMessagner((prev) => ({ open: false }));
-              }}
+              onClick={() => setMiniMessagner((prev) => ({ open: false }))}
             />
           </div>
         </div>
-        {/* Chat area */}
 
+        {/* Chat area */}
         <div
           ref={chatContainerRef}
-          className="flex flex-col flex-1 bg-white p-3 space-y-2 overflow-y-auto"
+          className="flex flex-col flex-1 bg-white p-3 space-y-2 overflow-y-auto min-h-0"
         >
           {messages.map((dd) => (
             <div
               key={dd._id}
               className={`${
                 dd.senderId === currentUser.userId
-                  ? "self-end bg-blue-400 text-white "
+                  ? "self-end bg-blue-400 text-white"
                   : "self-start bg-gray-200 text-gray-800"
-              } relative px-3 py-2 rounded-lg max-w-[80%]  `}
+              } relative px-3 py-2 rounded-lg max-w-[80%] break-words`}
             >
               {dd.media && (
                 <img
@@ -154,20 +173,25 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
             </div>
           ))}
         </div>
+
+        {/* Media preview */}
         {preview && (
           <div className="relative p-2 bg-gray-100">
             <img src={preview} alt="" className="w-24 rounded-md" />
             <X
               size={20}
-              className="absolute top-0 left-20 cursor-pointer text-white hover:text-red-500"
-              onClick={() =>
-                setPreview(() => (mediaInputRef.current.value = null))
-              }
+              className="absolute top-0 left-20 cursor-pointer text-gray-600 hover:text-red-500"
+              onClick={() => {
+                setPreview(null);
+                mediaInputRef.current.value = null;
+              }}
             />
           </div>
         )}
-        <div className="sticky bottom-0 bg-white border-t border-gray-300 flex items-center gap-2 p-2">
-          <LucideVoicemail />
+
+        {/* Input area */}
+        <div className="relative bottom-0 bg-white border-t border-gray-300 flex items-center gap-2 p-2 pb-safe">
+          <LucideVoicemail className="text-gray-600" />
           <GalleryHorizontal
             className="cursor-pointer text-gray-600"
             onClick={handleMedia}
@@ -190,16 +214,17 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
             onChange={handleFileChange}
             hidden
           />
-
           <button
             className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
             onClick={handleSentMessage}
           >
-            Sent
+            Send
           </button>
         </div>
+
+        {/* Video call */}
         {videoCall && (
-          <div className="absolute w-full h-full top-20">
+          <div className="absolute w-full h-full top-20 z-50">
             <AudioVideo remoteUserId={user._id} />
           </div>
         )}
