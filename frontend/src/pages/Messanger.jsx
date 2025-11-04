@@ -13,7 +13,9 @@ const Messanger = () => {
   });
   const [allUsers, setAllUsers] = useState([]);
   const [showMessanger, setShowMessanger] = useState(false);
-
+  if (isMiniMessagner.open) {
+    document.body.style.overflow = "hidden";
+  }
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
