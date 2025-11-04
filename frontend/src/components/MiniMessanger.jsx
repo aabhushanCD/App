@@ -117,10 +117,10 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-[100dvh] max-h-[100dvh] bg-gray-100 overflow-hidden">
+    <div className="flex flex-col  h-[100dvh] max-h-[100dvh] bg-gray-100 overflow-hidden">
       <div className="flex flex-col bg-gray-200 rounded-2xl flex-1 max-h-[100dvh]">
         {/* Header */}
-        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 rounded-t-2xl text-white">
+        <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 sm:rounded-t-2xl text-white animate-accordion-up duration-300">
           <div className="flex gap-2 items-center">
             {user.imageUrl ? (
               <img
@@ -151,7 +151,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
         {/* Chat area */}
         <div
           ref={chatContainerRef}
-          className="flex flex-col flex-1 bg-white p-3 space-y-2 overflow-y-auto min-h-0"
+          className="flex flex-col flex-1 bg-white p-3 space-y-2 overflow-y-auto min-h-0 animate-collapsible-down"
         >
           {messages.map((dd) => (
             <div
