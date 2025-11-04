@@ -106,7 +106,7 @@ export const LogOut = async (req, res) => {
     }
     res.cookie("accessToken", "", {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 0,
     });
     return res
