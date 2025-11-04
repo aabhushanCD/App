@@ -20,6 +20,7 @@ import MessangerContainer from "@/components/MessangerContainer";
 import MiniMessanger from "./MiniMessanger";
 import SearchBox from "./SearchBox";
 import { Input } from "./ui/input";
+import MenuBar from "./MenuBar";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -265,7 +266,7 @@ const Navbar = () => {
           </div>
         </div>
         {/* Bell */}
-        <div className="flex items-center gap-1 md:gap-6 ml-6">
+        <div className="  flex items-center gap-1 md:gap-6 ml-6">
           <div className="relative">
             <Bell
               className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
@@ -348,6 +349,7 @@ const Navbar = () => {
           </div>
 
           <Menu className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
+       
         </div>
       </div>
     </div>

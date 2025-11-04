@@ -12,6 +12,7 @@ import LeftSideBar from "./LeftSideBar";
 import { useAuth } from "@/store/AuthStore";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import MenuBar from "./MenuBar";
 
 const Home = () => {
   const { currentUser } = useAuth();
