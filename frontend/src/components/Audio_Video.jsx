@@ -68,7 +68,16 @@ const AudioVideo = ({ remoteUserId }) => {
           <Button onClick={callUser} className={"bg-green-500"}>
             Call
           </Button>
-          <Button className={"bg-red-500"}>End</Button>
+          <Button
+            className={"bg-red-500"}
+            onClick={() => {
+              socket.off("offer");
+              socket.off("answer");
+              socket.off("ice-candidate");
+            }}
+          >
+            End
+          </Button>
         </div>
       </div>
     </div>
