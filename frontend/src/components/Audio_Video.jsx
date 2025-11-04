@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useNotify } from "@/store/NotificationStore";
 
-const AudioVideo = ({ remoteUserId }) => {
+const AudioVideo = ({ remoteUserId, onEndCall }) => {
   const socket = useNotify();
   const {
     localStream,
@@ -13,6 +13,7 @@ const AudioVideo = ({ remoteUserId }) => {
     createAnswer,
     setRemoteDescription,
     addIceCandidate,
+    stopStream,
   } = useWebRTC(remoteUserId);
 
   useEffect(() => {
@@ -32,10 +33,17 @@ const AudioVideo = ({ remoteUserId }) => {
       await addIceCandidate(candidate);
     });
 
+    socket.on("call-ended", () => {
+      stopStream();
+      onEndCall?.();
+    });
+
     return () => {
       socket.off("offer");
       socket.off("answer");
       socket.off("ice-candidate");
+      socket.off("call-ended");
+      stopStream();
     };
   }, [socket, remoteUserId]);
 
@@ -44,41 +52,45 @@ const AudioVideo = ({ remoteUserId }) => {
     socket.emit("offer", { receiverId: remoteUserId, sdp: offer });
   };
 
+  const endCall = () => {
+    socket.emit("end", { receiverId: remoteUserId });
+    stopStream();
+    onEndCall?.();
+  };
+
   return (
-    <div className=" w-full h-full bg-gray-600">
-      <div className="flex gap-2 flex-col items-center  w-full relative border-2 h-full p-4">
-        <div className=" flex h-[70%] rounded-md ">
-          <video
-            autoPlay
-            muted
-            playsInline
-            className="w-full  rounded-md"
-            ref={(v) => v && (v.srcObject = remoteStream)}
-          />
-        </div>
-        <div className="absolute top-5 right-5">
-          <video
-            autoPlay
-            playsInline
-            className="top-0 right-0  w-30  rounded-md"
-            ref={(v) => v && (v.srcObject = localStream)}
-          />
-        </div>
-        <div className="flex gap-4">
-          <Button onClick={callUser} className={"bg-green-500"}>
-            Call
-          </Button>
-          <Button
-            className={"bg-red-500"}
-            onClick={() => {
-              socket.off("offer");
-              socket.off("answer");
-              socket.off("ice-candidate");
-            }}
-          >
-            End
-          </Button>
-        </div>
+    <div className="w-full h-full bg-gray-900 flex justify-center items-center relative">
+      {/* Remote video */}
+      <video
+        autoPlay
+        playsInline
+        className="w-full h-full object-cover rounded-lg"
+        ref={(v) => v && (v.srcObject = remoteStream)}
+      />
+
+      {/* Local video */}
+      <video
+        autoPlay
+        muted
+        playsInline
+        className="absolute top-4 right-4 w-32 h-32 rounded-md border-2 border-white object-cover shadow-lg"
+        ref={(v) => v && (v.srcObject = localStream)}
+      />
+
+      {/* Controls */}
+      <div className="absolute bottom-5 flex gap-4">
+        <Button
+          onClick={callUser}
+          className="bg-green-500 hover:bg-green-600 shadow-md"
+        >
+          Call
+        </Button>
+        <Button
+          onClick={endCall}
+          className="bg-red-500 hover:bg-red-600 shadow-md"
+        >
+          End
+        </Button>
       </div>
     </div>
   );
