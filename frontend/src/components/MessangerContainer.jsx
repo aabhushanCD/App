@@ -14,9 +14,9 @@ const MessangerContainer = ({
     <div
       className={`${
         location.pathname === "/messanger" && "h-screen"
-      } bg-blue-400  w-full shadow-2xl   `}
+      }  bg-white w-full shadow-2xl   `}
     >
-      <div className="flex flex-col gap-3 p-4  h-130">
+      <div className="flex flex-col gap-3 p-4  h-auto min-h-90">
         <div className=" flex gap-3 justify-between items-center ">
           <h1 className="flex font-bold text-3xl">Chats</h1>
           <div className="flex gap-3">

@@ -1,4 +1,5 @@
 import { useAuth } from "@/store/AuthStore";
+import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +22,11 @@ const ProtectedRoute = ({ children }) => {
   }, [checked, currentUser, navigate]);
 
   if (isLoading || !currentUser) {
-    return <div>loading.........</div>;
+    return (
+      <div className="flex items-center justify-center h-screen ">
+        Hell'O <Loader className="animate-spin" />
+      </div>
+    );
   }
   return <>{children}</>;
 };

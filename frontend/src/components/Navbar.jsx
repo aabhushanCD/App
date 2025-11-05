@@ -10,6 +10,7 @@ import {
   X,
   MessageSquare,
   LogOut,
+  Thermometer,
 } from "lucide-react";
 import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
@@ -173,12 +174,6 @@ const Navbar = () => {
         <Button className="bg-transparent text-gray-700 hover:text-blue-500 hover:bg-gray-100">
           Account
         </Button>
-        <Button
-          className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100"
-          onClick={handleLogout}
-        >
-          <LogOut />
-        </Button>
       </div>
 
       {/* Right Icons */}
@@ -238,7 +233,7 @@ const Navbar = () => {
               <span className="absolute top-0 right-0 block w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white" />
             )}
             {showMessanger && (
-              <div className="absolute w-90 min-h-70 -left-61">
+              <div className="absolute w-90 top-11 min-h-70 -left-61">
                 <MessangerContainer
                   newMessageNotification={newMessageNotification}
                   allUsers={allUsers}
@@ -265,6 +260,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
+
         {/* Bell */}
         <div className="  flex items-center gap-1 md:gap-6 ml-6">
           <div className="relative">
@@ -348,8 +344,12 @@ const Navbar = () => {
             )}
           </div>
 
-          <Menu className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500" />
-       
+          <Button
+            className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100"
+            onClick={handleLogout}
+          >
+            <LogOut />
+          </Button>
         </div>
       </div>
     </div>

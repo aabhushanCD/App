@@ -4,7 +4,7 @@ import { ServerApi } from "@/constants";
 import { useAuth } from "@/store/AuthStore";
 import axios from "axios";
 import { Bookmark, Grid2x2, Settings, Tags, X } from "lucide-react";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Profile = () => {
@@ -19,6 +19,7 @@ const Profile = () => {
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(null);
   const [highlightMemo, setHighlightMemo] = useState("");
+  const [isLoading, setLoading] = useState(false);
   const [addHighlight, setAddHighlight] = useState({
     open: false,
     state: 1,
@@ -77,6 +78,7 @@ const Profile = () => {
   const handleAddHighlight = () => {
     setAddHighlight((prev) => ({ open: true, state: 1 }));
     document.body.style.overflow = "hidden";
+  
   };
   const handleHighlightChange = (postId, mediaIndex) => {
     setSelectedPostId(postId);
@@ -84,6 +86,7 @@ const Profile = () => {
   };
 
   const handleAddHighlightSubmit = async (postId, mediaIndex) => {
+    setLoading(true);
     try {
       if (!highlightMemo) {
         toast.error("Please write a memo");
@@ -95,10 +98,10 @@ const Profile = () => {
         { postId, mediaIndex, memo: highlightMemo, type: "image" },
         { withCredentials: true }
       );
-
       toast.success("Highlight added successfully!");
       setAddHighlight({ open: false, state: 1 });
       document.body.style.overflow = "auto";
+      setLoading(false);
       setHighlightMemo(""); // clear input
       fetchHighlights(); // refresh highlights
     } catch (error) {
@@ -250,7 +253,7 @@ const Profile = () => {
           ))}
 
           {addHighlight.open && (
-            <div className="fixed flex flex-col justify-between self-center w-90   z-1 p-2  md:w-[100vh] h-150 top-20 rounded-2xl overflow-hidden bg-orange-300">
+            <div className="fixed flex flex-col justify-between self-center w-90   z-1 p-2  md:w-[100vh] h-140 top-20 rounded-2xl overflow-hidden bg-orange-300">
               <X
                 className="absolute right-2 hover:bg-gray-400 rounded-full"
                 onClick={() => {
@@ -298,7 +301,11 @@ const Profile = () => {
                 </Button>
                 {addHighlight.state === 2 ? (
                   <Button
-                    disabled={!selectedPostId || selectedMediaIndex === null}
+                    disabled={
+                      isLoading ||
+                      !selectedPostId ||
+                      selectedMediaIndex === null
+                    }
                     onClick={() =>
                       handleAddHighlightSubmit(
                         selectedPostId,

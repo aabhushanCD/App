@@ -20,7 +20,7 @@ export default function MenuBar({ onLogout }) {
   ];
 
   return (
-    <nav className="absolute flex items-center justify-between bg-white border-t border-gray-200 px-4 py-2 fixed bottom-0 left-0 right-0 shadow-sm md:static md:rounded-xl md:w-[320px] md:flex-col md:h-screen md:justify-start md:gap-4">
+    <div className=" flex items-center justify-between bg-white border-t border-gray-200 px-4 py-2 fixed bottom-0 left-0 right-0 shadow-sm md:static md:rounded-xl md:w-[320px] md:flex-col md:h-screen md:justify-start md:gap-4">
       {/* Menu Buttons */}
       {menuItems.map((item) => (
         <button
@@ -47,6 +47,6 @@ export default function MenuBar({ onLogout }) {
         <LogOut size={20} />
         <span className="hidden md:inline text-sm font-medium">Logout</span>
       </button>
-    </nav>
+    </div>
   );
 }

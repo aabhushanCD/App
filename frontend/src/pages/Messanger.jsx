@@ -37,7 +37,7 @@ const Messanger = () => {
     fetchUsers();
   }, []);
   return (
-    <div className="flex flex-2 h-screen">
+    <div className="flex flex-2 h-full">
       <div
         className={`sm:w-[30%] w-full  ${
           isMiniMessagner.open ? "hidden  sm:block " : ""
