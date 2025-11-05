@@ -32,7 +32,7 @@ const Messanger = () => {
       );
     }
   };
-
+  document.body.style.overflow = "auto";
   useEffect(() => {
     fetchUsers();
   }, []);

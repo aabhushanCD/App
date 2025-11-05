@@ -115,10 +115,11 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  document.body.style.overflow = "hidden";
 
   return (
     <div className="flex flex-col h-[100dvh] bg-gray-100 overflow-hidden">
-      <div className="flex flex-col bg-gray-200 rounded-2xl flex-1 h-full">
+      <div className=" flex  flex-col bg-gray-200 rounded-2xl flex-1 h-full">
         {/* Header */}
         <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500  text-white ">
           <div className="flex gap-2 items-center">
