@@ -120,7 +120,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
 
   return (
     <div
-      className="fixed inset-0 sm:flex flex-col bg-gray-100 z-50"
+      className="sm:flex flex-col w-full bg-gray-100 z-50"
       style={{
         height: `${viewportHeight}px`, // Prevent shrinking under keyboard
       }}
