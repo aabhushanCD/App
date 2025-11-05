@@ -22,7 +22,6 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
   const chatContainerRef = useRef();
   const [preview, setPreview] = useState(null);
   const [videoCall, setVideoCall] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
   // Fetch messages
   useEffect(() => {
@@ -105,49 +104,33 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
     }
   }, [messages]);
 
-  // Handle viewport resize (keyboard + mobile fix)
-  useEffect(() => {
-    const handleResize = () => {
-      setViewportHeight(window.innerHeight);
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop =
-          chatContainerRef.current.scrollHeight;
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <div
-      className="sm:flex flex-col w-full bg-gray-100 z-50"
-      style={{
-        height: `${viewportHeight}px`, // Prevent shrinking under keyboard
-      }}
-    >
+    <div className="fixed bottom-4 right-6 w-[340px] md:w-[380px] h-[500px] flex flex-col overflow-hidden z-50 bg-white shadow-xl rounded-2xl">
       {/* Header */}
-      <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 text-white">
+      <div className="flex justify-between items-center p-3 border-b border-gray-300 bg-blue-500 text-white rounded-t-2xl">
         <div className="flex gap-2 items-center">
           {user.imageUrl ? (
             <img
               src={user.imageUrl}
               alt=""
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-9 h-9 rounded-full object-cover"
             />
           ) : (
-            <span className="w-10 h-10 rounded-full border flex items-center justify-center text-white bg-blue-400">
+            <span className="w-9 h-9 rounded-full border flex items-center justify-center text-white bg-blue-400">
               U
             </span>
           )}
-          <h1 className="font-semibold">{user.name || "User"}</h1>
+          <h1 className="font-semibold text-sm">{user.name || "User"}</h1>
         </div>
         <div className="flex gap-3">
-          <Phone className="cursor-pointer" />
+          <Phone size={18} className="cursor-pointer" />
           <Video
+            size={18}
             className="cursor-pointer"
             onClick={() => setVideoCall((prev) => !prev)}
           />
           <X
+            size={18}
             className="cursor-pointer"
             onClick={() => setMiniMessagner(() => ({ open: false }))}
           />
@@ -157,11 +140,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       {/* Chat area */}
       <div
         ref={chatContainerRef}
-        className=" flex flex-col flex-1 overflow-y-auto px-3 py-4 space-y-3 bg-white"
-        style={{
-          maxHeight: "calc(100% - 130px)",
-          scrollBehavior: "smooth",
-        }}
+        className="flex flex-col flex-1 overflow-y-auto px-3 py-4 space-y-3 bg-white"
       >
         {messages.map((dd) => (
           <div
@@ -170,7 +149,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
               dd.senderId === currentUser.userId
                 ? "self-end bg-blue-500 text-white ml-auto"
                 : "self-start bg-gray-200 text-gray-800 mr-auto"
-            } px-3 py-2 rounded-2xl max-w-[50%] break-words shadow-sm`}
+            } px-3 py-2 rounded-2xl max-w-[80%] break-words shadow-sm text-sm`}
           >
             {dd.media && (
               <img
@@ -189,7 +168,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
         <div className="relative p-2 bg-gray-100 border-t border-gray-300">
           <img src={preview} alt="" className="w-24 rounded-md" />
           <X
-            size={20}
+            size={18}
             className="absolute top-1 left-24 cursor-pointer text-gray-600 hover:text-red-500"
             onClick={() => {
               setPreview(null);
@@ -200,8 +179,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       )}
 
       {/* Input area */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-300 flex items-center gap-2 p-2">
-        <LucideVoicemail className="text-gray-600 shrink-0" />
+      <div className="bg-white border-t border-gray-300 flex items-center gap-1 p-2">
         <GalleryHorizontal
           className="cursor-pointer text-gray-600 shrink-0"
           onClick={handleMedia}
@@ -210,12 +188,12 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
           type="text"
           ref={textInputRef}
           placeholder="Write a message..."
-          className="flex-1 p-2 bg-gray-100 rounded-2xl focus:outline-none"
+          className="flex-1 p-2 bg-gray-100 rounded-2xl text-sm focus:outline-none"
           onFocus={() => {
             setTimeout(() => {
               chatContainerRef.current.scrollTop =
                 chatContainerRef.current.scrollHeight;
-            }, 250);
+            }, 200);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -231,16 +209,16 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
           hidden
         />
         <button
-          className="bg-blue-500 text-white px-4 py-1 rounded-2xl shrink-0"
+          className="bg-blue-500 text-white px-4 py-1 rounded-2xl shrink-0 text-sm"
           onClick={handleSentMessage}
         >
           Send
         </button>
       </div>
 
-      {/* Video call */}
+      {/* Video call (no gray background) */}
       {videoCall && (
-        <div className="absolute w-full h-full top-0 z-50 bg-black/70">
+        <div className="absolute w-full h-full top-0 z-50 bg-white rounded-t-2xl">
           <AudioVideo remoteUserId={user._id} />
         </div>
       )}
