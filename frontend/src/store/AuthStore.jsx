@@ -1,10 +1,11 @@
-import React, { useContext, useState, createContext } from "react";
+import React, { useState } from "react";
 import { ServerApi } from "../constants.js";
 import { toast } from "sonner";
 
 import axios from "axios";
+import { AuthContext } from "@/context/context.jsx";
 
-export const AuthContext = createContext();
+// export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("user") || null)
@@ -13,6 +14,9 @@ export const AuthContextProvider = ({ children }) => {
 
   const me = async () => {
     setLoading(true);
+    if (!currentUser) {
+      return;
+    }
     try {
       const res = await axios.get(`${ServerApi}/auth/me`, {
         withCredentials: true,
@@ -24,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       setCurrentUser(null);
       localStorage.removeItem("user");
-      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      toast.error(error);
     } finally {
       setLoading(false);
     }
@@ -33,20 +37,16 @@ export const AuthContextProvider = ({ children }) => {
   const login = async ({ email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${ServerApi}/auth/login`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
+      const res = await axios.post(`${ServerApi}/auth/login`, {
+        email,
+        password,
+      });
       if (res.status === 200) {
-        setCurrentUser(res.data.user);
-        toast.success(res?.data?.message);
         return true;
       }
+      return false;
     } catch (error) {
+      console.error(error);
       toast.error(`${error.response?.data?.message}` || `${error.message}`);
       return false;
     } finally {
@@ -119,4 +119,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// export const useAuth = () => useContext(AuthContext);

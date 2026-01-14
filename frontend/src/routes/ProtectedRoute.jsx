@@ -1,4 +1,5 @@
-import { useAuth } from "@/store/AuthStore";
+// import { useAuth } from "@/store/AuthStore";
+import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

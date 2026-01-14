@@ -1,4 +1,5 @@
-import { useAuth } from "@/store/AuthStore";
+// import { useAuth } from "@/store/AuthStore";
+import { useAuth } from "@/hooks/useAuth";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Send, Image, Heart, SendIcon } from "lucide-react";

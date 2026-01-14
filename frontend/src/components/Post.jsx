@@ -5,17 +5,18 @@ import {
   MessageCircle,
   MessageCircleIcon,
   Share2,
-  ThumbsUp,
+
   X,
 } from "lucide-react";
 import axios from "axios";
 import { ServerApi, timeAgo } from "@/constants";
 
-import { useAuth } from "@/store/AuthStore";
+// import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
 import Comment from "./Comment";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();

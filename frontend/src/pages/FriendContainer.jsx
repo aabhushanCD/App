@@ -1,4 +1,4 @@
-import LeftSideBar from "@/components/LeftSideBar";
+// import LeftSideBar from "@/components/LeftSideBar";
 import { Button } from "@/components/ui/button";
 import { ServerApi } from "@/constants";
 import axios from "axios";
@@ -209,9 +209,8 @@ const FriendContainer = () => {
                   U
                 </span>
               )}
-            
-                <h1 className={" font-semibold text-center"}>{user.name}</h1>
-        
+
+              <h1 className={" font-semibold text-center"}>{user.name}</h1>
             </div>
           ))}
         </div>

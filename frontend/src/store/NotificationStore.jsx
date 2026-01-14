@@ -7,7 +7,8 @@ import React, {
 } from "react";
 import { io } from "socket.io-client";
 import { SocketApi } from "@/constants";
-import { useAuth } from "./AuthStore";
+import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "./AuthStore";
 
 export const NotificationContext = createContext();
 
@@ -58,7 +59,7 @@ export const NotificationProvider = ({ children }) => {
 export const useNotify = () => {
   const socket = useContext(NotificationContext);
   if (!socket) {
-    // console.warn("⚠️ useNotify must be used within NotificationProvider or socket not connected yet.");  
+    // console.warn("⚠️ useNotify must be used within NotificationProvider or socket not connected yet.");
   }
   return socket;
 };

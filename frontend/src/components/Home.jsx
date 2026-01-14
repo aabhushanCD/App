@@ -9,9 +9,8 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import LeftSideBar from "./LeftSideBar";
 
-import { useAuth } from "@/store/AuthStore";
-
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -65,7 +64,7 @@ const Home = () => {
       setLoading(false);
     }
   };
-  const handleContent = (e) => {
+  const handleContent = () => {
     const content = contentInputRef.current.value;
     setForm((prev) => ({ ...prev, content }));
   };

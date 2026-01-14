@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ServerApi } from "../constants.js";
 import Post from "./Post";
 import axios from "axios";

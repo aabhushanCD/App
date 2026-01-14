@@ -7,12 +7,12 @@ import { AuthContextProvider } from "./store/AuthStore";
 import { NotificationProvider } from "./store/NotificationStore";
 
 createRoot(document.getElementById("root")).render(
-  // <StrictMode>
-  <AuthContextProvider>
-    <NotificationProvider>
-      <App />
-      <Toaster richColors closeButton duration={2000}></Toaster>
-    </NotificationProvider>
-  </AuthContextProvider>
-  // </StrictMode>
+  <StrictMode>
+    <AuthContextProvider>
+      <NotificationProvider>
+        <App />
+        <Toaster richColors closeButton duration={2000}></Toaster>
+      </NotificationProvider>
+    </AuthContextProvider>
+  </StrictMode>
 );

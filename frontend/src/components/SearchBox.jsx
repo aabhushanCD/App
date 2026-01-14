@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const SearchBox = ({ data, setSearch, search }) => {
+const SearchBox = ({ data, setSearch }) => {
   const navigate = useNavigate();
   document.addEventListener("click", () => {
     setSearch(() => ({ open: false }));
