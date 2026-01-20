@@ -10,8 +10,8 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkUser = async () => {
       console.log("checked auth");
-      await me(); // check session
-      setChecked(true); // allow render after check
+      await me(); // check session  
+      setChecking(true); // allow render after check
     };
 
     checkUser();
