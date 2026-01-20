@@ -1,9 +1,9 @@
 import { ServerApi } from "@/constants";
-import { useAuth } from "@/store/AuthStore";
+
 import { useNotify } from "@/store/NotificationStore";
 import axios from "axios";
 import {
-  LucideVoicemail,
+
   GalleryHorizontal,
   Phone,
   Video,
@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import AudioVideo from "./Audio_Video";
+import { useAuth } from "@/hooks/useAuth";
 
 const MiniMessanger = ({ setMiniMessagner, user }) => {
   const { currentUser } = useAuth();

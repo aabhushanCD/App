@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 
-import { Camera, CircleX, Image, Music, Video } from "lucide-react";
+import { Camera, CircleX, Image, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/store/AuthStore.jsx";
+// import { useAuth } from "@/store/AuthStore.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const CreatePost = ({
   loading,

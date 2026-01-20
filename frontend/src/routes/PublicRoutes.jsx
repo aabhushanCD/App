@@ -1,15 +1,14 @@
-import { useAuth } from "@/store/AuthStore";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import React from "react";
+import { Navigate } from "react-router-dom";
 
 const PublicRoutes = ({ children }) => {
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/");
-    }
-  }, [navigate, currentUser]);
+
+  // If logged in, block access to login/signup
+  if (currentUser) {
+    return <Navigate to="/home" replace />;
+  }
 
   return <>{children}</>;
 };

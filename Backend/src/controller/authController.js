@@ -5,6 +5,8 @@ import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import Friend from "../model/Friend.model.js";
 import Post from "../model/PostModel/Post.model.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 // signUp
 export const Register = async (req, res) => {
   try {

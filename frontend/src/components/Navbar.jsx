@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { data, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import {
   Bell,
@@ -10,9 +10,8 @@ import {
   X,
   MessageSquare,
   LogOut,
-  Thermometer,
 } from "lucide-react";
-import { useAuth } from "@/store/AuthStore";
+// import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
 import { ServerApi, timeAgo } from "@/constants";
 import axios from "axios";
@@ -20,8 +19,7 @@ import { useNotify } from "@/store/NotificationStore";
 import MessangerContainer from "@/components/MessangerContainer";
 import MiniMessanger from "./MiniMessanger";
 import SearchBox from "./SearchBox";
-import { Input } from "./ui/input";
-import MenuBar from "./MenuBar";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -144,7 +142,7 @@ const Navbar = () => {
         result: Array.isArray(res.data) ? res.data : res.data.users || null,
       }));
     } catch (error) {
-      toast.error("Invalid Search!");
+      toast.error("Invalid Search!", error);
     }
   };
 

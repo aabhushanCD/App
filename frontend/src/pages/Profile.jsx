@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ServerApi } from "@/constants";
-import { useAuth } from "@/store/AuthStore";
+import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/store/AuthStore";
+
 import axios from "axios";
+
 import { Bookmark, Grid2x2, Settings, Tags, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -63,10 +66,7 @@ const Profile = () => {
         toast.success("Profile Update Successfully");
       } else {
         console.error(res.data.message);
-        toast.error(
-          error?.response?.data?.message ||
-            "Something error happened while updating profile"
-        );
+        toast.error("Something error happened while updating profile");
       }
     } catch (error) {
       console.error(
@@ -76,9 +76,8 @@ const Profile = () => {
     }
   };
   const handleAddHighlight = () => {
-    setAddHighlight((prev) => ({ open: true, state: 1 }));
+    setAddHighlight(() => ({ open: true, state: 1 }));
     document.body.style.overflow = "hidden";
-  
   };
   const handleHighlightChange = (postId, mediaIndex) => {
     setSelectedPostId(postId);

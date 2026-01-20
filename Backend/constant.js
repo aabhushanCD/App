@@ -8,4 +8,5 @@ export const allowedOrigins = [
   process.env.CLIENT_URL_7,
   process.env.CLIENT_URL_8,
   process.env.CLIENT_URL_9,
+  "192.168.254.3:5173",
 ];

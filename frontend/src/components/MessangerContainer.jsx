@@ -1,7 +1,7 @@
 import { ServerApi } from "@/constants";
-import axios from "axios";
+
 import { Ellipsis, Search } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 const MessangerContainer = ({
