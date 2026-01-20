@@ -27,8 +27,8 @@ const AppRoutes = () => {
           }
         >
           {/* Nested routes inside Layout */}
-          <Route index element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<Home />} />
+          <Route element={<Navigate to="/home" replace />} />
+          <Route index path="/home" element={<Home />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/web" element={<Audio_Video />} />
           <Route path="/friend" element={<FriendContainer />} />
@@ -75,7 +75,7 @@ const AppRoutes = () => {
         />
 
         {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/"  replace/>} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>
   );
