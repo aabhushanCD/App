@@ -5,7 +5,6 @@ import {
   MessageCircle,
   MessageCircleIcon,
   Share2,
-
   X,
 } from "lucide-react";
 import axios from "axios";
@@ -128,15 +127,17 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               );
             }}
           >
-            <img
-              src={
-                post.creatorId?.imageUrl ||
-                (post.creatorId._id === currentUser._id && currentUser.imageUrl)
-              }
-              alt="profile"
-              width={50}
-              className="w-15 h-15 rounded-full overflow-hidden object-cover "
-            />
+            {post.creatorId?.imageUrl ? (
+              <img
+                src={post.creatorId.imageUrl}
+                alt={`${post.creatorId.name}'s profile`}
+                className="w-15 h-15 rounded-full overflow-hidden object-cover "
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-400 text-white font-bold text-lg">
+                {post.creatorId?.name?.charAt(0) || currentUser.name.charAt(0)}
+              </div>
+            )}
             <span>
               <h1 className="font-semibold">
                 {post.creatorId.name ||

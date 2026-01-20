@@ -15,7 +15,7 @@ export const AuthContextProvider = ({ children }) => {
   const me = async () => {
     setLoading(true);
     if (!currentUser) {
-      return;
+      return setLoading(false);
     }
     try {
       const res = await axios.get(`${ServerApi}/auth/me`, {
@@ -98,11 +98,11 @@ export const AuthContextProvider = ({ children }) => {
           withCredentials: true,
         },
       );
-      if (res.status === 200 || res.status === 300) {
+      if (res.status === 200) {
         localStorage.removeItem("user");
+        setCurrentUser(null);
         return true;
       }
-      setCurrentUser(null);
     } catch (error) {
       toast.error(`${error.response?.data?.message}` || `${error.message}`);
       return false;

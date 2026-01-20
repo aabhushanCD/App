@@ -125,7 +125,7 @@ const Home = () => {
 
     if (observerRef.current) observer.observe(observerRef.current);
 
-    return () => {
+    return () => {  
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
   }, [hasMore, loading]);

@@ -1,24 +1,18 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const { currentUser, me } = useAuth();
-  const [checking, setChecking] = useState(true);
+  const { currentUser, me, isLoading } = useAuth();
 
+  // Call me() once on mount
   useEffect(() => {
-    const checkUser = async () => {
-      console.log("checked auth");
-      await me(); // check session  
-      setChecking(true); // allow render after check
-    };
-
-    checkUser();
+    me();
   }, []);
 
-  // Wait until auth check finishes
-  if (checking) {
+  // Show loader while checking session
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="animate-spin" />
@@ -26,12 +20,12 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Not authenticated
+  // Not authenticated → redirect
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  // Authenticated
+  // Authenticated → show content
   return <>{children}</>;
 };
 
