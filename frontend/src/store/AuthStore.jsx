@@ -37,11 +37,14 @@ export const AuthContextProvider = ({ children }) => {
   const login = async ({ email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${ServerApi}/auth/login`, {
-        email,
-        password,
-      });
-
+      const res = await axios.post(
+        `${ServerApi}/auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
       if (res.status === 200) {
         setCurrentUser(res.data.user);
         localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -60,18 +63,27 @@ export const AuthContextProvider = ({ children }) => {
   const register = async ({ name, email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${ServerApi}/auth/register`, {
-        name,
-        email,
-        password,
-      });
-      if (res.status === 200) {
+      const res = await axios.post(
+        `${ServerApi}/auth/register`,
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      if (res.status === 200 || res.status === 201) {
+       
         toast.success(res?.data?.message);
         return true;
       }
       return false;
     } catch (error) {
-      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      toast.error(
+        error.response?.data?.message || error.message || "Registration failed",
+      );
       return false;
     } finally {
       setLoading(false);

@@ -13,7 +13,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ password: "" });
   const [isLoading, setIsLoading] = useState(false);
-  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));

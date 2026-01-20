@@ -77,7 +77,7 @@ const Home = () => {
           `${ServerApi}/post/getPostPagenation?limit=${3}&page=${page}`,
           {
             withCredentials: true,
-          }
+          },
         );
         if (res.status === 200) {
           setPostData((prev) => ({
@@ -120,7 +120,7 @@ const Home = () => {
           setPage((prev) => prev + 1);
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (observerRef.current) observer.observe(observerRef.current);

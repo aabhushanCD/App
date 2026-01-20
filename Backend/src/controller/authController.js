@@ -72,8 +72,8 @@ export const Login = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      // secure: false,
-      sameSite: "none",
+      // secure: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({
@@ -343,7 +343,7 @@ export const getUserProfile = async (req, res) => {
     if (!posts || posts.length === 0) {
       const user = await User.findById(Id)
         .select(
-          "name imageUrl email bio highlight.post highlight.meidaIndex highlight.memo highlight.type"
+          "name imageUrl email bio highlight.post highlight.meidaIndex highlight.memo highlight.type",
         )
         .populate({
           path: "highlight.post",

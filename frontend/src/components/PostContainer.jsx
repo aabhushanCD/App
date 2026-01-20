@@ -10,7 +10,7 @@ const PostContainer = ({ postsData, setPostData }) => {
       const res = await axios.delete(
         `${ServerApi}/post/deletePost/${postId}`,
 
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         const newData = postsData.posts.filter((post) => {
