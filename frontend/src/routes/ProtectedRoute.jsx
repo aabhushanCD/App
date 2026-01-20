@@ -1,34 +1,37 @@
-// import { useAuth } from "@/store/AuthStore";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
-  const { currentUser, me, isLoading } = useAuth();
-  const [checked, setChecked] = useState(false);
+  const { currentUser, me } = useAuth();
+  const [checking, setChecking] = useState(true);
+
   useEffect(() => {
-    const checkUser = async () => {
-      await me(); // check session
-      setChecked(true); // allow render after check
+    const verify = async () => {
+      if (!currentUser) {
+        await me(); // ONLY if user not already logged in
+      }
+      setChecking(false);
     };
-    checkUser();
+    verify();
   }, []);
 
-  useEffect(() => {
-    if (checked && !currentUser) {
-      navigate("/login");
-    }
-  }, [checked, currentUser, navigate]);
-
-  if (isLoading || !currentUser) {
+  // Wait until auth check finishes
+  if (checking) {
     return (
-      <div className="flex items-center justify-center h-screen ">
-        Hell'O <Loader className="animate-spin" />
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="animate-spin" />
       </div>
     );
   }
+
+  // Not authenticated
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Authenticated
   return <>{children}</>;
 };
 

@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/store/AuthStore";
+
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "lucide-react";
-import { Link } from "react-router-dom";
+
 import axios from "axios";
 import { ServerApi } from "@/constants";
 const ResetPassword = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ password: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));

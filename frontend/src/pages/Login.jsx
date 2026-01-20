@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/store/AuthStore";
+// import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 const Login = () => {
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
@@ -20,17 +21,20 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!emailPattern.test(form.email)) {
+    if (!emailPattern.test(form.email.trim())) {
       return toast.error("Please Enter Valid Email");
+    }
+    if (!form.password) {
+      return toast.error("Password is required");
     }
     const success = await login(form);
     if (success) {
-      navigate("/");
+    navigate("/home")
     }
   };
   return (
-    <div className=" flex justify-center items-center h-screen">
-      <div className="flex flex-col gap-4 w-6x1 p-6 rounded-lg shadow-md border ">
+    <div className=" flex justify-center items-center min-h-screen">
+      <div className="flex flex-col gap-4 w-6x1 p-6 rounded-lg shadow-md border  ">
         <div className="flex justify-center border-b-[3px] pb-2">
           <h1 className="text-xl font-semibold">Login</h1>
         </div>
@@ -58,7 +62,7 @@ const Login = () => {
             />
           </div>
           {isLoading ? (
-            <Loader className="animate-spin ml-19" />
+            <Loader className="animate-spin m-auto " />
           ) : (
             <Button type="submit" onClick={handleLogin}>
               Submit

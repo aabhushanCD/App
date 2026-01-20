@@ -8,7 +8,7 @@ import { AuthContext } from "@/context/context.jsx";
 // export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user") || null)
+    JSON.parse(localStorage.getItem("user") || null),
   );
   const [isLoading, setLoading] = useState(false);
 
@@ -41,7 +41,10 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password,
       });
+
       if (res.status === 200) {
+        setCurrentUser(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         return true;
       }
       return false;
@@ -82,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       if (res.status === 200) {
         localStorage.removeItem("user");

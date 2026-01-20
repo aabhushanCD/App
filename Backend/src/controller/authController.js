@@ -5,6 +5,8 @@ import { deleteMedia, uploadMedia } from "../util/cloudinary.js";
 import Friend from "../model/Friend.model.js";
 import Post from "../model/PostModel/Post.model.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 // signUp
 export const Register = async (req, res) => {
   try {
@@ -70,7 +72,7 @@ export const Login = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      // secure: true,
+      // secure: false,
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
