@@ -9,9 +9,11 @@ const ProtectedRoute = ({ children }) => {
   const [checked, setChecked] = useState(false);
   useEffect(() => {
     const checkUser = async () => {
+      console.log("checked auth");
       await me(); // check session
       setChecked(true); // allow render after check
     };
+
     checkUser();
   }, []);
 
