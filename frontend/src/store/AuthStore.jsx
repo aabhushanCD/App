@@ -7,7 +7,7 @@ import axios from "axios";
 export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user") || null)
+    JSON.parse(localStorage.getItem("user") || null),
   );
   const [isLoading, setLoading] = useState(false);
 
@@ -39,7 +39,7 @@ export const AuthContextProvider = ({ children }) => {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         setCurrentUser(res.data.user);
@@ -57,18 +57,27 @@ export const AuthContextProvider = ({ children }) => {
   const register = async ({ name, email, password }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${ServerApi}/auth/register`, {
-        name,
-        email,
-        password,
-      });
-      if (res.status === 200) {
+      const res = await axios.post(
+        `${ServerApi}/auth/register`,
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      if (res.status === 200 || res.status === 201) {
+       
         toast.success(res?.data?.message);
         return true;
       }
       return false;
     } catch (error) {
-      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      toast.error(
+        error.response?.data?.message || error.message || "Registration failed",
+      );
       return false;
     } finally {
       setLoading(false);
@@ -82,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       if (res.status === 200) {
         localStorage.removeItem("user");

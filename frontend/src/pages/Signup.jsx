@@ -4,12 +4,12 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/store/AuthStore";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Signup = () => {
-  const navigate = useNavigate();
   const { isLoading, register } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleChange = (e) => {
@@ -23,7 +23,9 @@ const Signup = () => {
       return;
     }
     const success = await register(form);
-    if (success) navigate("/login");
+    if (success) {
+      return navigate("/login");
+    }
   };
 
   return (

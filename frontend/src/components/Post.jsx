@@ -36,22 +36,30 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
     };
   }, [showCommentBox]);
 
-  useEffect(() => {
-    post;
-  }, [setComments]);
-
   const handleLike = async (postId) => {
+    const userId = currentUser.userId;
+    const alreadyLiked = likes.includes(userId);
+
+    // 1️⃣ Optimistically update UI
+    setLikes((prevLikes) =>
+      alreadyLiked
+        ? prevLikes.filter((id) => id !== userId)
+        : [...prevLikes, userId],
+    );
     try {
-      const res = await axios.put(
+      await axios.put(
         `${ServerApi}/post/like_dislikePost/${postId}`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
-      if (res.status === 200) {
-        setLikes(res.data.likes);
-      }
     } catch (error) {
+      setLikes((prevLikes) =>
+        alreadyLiked
+          ? [...prevLikes, userId]
+          : prevLikes.filter((id) => id !== userId),
+      );
       console.error(error.message);
+      toast.error("Failed to update like");
     }
   };
 
@@ -65,7 +73,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
       const postId = post._id;
       const res = await axios.get(
         `${ServerApi}/post/getAllComments/${postId}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         setComments(res.data.comments);
@@ -115,7 +123,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               navigate(
                 isCurrentUser
                   ? `/user/profile/${post.creatorId._id}`
-                  : "/profile/"
+                  : "/profile/",
               );
             }}
           >
@@ -165,9 +173,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
 
         {/* content */}
         <div className="bg-gray-50">
-          <p
-            className={`text-lg mb-2 p-4 ${post.content ? "" : "hidden"}`}
-          >
+          <p className={`text-lg mb-2 p-4 ${post.content ? "" : "hidden"}`}>
             {post.content || ""}
           </p>
 
@@ -202,7 +208,11 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
 
         {/* likes/comments count */}
         <div className="flex justify-between items-center p-2">
-          <span className="flex gap-1">
+          <span
+            className={`flex gap-2 items-center cursor-pointer ${
+              likes.includes(currentUser.userId) ? "text-red-500" : ""
+            }`}
+          >
             <Heart />
             {likes.length}
           </span>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Send, Image, Heart, SendIcon } from "lucide-react";
@@ -34,7 +34,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       const res = await axios.post(
         `${ServerApi}/post/sendComment/${postId}`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         toast.success("comment Success");
@@ -53,12 +53,12 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
     try {
       const res = await axios.delete(
         `${ServerApi}/post/deleteComment/${postId}/comment/${commentId}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         toast.success("Comment Deleted Successfully");
         setComments((prevComments) =>
-          prevComments.filter((comment) => comment._id !== commentId)
+          prevComments.filter((comment) => comment._id !== commentId),
         );
         updatePostCommentCount?.(postId, -1);
       }
@@ -73,15 +73,15 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       const res = await axios.put(
         `${ServerApi}/post/likeComment/${commentId}`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (res.status === 200) {
         // Update comment likes locally
         setComments((prev) =>
           prev.map((c) =>
-            c._id === commentId ? { ...c, likes: res.data.totalLike } : c
-          )
+            c._id === commentId ? { ...c, likes: res.data.totalLike } : c,
+          ),
         );
       }
     } catch (error) {
@@ -94,13 +94,13 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       const res = await axios.put(
         `${ServerApi}/post/editComment/${commentId}`,
         { commentText: editingText },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         setComments((prev) =>
           prev.map((c) =>
-            c._id === commentId ? { ...c, text: res.data.comment.text } : c
-          )
+            c._id === commentId ? { ...c, text: res.data.comment.text } : c,
+          ),
         );
         setEditingCommentId(null);
         setEditingText("");
