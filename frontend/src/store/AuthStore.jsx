@@ -75,7 +75,6 @@ export const AuthContextProvider = ({ children }) => {
         },
       );
       if (res.status === 200 || res.status === 201) {
-       
         toast.success(res?.data?.message);
         return true;
       }
@@ -99,7 +98,7 @@ export const AuthContextProvider = ({ children }) => {
           withCredentials: true,
         },
       );
-      if (res.status === 200) {
+      if (res.status === 200 || res.status === 300) {
         localStorage.removeItem("user");
         return true;
       }
