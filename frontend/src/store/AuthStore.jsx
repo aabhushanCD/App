@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import axios from "axios";
 import { AuthContext } from "@/context/context.jsx";
+import { Navigate } from "react-router-dom";
 
 // export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -15,7 +16,8 @@ export const AuthContextProvider = ({ children }) => {
   const me = async () => {
     setLoading(true);
     if (!currentUser) {
-      return setLoading(false);
+      setLoading(false);
+      return <Navigate to="/login" />;
     }
     try {
       const res = await axios.get(`${ServerApi}/auth/me`, {

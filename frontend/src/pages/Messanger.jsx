@@ -50,7 +50,7 @@ const Messanger = () => {
         />
       </div>
       {isMiniMessagner.open && (
-        <div className="md:w-[70%] w-full h-full z-50 sm:z-10">
+        <div className="md:w-[70%] w-full min-h-screen  z-50 sm:z-10">
           <MiniMessanger
             user={isMiniMessagner.user}
             setMiniMessagner={setMiniMessagner}

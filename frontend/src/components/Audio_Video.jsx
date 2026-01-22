@@ -14,6 +14,7 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
     setRemoteDescription,
     addIceCandidate,
     stopStream,
+    closeConnection,
   } = useWebRTC(remoteUserId);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
     });
 
     socket.on("call-ended", () => {
+      closeConnection();
       stopStream();
       onEndCall?.();
     });
@@ -55,12 +57,14 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
   const endCall = () => {
     socket.emit("end", { receiverId: remoteUserId });
     stopStream();
+    closeConnection();
     onEndCall?.();
   };
 
   return (
-    <div className="w-full h-full bg-gray-900 flex justify-center items-center relative">
+    <div className="w-full h-full  bg-gray-900 flex justify-center items-center relative">
       {/* Remote video */}
+
       <video
         autoPlay
         playsInline
@@ -71,7 +75,6 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
       {/* Local video */}
       <video
         autoPlay
-        muted
         playsInline
         className="absolute top-4 right-4 w-32 h-32 rounded-md border-2 border-white object-cover shadow-lg"
         ref={(v) => v && (v.srcObject = localStream)}
