@@ -21,12 +21,12 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // Not authenticated → redirect
-  if (!currentUser) {
+  if (!currentUser && !isLoading) {
     return <Navigate to="/login" replace />;
   }
 
   // Authenticated → show content
-  return <>{children}</>;
+  return children;
 };
 
 export default ProtectedRoute;

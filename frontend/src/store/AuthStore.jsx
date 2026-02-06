@@ -15,10 +15,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const me = async () => {
     setLoading(true);
-    if (!currentUser) {
-      setLoading(false);
-      return <Navigate to="/login" />;
-    }
     try {
       const res = await axios.get(`${ServerApi}/auth/me`, {
         withCredentials: true,
@@ -31,6 +27,7 @@ export const AuthContextProvider = ({ children }) => {
       setCurrentUser(null);
       localStorage.removeItem("user");
       toast.error(error);
+      return <Navigate to="/login"></Navigate>;
     } finally {
       setLoading(false);
     }
