@@ -1,16 +1,27 @@
 import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { useAuth } from "@/hooks/useAuth";
 // import { useAuth } from "@/store/AuthStore";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import { toast } from "sonner";
 
 const Signup = () => {
   const { isLoading, register } = useAuth();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState({
+    type: "",
+    error: "",
+  });
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const handleChange = (e) => {
@@ -19,10 +30,26 @@ const Signup = () => {
   };
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (!form.name || !form.email || !form.password) {
+      return setErrorMessage({
+        type: "name",
+        error: "Please, Enter All Field ! ",
+      });
+    }
     if (!emailPattern.test(form.email)) {
       toast.error("Please Enter Valid Email");
-      return;
+      return setErrorMessage({
+        type: "email",
+        error: "Email Invalid! ",
+      });
     }
+    if (!form.password.length < 7) {
+      return setErrorMessage({
+        type: "password",
+        error: "Password must be greater than 7 ",
+      });
+    }
+
     const success = await register(form);
     if (success) {
       return navigate("/login");
@@ -31,44 +58,65 @@ const Signup = () => {
 
   return (
     <div className=" flex justify-center items-center h-screen">
-      <div className="flex flex-col gap-4 w-6x1 p-6 rounded-lg shadow-md border ">
-        <div className="flex justify-center border-b-[3px] pb-2">
-          <h1 className="text-xl font-bold">SignUp</h1>
+      <div className=" gap-4 w-md p-6 rounded-lg shadow-md border ">
+        <div className="text-center  border-b-[3px] pb-4">
+          <h1 className="text-5xl font-bold text-blue-900">Sign up</h1>
         </div>
 
-        <form className="flex flex-col gap-4" type="submit">
-          <div className="flex flex-col gap-1">
-            <Label>Full Name</Label>
-            <Input
-              placeholder="John Noe"
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label>Email</Label>
-            <Input
-              placeholder="user@gmail.com"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label>Password</Label>
-            <Input
-              placeholder="**************"
-              type="text"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-          </div>
+        <form className="flex flex-col gap-4 mt-4" type="submit">
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="name">Full Name</FieldLabel>
+              <Input
+                id="name"
+                placeholder="John Noe"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
+              {errorMessage.type === "name" && (
+                <FieldDescription className={"text-red-500"}>
+                  * {errorMessage.error}
+                </FieldDescription>
+              )}
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input
+                id="email"
+                placeholder="user@gmail.com"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+              {errorMessage.type === "email" && (
+                <FieldDescription className={"text-red-500"}>
+                  * {errorMessage.error}
+                </FieldDescription>
+              )}
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <Input
+                id="password"
+                placeholder="**************"
+                type="text"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+              />
+              {errorMessage.type === "password" && (
+                <FieldDescription className={"text-red-500"}>
+                  * {errorMessage.error}
+                </FieldDescription>
+              )}
+            </Field>
+          </FieldGroup>
           {isLoading ? (
             <Loader className="animate-spin ml-19" />
           ) : (

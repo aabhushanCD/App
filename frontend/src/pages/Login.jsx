@@ -8,6 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 const Login = () => {
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
@@ -29,38 +35,43 @@ const Login = () => {
     }
     const success = await login(form);
     if (success) {
-    navigate("/home")
+      navigate("/home");
     }
   };
   return (
-    <div className=" flex justify-center items-center min-h-screen">
-      <div className="flex flex-col gap-4 w-6x1 p-6 rounded-lg shadow-md border  ">
-        <div className="flex justify-center border-b-[3px] pb-2">
-          <h1 className="text-xl font-semibold">Login</h1>
+    <div className=" flex justify-center items-center min-h-screen ">
+      <div className="w-md p-6 rounded-lg shadow-md border  ">
+        <div className="text-center border-b-[3px] pb-4">
+          <h1 className="text-5xl  font-bold text-blue-900">Sign in</h1>
         </div>
 
-        <form className="flex flex-col gap-2">
-          <div className="flex flex-col gap-1">
-            <Label>Email</Label>
-            <Input
-              placeholder="user@gmail.com"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label>Password</Label>
-            <Input
-              placeholder="**************"
-              type="text"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-          </div>
+        <form className="flex flex-col gap-2 mt-4">
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input
+                id="email"
+                placeholder="user@gmail.com"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <Input
+                id="password"
+                placeholder="**************"
+                type="text"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+              />
+            </Field>
+          </FieldGroup>
           {isLoading ? (
             <Loader className="animate-spin m-auto " />
           ) : (
