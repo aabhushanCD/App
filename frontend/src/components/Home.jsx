@@ -1,14 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import CreatePost from "../features/post/components/CreatePost";
-
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import CreatePost from "../features/post/components/CreatePostCart";
 import PostContainer from "../features/post/PostContainer";
-
-import PostCreateSmall from "../features/post/components/PostCreateSmall";
-
+import PostCreateSmall from "../features/post/components/PostSmallCreate";
 import LeftSideBar from "./LeftSideBar";
-
 import { useAuth } from "@/features/auth/authContext";
 import RightSideBar from "./RightSideBar";
+import { getPostPagenation } from "@/features/post/postService";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -33,17 +30,12 @@ const Home = () => {
   const fileInputRef = useRef();
   const contentInputRef = useRef();
 
-  const handleContent = () => {
-    const content = contentInputRef.current.value;
-    setForm((prev) => ({ ...prev, content }));
-  };
-
-  const handleButton = () => {
+  const handleButton = useCallback(() => {
     setCreate(true);
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
-  };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,12 +47,40 @@ const Home = () => {
       { threshold: 1 },
     );
 
-    if (observerRef.current) observer.observe(observerRef.current);
+    const el = observerRef.current;
+    if (el) observer.observe(el);
 
     return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+      if (el) observer.unobserve(el);
     };
-  }, [hasMore, loading]);
+  }, [hasMore]);
+
+  
+  useEffect(() => {
+    const postFetch = async () => {
+      try {
+        setLoading(true);
+        const res = await getPostPagenation(page);
+        if (res.status === 200) {
+          setPostData((prev) => ({
+            ...prev,
+            posts: [...(prev.posts || []), ...res.data.posts],
+            hasMore: res.data.hasMore,
+            totalPosts: res.data.totalPosts,
+            userId: res.data.userId,
+          }));
+
+          setHasMore(res.data.hasMore);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    postFetch();
+  }, [page]);
+
   return (
     <>
       <div className="flex  w-full gap-0 md:gap-5  max-w-7xl mx-auto dark:bg-black dark:text-white ">
@@ -92,7 +112,6 @@ const Home = () => {
               fileInputRef={fileInputRef}
               contentInputRef={contentInputRef}
               setCreate={setCreate}
-              handleContent={handleContent}
               handleButton={handleButton}
             />
           )}
@@ -104,7 +123,6 @@ const Home = () => {
               setPostData={setPostData}
               setLoading={setLoading}
               setHasMore={setHasMore}
-              page={page}
             />
             <div
               ref={observerRef}

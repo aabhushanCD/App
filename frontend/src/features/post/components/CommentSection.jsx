@@ -3,10 +3,15 @@ import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
 import { Send, Image, Heart, SendIcon } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
-import axios from "axios";
-import { ServerApi } from "@/utils/constants";
+
 import { toast } from "sonner";
 import { timeAgo } from "@/utils/constants";
+import {
+  deleteComment,
+  editComment,
+  likeComments,
+  sendComment,
+} from "@/features/comment/comment.service";
 const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
@@ -31,11 +36,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       formData.append("commentText", text);
       if (comment.file) formData.append("file", comment.file);
 
-      const res = await axios.post(
-        `${ServerApi}/post/sendComment/${postId}`,
-        formData,
-        { withCredentials: true },
-      );
+      const res = await sendComment(postId, formData);
       if (res.status === 200) {
         toast.success("comment Success");
         setComments((prev) => [res.data.newComment, ...(prev || [])]);
@@ -51,10 +52,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const res = await axios.delete(
-        `${ServerApi}/post/deleteComment/${postId}/comment/${commentId}`,
-        { withCredentials: true },
-      );
+      const res = await deleteComment(postId, commentId);
       if (res.status === 200) {
         toast.success("Comment Deleted Successfully");
         setComments((prevComments) =>
@@ -70,12 +68,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
 
   const likeComment = async (commentId) => {
     try {
-      const res = await axios.put(
-        `${ServerApi}/post/likeComment/${commentId}`,
-        {},
-        { withCredentials: true },
-      );
-
+      const res = await likeComments(commentId);
       if (res.status === 200) {
         // Update comment likes locally
         setComments((prev) =>
@@ -91,11 +84,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const handleEditComment = async (commentId) => {
     if (!editingText.trim()) return toast.error("Comment cannot be empty");
     try {
-      const res = await axios.put(
-        `${ServerApi}/post/editComment/${commentId}`,
-        { commentText: editingText },
-        { withCredentials: true },
-      );
+      const res = await editComment(editingText, commentId);
       if (res.status === 200) {
         setComments((prev) =>
           prev.map((c) =>

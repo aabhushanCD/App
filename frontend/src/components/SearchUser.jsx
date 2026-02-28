@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const SearchBox = ({ data, setSearch }) => {
+const SearchUser = ({ data, setSearch }) => {
   const navigate = useNavigate();
   document.addEventListener("click", () => {
     setSearch(() => ({ open: false }));
@@ -9,7 +9,7 @@ const SearchBox = ({ data, setSearch }) => {
 
   return (
     <div
-      className="flex gap-2  items-center border p-4 rounded-2xl bg-gray-300 "
+      className="flex gap-2  items-center border p-2 rounded-2xl bg-gray-100 "
       onClick={() => {
         navigate(`/user/profile/${data._id}`);
         setSearch(() => ({ open: false, text: "" }));
@@ -29,4 +29,4 @@ const SearchBox = ({ data, setSearch }) => {
   );
 };
 
-export default SearchBox;
+export default SearchUser;

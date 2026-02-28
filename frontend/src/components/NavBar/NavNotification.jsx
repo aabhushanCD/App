@@ -1,7 +1,7 @@
 import { notification } from "@/features/notification/notification.service";
 import { Bell } from "lucide-react";
 import React, { memo, useState } from "react";
-import Notification from "../Notification";
+import Notification from "../../features/notification/Notification";
 
 const NavNotification = () => {
   const [isNotification, setNotification] = useState(false);

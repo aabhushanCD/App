@@ -1,40 +1,8 @@
-import React, { useEffect } from "react";
+import React, { memo } from "react";
 import { toast } from "sonner";
 import Post from "@/features/post/components/Post";
-import { deletePost, getPostPagenation } from "./postService";
-
-const PostContainer = ({
-  postsData,
-  setPostData,
-  setLoading,
-  setHasMore,
-  page,
-}) => {
-  useEffect(() => {
-    const postFetch = async () => {
-      try {
-        setLoading(true);
-        const res = await getPostPagenation(page);
-        if (res.status === 200) {
-          setPostData((prev) => ({
-            ...prev,
-            posts: [...(prev.posts || []), ...res.data.posts],
-            hasMore: res.data.hasMore,
-            totalPosts: res.data.totalPosts,
-            userId: res.data.userId,
-          }));
-
-          setHasMore(res.data.hasMore);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    postFetch();
-  }, [page]);
-
+import { deletePost } from "./postService";
+const PostContainer = ({ postsData, setPostData }) => {
   const handlePostDelete = async (postId) => {
     try {
       const res = await deletePost(postId);
@@ -49,21 +17,21 @@ const PostContainer = ({
       toast.error(error.response?.data?.message);
     }
   };
+
+  // Update comment count for a single post
   const updatePostCommentCount = (postId, delta) => {
     setPostData((prev) => {
-      const updatedPosts = prev.posts.map((post) => {
+      const newPosts = prev.posts.map((post) => {
         if (post._id === postId) {
-          const currentCount = post.comments?.length ?? 0;
-          return {
-            ...post,
-            comments: Array(currentCount + delta).fill({}), // just to make length update
-          };
+          // Only create a new object for the affected post
+          return { ...post, commentCount: (post.commentCount ?? 0) + delta };
         }
-        return post;
+        return post; // keep the same reference for unaffected posts
       });
-      return { ...prev, posts: updatedPosts };
+      return { ...prev, posts: newPosts };
     });
   };
+
   return (
     <div className="  ">
       {postsData?.posts?.length > 0 && (
@@ -82,4 +50,4 @@ const PostContainer = ({
   );
 };
 
-export default PostContainer;
+export default memo(PostContainer);

@@ -1,7 +1,7 @@
 import { useWebRTC } from "@/useWebRtc";
 import { useEffect } from "react";
 import { Button } from "./ui/button";
-import { useNotify } from "@/store/NotificationStore";
+import { useNotify } from "@/features/notification/NotificationStore";
 
 const AudioVideo = ({ remoteUserId, onEndCall }) => {
   const socket = useNotify();

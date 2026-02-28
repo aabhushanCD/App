@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 
 import { Camera, CircleX, Image, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ const CreatePost = ({
   fileInputRef,
   contentInputRef,
   setCreate,
-  handleContent,
   handleButton,
   setPostData,
 }) => {
@@ -33,7 +32,10 @@ const CreatePost = ({
       url: URL.createObjectURL(file),
     }));
   }, [form.files]);
-
+  const handleContent = () => {
+    const content = contentInputRef.current.value;
+    setForm((prev) => ({ ...prev, content }));
+  };
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setForm((prev) => ({ ...prev, files: [...prev.files, ...selectedFiles] }));
@@ -194,4 +196,4 @@ const CreatePost = ({
   );
 };
 
-export default CreatePost;
+export default memo(CreatePost);

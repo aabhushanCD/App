@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { Toaster } from "./components/ui/sonner";
 
-import { NotificationProvider } from "./store/NotificationStore";
+import { NotificationProvider } from "./features/notification/NotificationStore";
 import { AuthContextProvider } from "./features/auth/authContext";
 
 createRoot(document.getElementById("root")).render(

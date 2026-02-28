@@ -15,3 +15,7 @@ export const getPostPagenation = (page) => {
 export const deletePost = (id) => {
   return api.delete(`/post/deletePost/${id}`);
 };
+
+export const like_dislikePost = (id) => {
+  return api.put(`/post/like_dislikePost/${id}`);
+};

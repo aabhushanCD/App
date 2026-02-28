@@ -8,7 +8,7 @@ import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
 import Profile from "@/features/profile/MyProfile";
 import Audio_Video from "@/components/Audio_Video";
-import FriendContainer from "@/pages/FriendContainer";
+import FriendContainer from "@/features/friend/FriendContainer";
 import Messanger from "@/pages/Messanger";
 import OtherProfile from "@/features/profile/OtherProfile";
 import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";

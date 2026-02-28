@@ -1,7 +1,7 @@
 import AudioVideo from "@/components/Audio_Video";
 import { ServerApi } from "@/utils/constants";
 
-import { useNotify } from "@/store/NotificationStore";
+import { useNotify } from "@/features/notification/NotificationStore";
 import axios from "axios";
 import { GalleryHorizontal, Phone, Video, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";

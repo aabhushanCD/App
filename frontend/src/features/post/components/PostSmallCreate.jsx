@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../postService";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ const CreatePost = ({
   setCreate,
   setForm,
   handleButton,
+ 
 }) => {
   const navigate = useNavigate();
   const handlePostSubmit = async () => {
@@ -101,4 +102,4 @@ const CreatePost = ({
   );
 };
 
-export default CreatePost;
+export default memo(CreatePost);

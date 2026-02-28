@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { useNotify } from "./store/NotificationStore";
+import { useNotify } from "./features/notification/NotificationStore";
 
 export const useWebRTC = (remoteUserId) => {
   const socket = useNotify();
   const peer = useRef(
     new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    })
+    }),
   );
 
   const [localStream, setLocalStream] = useState(null);
