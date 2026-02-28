@@ -6,7 +6,7 @@ import Login from "@/features/auth/pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
-import Profile from "@/pages/Profile";
+import Profile from "@/features/profile/MyProfile";
 import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/Messanger";
