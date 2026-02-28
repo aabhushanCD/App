@@ -2,11 +2,7 @@ import { Search } from "lucide-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-const MessangerContainer = ({
-  setMiniMessagner,
-  setShowMessanger,
-  allUsers,
-}) => {
+const MessangerContainer = ({ setMiniChat, allUsers }) => {
   const location = useLocation();
   return (
     <div
@@ -49,8 +45,7 @@ const MessangerContainer = ({
               key={uj._id}
               className=" flex flex-wrap gap-2 items-center rounded-2xl hover:bg-blue-500 cursor-pointer"
               onClick={() => {
-                setMiniMessagner({ open: true, user: uj });
-                setShowMessanger(false);
+                setMiniChat({ open: true, user: uj });
               }}
             >
               <div className=" flex  w-12 h-12 border-2 rounded-full overflow-hidden ">

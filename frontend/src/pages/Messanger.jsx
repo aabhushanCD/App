@@ -5,7 +5,8 @@ import { ServerApi } from "@/utils/constants";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import MiniMessanger from "@/containers/ChatBox";
+
+import ChatBox from "@/containers/ChatBox";
 
 const Messanger = () => {
   const [isMiniMessagner, setMiniMessagner] = useState({
@@ -13,7 +14,7 @@ const Messanger = () => {
     user: {},
   });
   const [allUsers, setAllUsers] = useState([]);
-  const [showMessanger, setShowMessanger] = useState(false);
+
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
@@ -46,16 +47,12 @@ const Messanger = () => {
       >
         <MessangerContainer
           allUsers={allUsers}
-          setMiniMessagner={setMiniMessagner}
-          setShowMessanger={setShowMessanger}
+          setMiniChat={setMiniMessagner}
         />
       </div>
       {isMiniMessagner.open && (
         <div className="md:w-[70%] w-full min-h-screen  z-50 sm:z-10">
-          <MiniMessanger
-            user={isMiniMessagner.user}
-            setMiniMessagner={setMiniMessagner}
-          />
+          <ChatBox user={isMiniMessagner.user} setMiniChat={setMiniMessagner} />
         </div>
       )}
     </div>

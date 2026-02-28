@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth/authContext";
 
-const ChatBox = ({ setMiniMessagner, user }) => {
+const ChatBox = ({ user, setMiniChat }) => {
   const { currentUser } = useAuth();
   const socket = useNotify();
   const [messages, setMessages] = useState([]);
@@ -127,7 +127,7 @@ const ChatBox = ({ setMiniMessagner, user }) => {
           <X
             size={18}
             className="cursor-pointer"
-            onClick={() => setMiniMessagner(() => ({ open: false }))}
+            onClick={() => setMiniChat({ open: false })}
           />
         </div>
       </div>
