@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import { Send, Image, Heart, SendIcon } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
-import { ServerApi } from "@/constants";
+import { ServerApi } from "@/utils/constants";
 import { toast } from "sonner";
-import { timeAgo } from "@/constants";
+import { timeAgo } from "@/utils/constants";
 const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();

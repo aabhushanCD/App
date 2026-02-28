@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ServerApi } from "@/constants";
+import { ServerApi } from "@/utils/constants";
 import axios from "axios";
 import { toast } from "sonner";
 import {
@@ -18,7 +18,7 @@ import {
   Heart,
   UserX,
 } from "lucide-react";
-import { getAllUsers } from "@/services/friend.service";
+import { getAllUsers } from "@/features/friend/friend.service";
 
 const FriendContainer = () => {
   const [allUsers, setAllUsers] = useState({

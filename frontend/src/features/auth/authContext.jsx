@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, createContext } from "react";
 import { toast } from "sonner";
-
-import { AuthContext } from "@/context/context.jsx";
 
 import {
   loginApi,
   logOutApi,
   meApi,
   registerApi,
-} from "@/services/auth.service.js";
+} from "@/features/auth/auth.service";
 
-// export const AuthContext = createContext();
+export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user") || "null"),
-  );
+  const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,8 +18,8 @@ export const AuthContextProvider = ({ children }) => {
       try {
         const res = await meApi();
         setCurrentUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
       } catch (error) {
+        console.error(error);
         setCurrentUser(null);
         localStorage.removeItem("user");
       } finally {
@@ -37,7 +33,7 @@ export const AuthContextProvider = ({ children }) => {
       setLoading(true);
       const res = await loginApi(credentials);
       setCurrentUser(res.data.user);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+
       toast.success("Login successful");
       return true;
     } catch (error) {
@@ -70,19 +66,12 @@ export const AuthContextProvider = ({ children }) => {
     try {
       await logOutApi();
       setCurrentUser(null);
-      localStorage.removeItem("user");
-      toast.success("Logged out");
       return true;
     } catch (error) {
       toast.error(`${error.response?.data?.message}` || "Logout failed");
       return false;
     }
   };
-
-  // = io(`${SocketApi}`, {
-  //   query: { userId: currentUser?.userId },
-  //   withCredentials: true,
-  // });
 
   return (
     <AuthContext.Provider
@@ -100,4 +89,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-// export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);

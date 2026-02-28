@@ -1,11 +1,11 @@
 import MessangerContainer from "@/containers/MessangerContainer";
 
 // import { Button } from "@/components/ui/button";
-import { ServerApi } from "@/constants";
+import { ServerApi } from "@/utils/constants";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import MiniMessanger from "@/containers/MiniMessanger";
+import MiniMessanger from "@/containers/ChatBox";
 
 const Messanger = () => {
   const [isMiniMessagner, setMiniMessagner] = useState({

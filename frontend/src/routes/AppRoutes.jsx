@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Layout from "../layout/Layout";
-import Signup from "@/pages/Signup";
-import Login from "@/pages/Login";
+import Layout from "../components/layout/Layout";
+import Signup from "@/features/auth/pages/SignupPage";
+import Login from "@/features/auth/pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoutes from "./PublicRoutes";
 import Home from "@/components/Home";
@@ -11,8 +11,8 @@ import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/Messanger";
 import OtherProfile from "@/pages/OtherProfile";
-import ForgetPassword from "@/pages/ForgetPassword";
-import ResetPassword from "@/pages/ResetPassword";
+import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
+import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
 
 const AppRoutes = () => {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { ServerApi } from "../constants.js";
+import { ServerApi } from "../utils/constants.js";
 import Post from "../components/Post.jsx";
 import axios from "axios";
 import { toast } from "sonner";

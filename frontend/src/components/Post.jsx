@@ -8,14 +8,15 @@ import {
   X,
 } from "lucide-react";
 import axios from "axios";
-import { ServerApi, timeAgo } from "@/constants";
+import { ServerApi, timeAgo } from "@/utils/constants";
 
 // import { useAuth } from "@/store/AuthStore";
 import { Button } from "./ui/button";
-import Comment from "./Comment";
+import Comment from "../features/post/components/CommentSection";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/authContext";
+
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();

@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "@/api/axios";
 
 export const loginApi = (data) => {
   return api.post("/auth/login", data);
@@ -14,4 +14,12 @@ export const logOutApi = () => {
 
 export const meApi = () => {
   return api.get("/auth/me");
+};
+
+export const sendPassResetMail = (data) => {
+  return api.post("/auth/sendPassResetMail", data);
+};
+
+export const reset = ({ id, token, form }) => {
+  return api.post(`/auth/reset/${id}/${token}`, form.password);
 };

@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "../../api/axios";
 
 export const getAllFriend = () => {
   return api.get("/friend/getAllFriend/");

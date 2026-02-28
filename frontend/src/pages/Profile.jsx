@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ServerApi } from "@/constants";
-import { useAuth } from "@/hooks/useAuth";
-// import { useAuth } from "@/store/AuthStore";
+import { useAuth } from "@/features/auth/authContext";
+import { ServerApi } from "@/utils/constants";
+
+
 
 import axios from "axios";
 
@@ -39,7 +40,7 @@ const Profile = () => {
       } catch (error) {
         console.error(
           error?.response?.data?.message ||
-            "Something went wrong while fetching posts"
+            "Something went wrong while fetching posts",
         );
       }
     };
@@ -70,7 +71,7 @@ const Profile = () => {
       }
     } catch (error) {
       console.error(
-        error.message || "Something went wrong while updating profile"
+        error.message || "Something went wrong while updating profile",
       );
       toast.error(error.message);
     }
@@ -95,7 +96,7 @@ const Profile = () => {
       await axios.post(
         `${ServerApi}/highlight/addHighlight`,
         { postId, mediaIndex, memo: highlightMemo, type: "image" },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       toast.success("Highlight added successfully!");
       setAddHighlight({ open: false, state: 1 });
@@ -308,7 +309,7 @@ const Profile = () => {
                     onClick={() =>
                       handleAddHighlightSubmit(
                         selectedPostId,
-                        selectedMediaIndex
+                        selectedMediaIndex,
                       )
                     }
                   >

@@ -6,8 +6,9 @@ import React, {
   useState,
 } from "react";
 import { io } from "socket.io-client";
-import { SocketApi } from "@/constants";
-import { useAuth } from "@/hooks/useAuth";
+import { SocketApi } from "@/utils/constants";
+import { useAuth } from "@/features/auth/authContext";
+
 // import { useAuth } from "./AuthStore";
 
 export const NotificationContext = createContext();

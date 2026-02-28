@@ -1,14 +1,14 @@
 import AudioVideo from "@/components/Audio_Video";
-import { ServerApi } from "@/constants";
-import { useAuth } from "@/hooks/useAuth";
+import { ServerApi } from "@/utils/constants";
 
 import { useNotify } from "@/store/NotificationStore";
 import axios from "axios";
 import { GalleryHorizontal, Phone, Video, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/features/auth/authContext";
 
-const MiniMessanger = ({ setMiniMessagner, user }) => {
+const ChatBox = ({ setMiniMessagner, user }) => {
   const { currentUser } = useAuth();
   const socket = useNotify();
   const [messages, setMessages] = useState([]);
@@ -221,4 +221,4 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
   );
 };
 
-export default MiniMessanger;
+export default ChatBox;

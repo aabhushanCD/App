@@ -1,4 +1,4 @@
-import { timeAgo } from "@/constants";
+import { timeAgo } from "@/utils/constants";
 import { useNotify } from "@/store/NotificationStore";
 
 import { MessageSquare, X } from "lucide-react";

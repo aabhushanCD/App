@@ -1,29 +1,21 @@
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import {
-  Bell,
-  House,
-  Menu,
-  MessageCircle,
-  Search,
-  X,
-  MessageSquare,
-  LogOut,
-} from "lucide-react";
+import { Bell, House, MessageCircle, Search, LogOut } from "lucide-react";
 // import { useAuth } from "@/store/AuthStore";
 import { toast } from "sonner";
-import { ServerApi } from "@/constants";
+import { ServerApi } from "@/utils/constants";
 import axios from "axios";
 
 import MessangerContainer from "@/containers/MessangerContainer";
 
-import SearchBox from "./SearchBox";
-import { useAuth } from "@/hooks/useAuth";
-import MiniMessanger from "@/containers/MiniMessanger";
+// import SearchBox from "./SearchBox";
 
 import Notification from "./Notification";
-import { getAllFriend } from "@/services/friend.service";
+import { getAllFriends } from "@/features/friend/friend.service";
+import { useAuth } from "@/features/auth/authContext";
+import ChatBox from "@/containers/ChatBox";
+import NavSearch from "./NavBar/NavSearch";
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -37,27 +29,13 @@ const Navbar = () => {
     open: false,
     newMessage: [],
   });
-  const [search, setSearch] = useState({
-    open: false,
-    text: "",
-    result: [{ _id: "", name: "", imageUrl: "" }],
-  });
+
   const [isMiniMessagner, setMiniMessagner] = useState({
     open: false,
     user: {},
   });
-  const searchRef = useRef();
 
   const [allUsers, setAllUsers] = useState([]);
-
-  const handleLogout = async () => {
-    const success = await logout();
-    if (success) {
-      toast.success("Logout Successfully");
-      navigate("/login");
-    }
-  };
-
   // Audio/video calling setup
 
   const fetchNotification = async () => {
@@ -88,7 +66,7 @@ const Navbar = () => {
     setShowMessanger(!showMessanger);
     setBellOpen(false);
     try {
-      const res = await getAllFriend();
+      const res = await getAllFriends();
       if (res.status === 200) {
         setAllUsers(res.data.friend);
       }
@@ -99,31 +77,6 @@ const Navbar = () => {
       toast.error(
         error?.response?.data?.message || "Problem in getting All friend",
       );
-    }
-  };
-
-  const handleSearchChange = async () => {
-    setSearch((prev) => ({ ...prev, text: searchRef.current.value.trim() }));
-  };
-  const handleSearch = async () => {
-    if (searchRef.current.value.trim() === "") {
-      return;
-    }
-    try {
-      const res = await axios.post(
-        `${ServerApi}/auth/search`,
-        { text: search.text },
-        {
-          withCredentials: true,
-        },
-      );
-      setSearch((prev) => ({
-        open: true,
-        text: prev.text,
-        result: Array.isArray(res.data) ? res.data : res.data.users || null,
-      }));
-    } catch (error) {
-      toast.error("Invalid Search!", error);
     }
   };
 
@@ -156,42 +109,8 @@ const Navbar = () => {
       </div>
 
       {/* Right Icons */}
-      <div className=" flex  gap-5 items-center ">
-        <div className={`items-center border w-auto  h-8 rounded-2xl flex p-2`}>
-          <input
-            type="text"
-            className="w-full h-full border-none rounded-none outline-none text-xs font-semibold "
-            ref={searchRef}
-            value={search.text}
-            onChange={handleSearchChange}
-            placeholder="Search. . ."
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSearch();
-              }
-            }}
-          />
-          <Search
-            className="w-5 h-5   text-gray-600 cursor-pointer hover:text-blue-500"
-            onClick={handleSearch}
-          />
-        </div>
-
-        {search.open && (
-          <div className="absolute top-15 right-16 bg-gray-100">
-            <div className="w-100 h-100 border p-5 ">
-              {search.result.map((data) => (
-                <SearchBox
-                  data={data}
-                  key={data._id}
-                  setSearch={setSearch}
-                  search={search}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+      <div className=" flex gap-2 items-center ">
+        <NavSearch />
         <div className="hidden md:flex gap-2">
           <House
             className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
@@ -231,7 +150,7 @@ const Navbar = () => {
                       z-[60] flex flex-col transition-all duration-300 overflow-hidden
                     "
               >
-                <MiniMessanger
+                <ChatBox
                   user={isMiniMessagner.user}
                   setMiniMessagner={setMiniMessagner}
                 />
@@ -264,7 +183,13 @@ const Navbar = () => {
 
           <Button
             className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100"
-            onClick={handleLogout}
+            onClick={async () => {
+              const success = await logout();
+              if (success) {
+                toast.success("Logout Successfully");
+                navigate("/login");
+              }
+            }}
           >
             <LogOut />
           </Button>

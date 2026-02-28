@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../Navbar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer from "../Footer";
 import { Contact, Home, MessageCircle } from "lucide-react";
 
 const Layout = () => {

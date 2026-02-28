@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import CreatePost from "./CreatePost";
-import { ServerApi } from "../constants.js";
+import { ServerApi } from "../utils/constants.js";
 import PostContainer from "../containers/PostContainer";
 import axios from "axios";
 import { Camera, Image, Video } from "lucide-react";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import LeftSideBar from "./LeftSideBar";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/authContext";
 
 const Home = () => {
   const { currentUser } = useAuth();
