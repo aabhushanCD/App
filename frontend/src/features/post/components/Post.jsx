@@ -11,12 +11,11 @@ import axios from "axios";
 import { ServerApi, timeAgo } from "@/utils/constants";
 
 // import { useAuth } from "@/store/AuthStore";
-import { Button } from "./ui/button";
-import Comment from "../features/post/components/CommentSection";
+import { Button } from "../../../components/ui/button";
+import Comment from "./CommentSection";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth/authContext";
-
 
 const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   const { currentUser } = useAuth();

@@ -7,18 +7,20 @@ import { Label } from "@/components/ui/label";
 // import { useAuth } from "@/store/AuthStore.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth/authContext";
-
+import { createPost } from "../postService";
+import { toast } from "sonner";
 
 const CreatePost = ({
   loading,
   setForm,
+  setLoading,
   form,
   fileInputRef,
   contentInputRef,
   setCreate,
   handleContent,
   handleButton,
-  handlePostSubmit,
+  setPostData,
 }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -44,6 +46,32 @@ const CreatePost = ({
     }));
   };
 
+  const handlePostSubmit = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("content", form.content);
+
+      form.files.forEach((file) => {
+        formData.append("media", file);
+      });
+      const res = await createPost(formData);
+      // res.data;
+      if (res.status === 200) {
+        setPostData((prev) => ({
+          ...prev,
+          posts: [res.data.newPost, ...prev.posts],
+        }));
+        toast.success("Post Successfully", res.message);
+        setCreate(false);
+        setForm({ content: "", files: [] });
+      }
+    } catch (error) {
+      toast.error(error.response?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       {/* Popup modal */}

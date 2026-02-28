@@ -1,17 +1,43 @@
-import React from "react";
-import { ServerApi } from "../utils/constants.js";
-import Post from "../components/Post.jsx";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { toast } from "sonner";
+import Post from "@/features/post/components/Post";
+import { deletePost, getPostPagenation } from "./postService";
 
-const PostContainer = ({ postsData, setPostData }) => {
+const PostContainer = ({
+  postsData,
+  setPostData,
+  setLoading,
+  setHasMore,
+  page,
+}) => {
+  useEffect(() => {
+    const postFetch = async () => {
+      try {
+        setLoading(true);
+        const res = await getPostPagenation(page);
+        if (res.status === 200) {
+          setPostData((prev) => ({
+            ...prev,
+            posts: [...(prev.posts || []), ...res.data.posts],
+            hasMore: res.data.hasMore,
+            totalPosts: res.data.totalPosts,
+            userId: res.data.userId,
+          }));
+
+          setHasMore(res.data.hasMore);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    postFetch();
+  }, [page]);
+
   const handlePostDelete = async (postId) => {
     try {
-      const res = await axios.delete(
-        `${ServerApi}/post/deletePost/${postId}`,
-
-        { withCredentials: true },
-      );
+      const res = await deletePost(postId);
       if (res.status === 200) {
         const newData = postsData.posts.filter((post) => {
           return post._id != postId;
