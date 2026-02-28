@@ -10,7 +10,7 @@ import Profile from "@/features/profile/MyProfile";
 import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/pages/FriendContainer";
 import Messanger from "@/pages/Messanger";
-import OtherProfile from "@/pages/OtherProfile";
+import OtherProfile from "@/features/profile/OtherProfile";
 import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
 import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
 

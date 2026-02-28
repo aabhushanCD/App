@@ -11,3 +11,8 @@ export const addHighlight = (data) => {
 export const getHighlights = () => {
   return api.get("highlight/getHighlights/");
 };
+
+// other user Profile to check their profile
+export const getUserProfile = (id) => {
+  return api.get(`profile/getUserProfile/${id}`);
+};

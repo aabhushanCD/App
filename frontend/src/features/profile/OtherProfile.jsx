@@ -1,8 +1,7 @@
-import { ServerApi } from "@/utils/constants";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Grid2x2, Bookmark, Tags } from "lucide-react";
+import { getUserProfile } from "./profile.service";
 
 const OtherProfile = () => {
   const { Id } = useParams();
@@ -15,9 +14,7 @@ const OtherProfile = () => {
   // 🧠 Fetch user profile
   const fetchUserProfile = async () => {
     try {
-      const res = await axios.get(`${ServerApi}/profile/getUserProfile/${Id}`, {
-        withCredentials: true,
-      });
+      const res = await getUserProfile(Id);
       if (res.data.success) {
         setProfile(res.data);
       }
@@ -25,7 +22,7 @@ const OtherProfile = () => {
       console.error(error.message || "Failed to fetch user profile");
     }
   };
-  console.log(profile);
+
   useEffect(() => {
     fetchUserProfile();
   }, [Id]);

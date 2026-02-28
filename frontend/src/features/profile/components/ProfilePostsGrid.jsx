@@ -1,22 +1,6 @@
-import { myPosts } from "@/features/post/postService";
-import React, { useEffect } from "react";
+import React from "react";
 
-const ProfilePostsGrid = ({ setMyPost, myPost }) => {
-  useEffect(() => {
-    const fetchMyPosts = async () => {
-      try {
-        const res = await myPosts();
-        setMyPost(res.data.posts);
-      } catch (error) {
-        console.error(
-          error?.response?.data?.message ||
-            "Something went wrong while fetching posts",
-        );
-      }
-    };
-    fetchMyPosts();
-  });
-
+const ProfilePostsGrid = ({ myPost }) => {
   return (
     <>
       {myPost?.length > 0 && (

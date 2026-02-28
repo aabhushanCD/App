@@ -1,17 +1,32 @@
 import { useAuth } from "@/features/auth/authContext";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import EditProfile from "./components/EditProfile";
 import ProfileHeader from "./components/ProfileHeader";
 import ProfileHighlights from "./components/ProfileHighlights";
 import ProfilePostsGrid from "./components/ProfilePostsGrid";
 import ProfileTabs from "./components/ProfileTabs";
+import { myPosts } from "../post/postService";
 
 const Profile = () => {
   const [myPost, setMyPost] = useState([]);
   const { currentUser, setCurrentUser } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
+  useEffect(() => {
+    const fetchMyPosts = async () => {
+      try {
+        const res = await myPosts();
+        setMyPost(res.data.posts);
+      } catch (error) {
+        console.error(
+          error?.response?.data?.message ||
+            "Something went wrong while fetching posts",
+        );
+      }
+    };
+    fetchMyPosts();
+  }, []);
 
   return (
     <div className="md:flex md:items-center md:justify-center ">
@@ -37,7 +52,7 @@ const Profile = () => {
         <ProfileTabs />
 
         {/* --- My Posts --- */}
-        <ProfilePostsGrid myPost={myPost} setMyPost={setMyPost} />
+        <ProfilePostsGrid myPost={myPost} />
       </div>
     </div>
   );
