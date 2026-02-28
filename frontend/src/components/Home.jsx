@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import CreatePost from "./CreatePost";
 import { ServerApi } from "../constants.js";
-import PostContainer from "./PostContainer";
+import PostContainer from "../containers/PostContainer";
 import axios from "axios";
 import { Camera, Image, Video } from "lucide-react";
 
@@ -125,7 +125,7 @@ const Home = () => {
 
     if (observerRef.current) observer.observe(observerRef.current);
 
-    return () => {  
+    return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
   }, [hasMore, loading]);

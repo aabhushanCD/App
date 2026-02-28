@@ -1,18 +1,12 @@
+import AudioVideo from "@/components/Audio_Video";
 import { ServerApi } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 
 import { useNotify } from "@/store/NotificationStore";
 import axios from "axios";
-import {
-
-  GalleryHorizontal,
-  Phone,
-  Video,
-  X,
-} from "lucide-react";
+import { GalleryHorizontal, Phone, Video, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import AudioVideo from "./Audio_Video";
-import { useAuth } from "@/hooks/useAuth";
 
 const MiniMessanger = ({ setMiniMessagner, user }) => {
   const { currentUser } = useAuth();
@@ -68,7 +62,7 @@ const MiniMessanger = ({ setMiniMessagner, user }) => {
       const res = await axios.post(
         `${ServerApi}/message/sent/to/${user._id}`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 200) {
         textInputRef.current.value = "";

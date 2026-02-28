@@ -1,6 +1,4 @@
-import { ServerApi } from "@/constants";
-
-import { Ellipsis, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 

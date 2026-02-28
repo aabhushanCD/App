@@ -1,10 +1,11 @@
-import MessangerContainer from "@/components/MessangerContainer";
-import MiniMessanger from "@/components/MiniMessanger";
+import MessangerContainer from "@/containers/MessangerContainer";
+
 // import { Button } from "@/components/ui/button";
 import { ServerApi } from "@/constants";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import MiniMessanger from "@/containers/MiniMessanger";
 
 const Messanger = () => {
   const [isMiniMessagner, setMiniMessagner] = useState({
@@ -20,15 +21,15 @@ const Messanger = () => {
 
         {
           withCredentials: true,
-        }
+        },
       );
       setAllUsers(res.data.friend);
     } catch (error) {
       console.error(
-        error?.response?.data?.message || "Problem fetching all friends"
+        error?.response?.data?.message || "Problem fetching all friends",
       );
       toast.error(
-        error?.response?.data?.message || "Problem fetching all friends"
+        error?.response?.data?.message || "Problem fetching all friends",
       );
     }
   };

@@ -1,87 +1,65 @@
-import React, { useState } from "react";
-import { ServerApi } from "../constants.js";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import axios from "axios";
 import { AuthContext } from "@/context/context.jsx";
-import { Navigate } from "react-router-dom";
+
+import {
+  loginApi,
+  logOutApi,
+  meApi,
+  registerApi,
+} from "@/services/auth.service.js";
 
 // export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user") || null),
+    JSON.parse(localStorage.getItem("user") || "null"),
   );
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
-  const me = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${ServerApi}/auth/me`, {
-        withCredentials: true,
-      });
-      if (res.status === 200) {
+  useEffect(() => {
+    const validateUser = async () => {
+      try {
+        const res = await meApi();
         setCurrentUser(res.data.user);
         localStorage.setItem("user", JSON.stringify(res.data.user));
+      } catch (error) {
+        setCurrentUser(null);
+        localStorage.removeItem("user");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setCurrentUser(null);
-      localStorage.removeItem("user");
-      toast.error(error);
-      return <Navigate to="/login"></Navigate>;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async ({ email, password }) => {
-    setLoading(true);
+    };
+    validateUser();
+  }, []);
+  const login = async (credentials) => {
     try {
-      const res = await axios.post(
-        `${ServerApi}/auth/login`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true },
-      );
-      if (res.status === 200) {
-        setCurrentUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        return true;
-      }
-      return false;
+      setLoading(true);
+      const res = await loginApi(credentials);
+      setCurrentUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      toast.success("Login successful");
+      return true;
     } catch (error) {
-      console.error(error);
-      toast.error(`${error.response?.data?.message}` || `${error.message}`);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const register = async ({ name, email, password }) => {
-    setLoading(true);
-    try {
-      const res = await axios.post(
-        `${ServerApi}/auth/register`,
-        {
-          name,
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        },
-      );
-      if (res.status === 200 || res.status === 201) {
-        toast.success(res?.data?.message);
-        return true;
-      }
-      return false;
-    } catch (error) {
+      console.log(error);
       toast.error(
-        error.response?.data?.message || error.message || "Registration failed",
+        error.response?.data?.message || error.message || "Login failed",
       );
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (data) => {
+    try {
+      setLoading(true);
+      const res = await registerApi(data);
+
+      toast.success(res?.data?.message);
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed");
       return false;
     } finally {
       setLoading(false);
@@ -90,20 +68,13 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await axios.post(
-        `${ServerApi}/auth/logout`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
-      if (res.status === 200) {
-        localStorage.removeItem("user");
-        setCurrentUser(null);
-        return true;
-      }
+      await logOutApi();
+      setCurrentUser(null);
+      localStorage.removeItem("user");
+      toast.success("Logged out");
+      return true;
     } catch (error) {
-      toast.error(`${error.response?.data?.message}` || `${error.message}`);
+      toast.error(`${error.response?.data?.message}` || "Logout failed");
       return false;
     }
   };
@@ -114,21 +85,18 @@ export const AuthContextProvider = ({ children }) => {
   // });
 
   return (
-    <div>
-      <AuthContext.Provider
-        value={{
-          isLoading,
-          me,
-          login,
-          register,
-          logout,
-          currentUser,
-          setCurrentUser,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </div>
+    <AuthContext.Provider
+      value={{
+        isLoading,
+        login,
+        register,
+        logout,
+        currentUser,
+        setCurrentUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 

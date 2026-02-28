@@ -6,6 +6,7 @@ const SearchBox = ({ data, setSearch }) => {
   document.addEventListener("click", () => {
     setSearch(() => ({ open: false }));
   });
+
   return (
     <div
       className="flex gap-2  items-center border p-4 rounded-2xl bg-gray-300 "

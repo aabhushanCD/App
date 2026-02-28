@@ -9,6 +9,7 @@ import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ServerApi } from "@/constants";
+import { Field, FieldLabel } from "@/components/ui/field";
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -41,15 +42,18 @@ const ForgetPassword = () => {
   };
   return (
     <div className=" flex justify-center items-center h-screen">
-      <div className="flex flex-col gap-4 w-6x1 p-6 rounded-lg shadow-md border ">
-        <div className="flex justify-center border-b-[3px] pb-2">
-          <h1 className="text-xl font-semibold">Forget Password</h1>
+      <div className=" w-md p-6 rounded-lg shadow-md border ">
+        <div className=" text-center border-b-[3px] pb-4">
+          <h1 className="text-4xl font-semibold text-blue-950">
+            Forget Password
+          </h1>
         </div>
 
-        <form className="flex flex-col gap-2">
-          <div className="flex flex-col gap-1">
-            <Label>Email</Label>
+        <form className="flex flex-col gap-2 mt-4">
+          <Field>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              id="email"
               placeholder="user@gmail.com"
               type="email"
               name="email"
@@ -57,7 +61,7 @@ const ForgetPassword = () => {
               onChange={handleChange}
               required
             />
-          </div>
+          </Field>
 
           {isLoading ? (
             <Loader className="animate-spin ml-19" />
@@ -67,8 +71,11 @@ const ForgetPassword = () => {
             </Button>
           )}
         </form>
-        <Link to="/login" className="m-auto text-blue-600">
-          Back to Login?
+        <Link
+          to="/login"
+          className="w-full flex justify-center p-3 text-blue-600"
+        >
+          <span> Back to Login ?</span>
         </Link>
         <div className="flex justify-center flex-col items-center  ">
           <span>No Account?</span>

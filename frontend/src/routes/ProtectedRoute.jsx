@@ -1,15 +1,12 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const { currentUser, me, isLoading } = useAuth();
+  const { currentUser, isLoading } = useAuth();
 
   // Call me() once on mount
-  useEffect(() => {
-    me();
-  }, []);
 
   // Show loader while checking session
   if (isLoading) {

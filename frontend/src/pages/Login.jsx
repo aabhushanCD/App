@@ -65,7 +65,7 @@ const Login = () => {
               <Input
                 id="password"
                 placeholder="**************"
-                type="text"
+                type="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}

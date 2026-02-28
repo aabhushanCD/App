@@ -18,6 +18,7 @@ import {
   Heart,
   UserX,
 } from "lucide-react";
+import { getAllUsers } from "@/services/friend.service";
 
 const FriendContainer = () => {
   const [allUsers, setAllUsers] = useState({
@@ -29,9 +30,7 @@ const FriendContainer = () => {
   const fetchUser = async () => {
     if (allUsers.title === "Add Friends") return;
     try {
-      const res = await axios.get(`${ServerApi}/friend/getAllUsers`, {
-        withCredentials: true,
-      });
+      const res = await getAllUsers();
       if (res.status === 200) {
         setAllUsers({ title: "Add Friends", data: res.data.users });
         setActiveTab("add");
