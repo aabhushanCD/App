@@ -1,5 +1,5 @@
 // components/navbar/NavMessenger.jsx
-import { useState } from "react";
+import { memo, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import MessangerContainer from "@/containers/MessangerContainer";
@@ -55,4 +55,4 @@ const NavMessenger = () => {
   );
 };
 
-export default NavMessenger;
+export default memo(NavMessenger);

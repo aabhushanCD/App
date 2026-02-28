@@ -1,5 +1,5 @@
 // components/navbar/NavSearch.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
@@ -73,4 +73,4 @@ const NavSearch = () => {
   );
 };
 
-export default NavSearch;
+export default memo(NavSearch);
