@@ -1,4 +1,5 @@
-import React from "react";
+
+import FriendRequestCart from "./components/FriendRequestCart";
 
 const FriendRequestSection = ({ allUsers }) => {
   return (

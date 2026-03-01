@@ -17,7 +17,7 @@ export const useWebRTC = (remoteUserId) => {
 
     pc.onicecandidate = (event) => {
       if (event.candidate && remoteUserId) {
-        socket.emit("ice-candidate", {
+        socket.emit("ice-candidates", {
           receiverId: remoteUserId,
           candidate: event.candidate,
         });
@@ -57,6 +57,14 @@ export const useWebRTC = (remoteUserId) => {
   const addIceCandidate = async (candidate) => {
     await peer.current.addIceCandidate(new RTCIceCandidate(candidate));
   };
+  const closeConnection = () => {
+    if (peer.current) {
+      peer.current.getSenders().forEach((sender) => {
+        if (sender.track) sender.track.stop();
+      });
+      peer.current.close();
+    }
+  };
 
   return {
     peer,
@@ -64,6 +72,7 @@ export const useWebRTC = (remoteUserId) => {
     remoteStream,
     startLocalStream,
     createOffer,
+    closeConnection,
     createAnswer,
     setRemoteDescription,
     addIceCandidate,
