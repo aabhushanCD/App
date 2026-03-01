@@ -37,7 +37,7 @@ const NavMessenger = () => {
 
       {/* Messenger Dropdown */}
       {showMessanger && (
-        <div className="absolute top-11 right-0 w-96 min-h-[300px] bg-white shadow-2xl rounded-md z-50">
+        <div className="absolute md:top-11 md:right-0 w-100 -left-75 inset-0 top-11  h-auto  bg-white shadow-2xl rounded-md z-50">
           <MessangerBox
             allUsers={allUsers}
             setMiniChat={setMiniChat}

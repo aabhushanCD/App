@@ -21,15 +21,18 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
 
     socket.on("offer", async ({ sdp, from }) => {
       await setRemoteDescription(sdp);
+
       const answer = await createAnswer();
       socket.emit("answer", { receiverId: from, sdp: answer });
+      const ok = alert("SomeOne is calling Your");
+      ok ? callUser() : endCall();
     });
 
     socket.on("answer", async ({ sdp }) => {
       await setRemoteDescription(sdp);
     });
 
-    socket.on("ice-candidate", async ({ candidate }) => {
+    socket.on("ice-candidates", async ({ candidate }) => {
       await addIceCandidate(candidate);
     });
 

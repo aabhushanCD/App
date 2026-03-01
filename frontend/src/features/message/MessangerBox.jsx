@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Ellipsis, Search } from "lucide-react";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,18 +8,22 @@ const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
   return (
     <div
       className={`${
-        location.pathname === "/messanger" && "h-screen"
-      }  bg-white w-full shadow-2xl  overflow-y-auto`}
+        location.pathname === "/messanger" ? "h-screen" : "h-150 "
+      }  bg-white w-full shadow-2xl  flex flex-col`}
     >
-      <div className="flex flex-col gap-3 p-4  h-auto min-h-90">
-        <div className="sticky top-4 bg-white flex flex-col gap-3 p-4 ">
+      <div className="flex flex-col h-full">
+        <div className="sticky  top-0 bg-white flex flex-col gap-3 p-4 ">
           <div className=" flex gap-3 justify-between items-center ">
-            <h1
-              className="flex font-bold text-3xl text-blue-600 cursor-pointer"
-              onClick={() => navigate("/home")}
-            >
-              Hello's
-            </h1>
+            {location.pathname === "/messanger" ? (
+              <h1
+                className="flex font-bold text-3xl text-blue-600 cursor-pointer"
+                onClick={() => navigate("/home")}
+              >
+                Hello's
+              </h1>
+            ) : (
+              <h1 className="flex font-bold text-3xl text-blue-600 ">Chat's</h1>
+            )}
             <div className="flex gap-3">
               <Ellipsis />
             </div>

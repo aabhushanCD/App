@@ -3,7 +3,7 @@ import React from "react";
 const ChatChats = ({ dd, currentUser }) => {
   return (
     <div
-      key={dd._id}
+     
       className={`${
         dd.senderId === currentUser.userId
           ? "self-end bg-blue-500 text-white ml-auto"

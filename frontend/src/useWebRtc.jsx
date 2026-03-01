@@ -17,7 +17,7 @@ export const useWebRTC = (remoteUserId) => {
 
     pc.onicecandidate = (event) => {
       if (event.candidate && remoteUserId) {
-        socket.emit("ice-candidates", {
+        socket.emit("ice-candidate", {
           receiverId: remoteUserId,
           candidate: event.candidate,
         });

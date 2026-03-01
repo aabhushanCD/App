@@ -107,7 +107,7 @@ const ChatBox = ({ user, setMiniChat }) => {
           </div>
         )}
         {messages.map((dd) => (
-          <ChatChats dd={dd} currentUser={currentUser} />
+          <ChatChats key={dd._id} dd={dd} currentUser={currentUser} />
         ))}
       </div>
 
