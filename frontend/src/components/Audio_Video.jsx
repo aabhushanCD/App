@@ -2,8 +2,10 @@ import { useWebRTC } from "@/useWebRtc";
 import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useNotify } from "@/features/notification/NotificationStore";
+import { useAuth } from "@/features/auth/authContext";
 
 const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
+  const { currentUser } = useAuth();
   const socket = useNotify();
   const {
     localStream,
@@ -17,15 +19,11 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
   } = useWebRTC(remoteUserId);
 
   useEffect(() => {
-    startLocalStream();
-
     socket.on("offer", async ({ sdp, from }) => {
+      await startLocalStream();
       await setRemoteDescription(sdp);
-
       const answer = await createAnswer();
       socket.emit("answer", { receiverId: from, sdp: answer });
-      const ok = alert("SomeOne is calling Your");
-      ok ? callUser() : endCall();
     });
 
     socket.on("answer", async ({ sdp }) => {
@@ -41,6 +39,27 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
       onEndCall?.();
     });
 
+    socket.on("call-user", ({ from }) => {
+      const accepted = window.confirm("Incoming Call. Accept?");
+      if (accepted) {
+        socket.emit("call-accepted", { receiverId: from });
+      } else {
+        socket.emit("call-rejected", { receiverId: from });
+      }
+    });
+    socket.on("call-accepted", async ({ from }) => {
+      await startLocalStream();
+
+      const offer = await createOffer();
+      socket.emit("offer", {
+        receiverId: from,
+        sdp: offer,
+      });
+    });
+
+    socket.on("call-rejected", () => {
+      alert("Call Rejected");
+    });
     return () => {
       socket.off("offer");
       socket.off("answer");
@@ -50,8 +69,10 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
   }, [socket, remoteUserId]);
 
   const callUser = async () => {
-    const offer = await createOffer();
-    socket.emit("offer", { receiverId: remoteUserId, sdp: offer });
+    socket.emit("call-user", {
+      receiverId: remoteUserId,
+      name: currentUser.name,
+    });
   };
 
   const endCall = () => {

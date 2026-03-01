@@ -20,31 +20,45 @@ io.on("connection", (socket) => {
   if (userId) socket.join(userId);
   console.log(`User ${userId} joined their room`);
 
-  // when one user calls another
+  // Send Call request. when one user calls another
   socket.on("call-user", (data) => {
     io.to(data.receiverId).emit("incoming-call", {
       from: userId,
       name: data.name,
     });
   });
+  // Accept Call
+  socket.on("call-accepted", ({ receiverId }) => {
+    io.to(receiverId).emit("call-accepted", {
+      from: userId,
+    });
+  });
 
-  // when caller sends offer SDP
+  // Reject Call
+  socket.on("call-reject", ({ receiverId }) => {
+    io.to(receiverId).emit("call-rejected", {
+      from: userId,
+    });
+  });
+
+  // WebRTC offer. when caller sends offer SDP
   socket.on("offer", (data) => {
     io.to(data.receiverId).emit("offer", { sdp: data.sdp, from: userId });
   });
 
-  // when callee sends answer SDP
+  // WebRTC answer. when callee sends answer SDP
   socket.on("answer", (data) => {
     io.to(data.receiverId).emit("answer", { sdp: data.sdp, from: userId });
   });
 
-  // send ICE candidates
+  //  ICE candidates
   socket.on("ice-candidate", (data) => {
     io.to(data.receiverId).emit("ice-candidates", {
       candidate: data.candidate,
       from: userId,
     });
   });
+  // End Call
   socket.on("end", (data) => {
     io.to(data.receiverId).emit("call-ended", { from: userId });
   });
