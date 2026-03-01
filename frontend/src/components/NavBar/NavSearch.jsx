@@ -65,7 +65,7 @@ const NavSearch = () => {
       {open && searchResult.length > 0 && (
         <div className="absolute top-full left-0 p-2 bg-white shadow-lg border rounded-md mt-1 z-50 w-full max-h-64 overflow-y-auto">
           {searchResult.map((user) => (
-            <SearchUser key={user._id} data={user} />
+            <SearchUser key={user._id} data={user}  />
           ))}
         </div>
       )}
