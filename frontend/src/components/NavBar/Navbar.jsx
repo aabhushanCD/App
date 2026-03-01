@@ -19,16 +19,9 @@ const Navbar = () => {
   // Audio/video calling setup
 
   return (
-    <div className="flex justify-between flex-1  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
+    <div className="flex justify-evenly flex-1  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
       {/* Logo */}
-      <div className="flex items-center gap-3">
-        <a
-          href="/home"
-          className="bg-transparent text-blue-500 mr-2 text-2xl font-bold hover:bg-transparent"
-        >
-          Hell'O
-        </a>
-      </div>
+      
 
       {/* Center Navigation */}
       <div className="hidden md:flex gap-6">

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getHighlights } from "../profile.service";
+import { X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ProfileHighlights = ({ myPost }) => {
   const [selectedPostId, setSelectedPostId] = useState(null);

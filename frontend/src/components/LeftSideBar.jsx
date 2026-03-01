@@ -1,27 +1,71 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import {
+  Home,
+  Users,
+  MessageCircle,
+  Bell,
+  LogOut,
+  Newspaper,
+} from "lucide-react";
+
+const menuItems = [
+  { name: "News Feed", path: "/newsfeeds", icon: Newspaper },
+  { name: "Friends", path: "/friend", icon: Users },
+  { name: "Messenger", path: "/messanger", icon: MessageCircle },
+];
 
 const LeftSideBar = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
-    <div className="hidden  md:flex z-10 w-full flex-col overflow-auto border-r border-gray-200 dark:border-gray-700">
-      <div>
-        <h1 className="text-3xl border-b">SHORTCUTS</h1>
+    <div className="sticky top-0 h-screen w-full border-r bg-linear-to-br from-white via-blue-100 to-green-100 px-6 py-6 flex flex-col">
+      {/* Logo */}
+      <div className="mb-10">
+        <Link
+          to="/home"
+          className="text-3xl font-extrabold text-blue-500 tracking-wide"
+        >
+          Hell'O
+        </Link>
       </div>
-      <div className="flex flex-col items-start">
-        <button onClick={() => navigate("/newsfeeds")}>News Feed</button>
-        <button className="line-through">Inbox</button>
 
-        <button onClick={() => navigate("/friend")}>Friends</button>
+      {/* Navigation */}
+      <div className="flex flex-col gap-2 flex-1">
+        {menuItems.map(({ name, path, icon }) => {
+          const Icon = icon;
+          const isActive = location.pathname === path;
 
-        <button className="" onClick={() => navigate("/messanger")}>
-          Messanger
+          return (
+            <Link
+              key={path}
+              to={path}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                ${
+                  isActive
+                    ? "bg-blue-50 text-blue-600 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+            >
+              <Icon size={20} />
+              <span>{name}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Bottom Section */}
+      <div className="border-t pt-5 flex flex-col gap-2">
+        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition">
+          <Bell size={20} />
+          Notifications
         </button>
-        <button className="line-through">Notifications</button>
 
-        <button>Logout</button>
+        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition">
+          <LogOut size={20} />
+          Logout
+        </button>
       </div>
-      <div></div>
     </div>
   );
 };

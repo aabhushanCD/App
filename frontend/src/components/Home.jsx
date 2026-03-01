@@ -55,7 +55,6 @@ const Home = () => {
     };
   }, [hasMore]);
 
-  
   useEffect(() => {
     const postFetch = async () => {
       try {
@@ -83,65 +82,56 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex  w-full gap-0 md:gap-5  max-w-7xl mx-auto dark:bg-black dark:text-white ">
-        {/* Sidebar */}
-        <div className="hidden md:block sticky top-15 w-[21%] h-[100vh]">
-          <LeftSideBar />
-        </div>
-        {/* Main Feed */}
-        <div className=" flex-1 max-w-2xl w-full md:space-y-2">
-          {/* Create Post Section */}
-          <PostCreateSmall
-            currentUser={currentUser}
+      {/* Main Feed */}
+      <div className=" flex-1 max-w-2xl w-full md:space-y-2 justify-self-center">
+        {/* Create Post Section */}
+        <PostCreateSmall
+          currentUser={currentUser}
+          setLoading={setLoading}
+          form={form}
+          setPostData={setPostData}
+          setCreate={setCreate}
+          setForm={setForm}
+          handleButton={handleButton}
+        />
+
+        {/* Create modal */}
+        {isCreate && (
+          <CreatePost
+            setForm={setForm}
+            loading={loading}
             setLoading={setLoading}
             form={form}
             setPostData={setPostData}
+            fileInputRef={fileInputRef}
+            contentInputRef={contentInputRef}
             setCreate={setCreate}
-            setForm={setForm}
             handleButton={handleButton}
           />
+        )}
 
-          {/* Create modal */}
-          {isCreate && (
-            <CreatePost
-              setForm={setForm}
-              loading={loading}
-              setLoading={setLoading}
-              form={form}
-              setPostData={setPostData}
-              fileInputRef={fileInputRef}
-              contentInputRef={contentInputRef}
-              setCreate={setCreate}
-              handleButton={handleButton}
-            />
-          )}
-
-          {/* Posts */}
-          <div className="space-y-6">
-            <PostContainer
-              postsData={postsData}
-              setPostData={setPostData}
-              setLoading={setLoading}
-              setHasMore={setHasMore}
-            />
-            <div
-              ref={observerRef}
-              className="h-12 flex justify-center items-center"
-            >
-              {loading && (
-                <p className="text-gray-500 text-sm animate-pulse">
-                  Loading more posts...
-                </p>
-              )}
-              {!hasMore && (
-                <p className="text-gray-400 text-sm">You’ve reached the end</p>
-              )}
-            </div>
+        {/* Posts */}
+        <div className="space-y-6">
+          <PostContainer
+            postsData={postsData}
+            setPostData={setPostData}
+            setLoading={setLoading}
+            setHasMore={setHasMore}
+          />
+          <div
+            ref={observerRef}
+            className="h-12 flex justify-center items-center"
+          >
+            {loading && (
+              <p className="text-gray-500 text-sm animate-pulse">
+                Loading more posts...
+              </p>
+            )}
+            {!hasMore && (
+              <p className="text-gray-400 text-sm">You’ve reached the end</p>
+            )}
           </div>
         </div>
-
-        {/* Right Sidebar (Optional for balance) */}
-        <RightSideBar />
       </div>
     </>
   );
