@@ -30,7 +30,7 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
       await setRemoteDescription(sdp);
     });
 
-    socket.on("ice-candidates", async ({ candidate }) => {
+    socket.on("ice-candidate", async ({ candidate }) => {
       await addIceCandidate(candidate);
     });
 
@@ -56,6 +56,15 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
         sdp: offer,
       });
     });
+    socket.on("incoming-call", ({ from }) => {
+      const accepted = window.confirm("Incoming Call. Accept?");
+
+      if (accepted) {
+        socket.emit("call-accepted", { receiverId: from });
+      } else {
+        socket.emit("call-rejected", { receiverId: from });
+      }
+    });
 
     socket.on("call-rejected", () => {
       alert("Call Rejected");
@@ -65,6 +74,9 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
       socket.off("answer");
       socket.off("ice-candidate");
       socket.off("call-ended");
+      socket.off("incoming-call");
+      socket.off("call-accepted");
+      socket.off("call-rejected");
     };
   }, [socket, remoteUserId]);
 

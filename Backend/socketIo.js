@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
   });
 
   // Reject Call
-  socket.on("call-reject", ({ receiverId }) => {
+  socket.on("call-rejected", ({ receiverId }) => {
     io.to(receiverId).emit("call-rejected", {
       from: userId,
     });
@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
 
   //  ICE candidates
   socket.on("ice-candidate", (data) => {
-    io.to(data.receiverId).emit("ice-candidates", {
+    io.to(data.receiverId).emit("ice-candidate", {
       candidate: data.candidate,
       from: userId,
     });
