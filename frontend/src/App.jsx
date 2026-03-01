@@ -1,35 +1,63 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-
 import AppRoutes from "./routes/AppRoutes";
 import { useNotify } from "./features/notification/NotificationStore";
 
 import CallPopup from "./components/CallPopup";
-import AudioVideo from "./components/Audio_Video";
+import AudioVideo from "./components/AudioVideo";
 
 function App() {
   const socket = useNotify();
-  const [incomingCall, setIncomingCall] = useState(null);
-  const [activeCall, setActiveCall] = useState(null);
+  const [incomingCall, setIncomingCall] = useState(null); // for receiver popup
+  const [outgoingCall, setOutgoingCall] = useState(null); // for caller “Calling…”
+  const [activeCall, setActiveCall] = useState(null); // ongoing video call
+
   useEffect(() => {
     if (!socket) return;
+
+    // 🔹 Receiver gets a call
     const handleIncomingCall = ({ from, name }) => {
       setIncomingCall({ from, name });
     };
+
+    // 🔹 Receiver accepts the call
+    const handleCallAccepted = ({ from }) => {
+      setOutgoingCall(null); // stop “Calling…” UI
+      setActiveCall({ from });
+    };
+
+    // 🔹 Receiver rejects the call
+    const handleCallRejected = ({ from }) => {
+      alert("Call Rejected by user", from);
+      setOutgoingCall(null);
+    };
+
+    // 🔹 Call ended
+    const handleCallEnded = () => {
+      setActiveCall(null);
+    };
+
     socket.on("incoming-call", handleIncomingCall);
+    socket.on("call-accepted", handleCallAccepted);
+    socket.on("call-rejected", handleCallRejected);
+    socket.on("call-ended", handleCallEnded);
 
     return () => {
       socket.off("incoming-call", handleIncomingCall);
+      socket.off("call-accepted", handleCallAccepted);
+      socket.off("call-rejected", handleCallRejected);
+      socket.off("call-ended", handleCallEnded);
     };
   }, [socket]);
+
   return (
     <>
-      {incomingCall && (
+      {/* Receiver Popup */}
+      {incomingCall && !activeCall && (
         <CallPopup
           caller={incomingCall}
           onAccept={() => {
             socket.emit("call-accepted", { receiverId: incomingCall.from });
-            setActiveCall(incomingCall);
+            setActiveCall({ from: incomingCall.from });
             setIncomingCall(null);
           }}
           onReject={() => {
@@ -39,17 +67,30 @@ function App() {
         />
       )}
 
-      <div className="relative w-full max-h-screen">
-        {activeCall && (
-          <div className="absolute top-0 left-0 h-screen">
-            <AudioVideo
-              remoteUserId={activeCall.from}
-              onEndCall={() => setActiveCall(null)}
-              setVideoCall={setActiveCall}
-            />
-          </div>
-        )}
-      </div>
+      {/* Caller “Calling…” popup */}
+      {outgoingCall && !activeCall && (
+        <CallPopup
+          caller={outgoingCall}
+          isCalling={true} // show “Calling…”
+          onCancel={() => {
+            socket.emit("call-ended", { receiverId: outgoingCall.from });
+            setOutgoingCall(null);
+          }}
+        />
+      )}
+
+      {/* Active video call */}
+      {activeCall && (
+        <AudioVideo
+          remoteUserId={activeCall.from}
+          onEndCall={() => {
+            socket.emit("call-ended", { receiverId: activeCall.from });
+            setActiveCall(null);
+          }}
+          setVideoCall={setActiveCall}
+        />
+      )}
+
       <AppRoutes />
     </>
   );
