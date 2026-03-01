@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
 import { searchUsers } from "@/features/search/search.service"; // service layer
-import SearchUser from "../SearchUser";
+import SearchUser from "../../features/search/SearchUser";
 
 const NavSearch = () => {
   const [searchText, setSearchText] = useState("");

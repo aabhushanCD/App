@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { X } from "lucide-react";
 
-import Comment from "./CommentSection";
+import Comment from "../../comment/CommentSection";
 
 import { useAuth } from "@/features/auth/authContext";
 import PostHead from "./Post/PostHead";
