@@ -49,22 +49,13 @@ const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
     });
     socket.on("call-accepted", async ({ from }) => {
       await startLocalStream();
-
       const offer = await createOffer();
       socket.emit("offer", {
         receiverId: from,
         sdp: offer,
       });
     });
-    socket.on("incoming-call", ({ from }) => {
-      const accepted = window.confirm("Incoming Call. Accept?");
-
-      if (accepted) {
-        socket.emit("call-accepted", { receiverId: from });
-      } else {
-        socket.emit("call-rejected", { receiverId: from });
-      }
-    });
+ 
 
     socket.on("call-rejected", () => {
       alert("Call Rejected");
