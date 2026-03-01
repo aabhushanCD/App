@@ -9,7 +9,7 @@ import Home from "@/components/Home";
 import Profile from "@/features/profile/MyProfile";
 import Audio_Video from "@/components/Audio_Video";
 import FriendContainer from "@/features/friend/FriendContainer";
-import Messanger from "@/pages/Messanger";
+import Messanger from "@/features/message/Messanger";
 import OtherProfile from "@/features/profile/OtherProfile";
 import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
 import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
@@ -33,12 +33,12 @@ const AppRoutes = () => {
           <Route path="/web" element={<Audio_Video />} />
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
-          <Route path="/messanger" element={<Messanger />} />
+
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
 
           {/* Add more protected routes here */}
         </Route>
-
+        <Route path="/messanger" element={<Messanger />} />
         {/* Public Routes */}
         <Route
           path="/login"

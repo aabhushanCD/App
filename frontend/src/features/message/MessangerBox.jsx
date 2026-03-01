@@ -1,8 +1,9 @@
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Ellipsis, Search } from "lucide-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-const MessangerContainer = ({ setMiniChat, allUsers }) => {
+const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
   const location = useLocation();
   return (
     <div
@@ -14,38 +15,34 @@ const MessangerContainer = ({ setMiniChat, allUsers }) => {
         <div className=" flex gap-3 justify-between items-center ">
           <h1 className="flex font-bold text-3xl">Chats</h1>
           <div className="flex gap-3">
-            {/* <Ellipsis />
-            <button>B</button> */}
+            <Ellipsis />
           </div>
         </div>
         <div className="flex gap-2 bg-gray-200 text-gray-500 rounded-2xl p-1">
           <Search />
           <input
             type="text"
+            
             className="w-full border-none outline-none"
             placeholder="Write Something..."
           />
         </div>
         <div className=" hidden md:flex  font-semibold flex-wrap ">
-          <button className="rounded-2xl active:bg-gray-200 p-2 ">All</button>
-          <button className="rounded-2xl active:bg-gray-200 p-2 ">
-            Unread
-          </button>
-          <button className="rounded-2xl active:bg-gray-200 p-2 ">
-            Groups
-          </button>
-          <button className="rounded-2xl active:bg-gray-200 p-2 ">
-            Communities
-          </button>
+          {["All", "Unread", "Groups", "Communities"].map((btm) => (
+            <button className="rounded-2xl active:bg-gray-200 p-2">
+              {btm}
+            </button>
+          ))}
         </div>
 
         <div className="overflow-auto h-auto flex flex-col gap-2">
           {allUsers.map((uj) => (
             <div
               key={uj._id}
-              className=" flex flex-wrap gap-2 items-center rounded-2xl hover:bg-blue-500 cursor-pointer"
+              className=" flex flex-wrap gap-2 items-center rounded-2xl p-2 hover:bg-blue-300 cursor-pointer"
               onClick={() => {
                 setMiniChat({ open: true, user: uj });
+                setShowMessanger(false);
               }}
             >
               <div className=" flex  w-12 h-12 border-2 rounded-full overflow-hidden ">
@@ -63,7 +60,9 @@ const MessangerContainer = ({ setMiniChat, allUsers }) => {
               </div>
               <div className="p-1">
                 <h1 className="font-semibold">{uj.name}</h1>
-                <p className="hidden md:block">{"Write a message..."}</p>
+                <p className="hidden md:block text-gray-500">
+                  {"Write a message..."}
+                </p>
               </div>
             </div>
           ))}
@@ -73,4 +72,4 @@ const MessangerContainer = ({ setMiniChat, allUsers }) => {
   );
 };
 
-export default MessangerContainer;
+export default MessangerBox;

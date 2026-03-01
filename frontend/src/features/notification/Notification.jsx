@@ -33,7 +33,7 @@ const Notification = ({
   }, [socket]);
 
   return (
-    <div className="absolute -right-8 mt-2 border w-80 rounded-2xl bg-blue-400 shadow-lg">
+    <div className="absolute -right-8 mt-2 border w-80 rounded-2xl bg-blue-50 shadow-lg">
       <div className="p-3">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold">Notifications</h1>

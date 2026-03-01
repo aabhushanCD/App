@@ -2,9 +2,10 @@
 import { memo, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { toast } from "sonner";
-import MessangerContainer from "@/containers/MessangerContainer";
-import ChatBox from "@/containers/ChatBox";
+
+import ChatBox from "@/features/message/ChatBox";
 import { getAllFriends } from "@/features/friend/friend.service";
+import MessangerBox from "@/features/message/MessangerBox";
 
 const NavMessenger = () => {
   const [showMessanger, setShowMessanger] = useState(false);
@@ -37,7 +38,7 @@ const NavMessenger = () => {
       {/* Messenger Dropdown */}
       {showMessanger && (
         <div className="absolute top-11 right-0 w-96 min-h-[300px] bg-white shadow-2xl rounded-md z-50">
-          <MessangerContainer
+          <MessangerBox
             allUsers={allUsers}
             setMiniChat={setMiniChat}
             setShowMessanger={setShowMessanger}
@@ -47,7 +48,7 @@ const NavMessenger = () => {
 
       {/* Mini Chat Window */}
       {miniChat.open && (
-        <div className="fixed bottom-4 right-4 w-[380px] h-[75vh] bg-white shadow-2xl rounded-t-2xl z-[60] flex flex-col overflow-hidden">
+        <div className="fixed bottom-4 right-4 w-[380px] h-[75vh] bg-white shadow-2xl rounded-t-2xl z-60 flex flex-col overflow-hidden">
           <ChatBox user={miniChat.user} setMiniChat={setMiniChat} />
         </div>
       )}

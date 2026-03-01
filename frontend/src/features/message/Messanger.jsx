@@ -1,12 +1,8 @@
-import MessangerContainer from "@/containers/MessangerContainer";
-
-// import { Button } from "@/components/ui/button";
-import { ServerApi } from "@/utils/constants";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-
-import ChatBox from "@/containers/ChatBox";
+import ChatBox from "@/features/message/ChatBox";
+import { getAllFriends } from "../friend/friend.service";
+import MessangerBox from "@/features/message/MessangerBox";
 
 const Messanger = () => {
   const [isMiniMessagner, setMiniMessagner] = useState({
@@ -17,13 +13,7 @@ const Messanger = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(
-        `${ServerApi}/friend/getAllFriends`,
-
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await getAllFriends();
       setAllUsers(res.data.friend);
     } catch (error) {
       console.error(
@@ -41,17 +31,14 @@ const Messanger = () => {
   return (
     <div className="flex flex-2 h-full">
       <div
-        className={`sm:w-[30%] w-full  ${
+        className={`sm:w-[30%] md:w-100   ${
           isMiniMessagner.open ? "hidden  sm:block " : ""
         }`}
       >
-        <MessangerContainer
-          allUsers={allUsers}
-          setMiniChat={setMiniMessagner}
-        />
+        <MessangerBox allUsers={allUsers} setMiniChat={setMiniMessagner} />
       </div>
       {isMiniMessagner.open && (
-        <div className="md:w-[70%] w-full min-h-screen  z-50 sm:z-10">
+        <div className=" w-full   z-50 sm:z-10">
           <ChatBox user={isMiniMessagner.user} setMiniChat={setMiniMessagner} />
         </div>
       )}
