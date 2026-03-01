@@ -39,13 +39,17 @@ function App() {
         />
       )}
 
-      {activeCall && (
-        <AudioVideo
-          remoteUserId={activeCall.from}
-          onEndCall={() => setActiveCall(null)}
-          setVideoCall={setActiveCall}
-        />
-      )}
+      <div className="relative w-full max-h-screen">
+        {activeCall && (
+          <div className="absolute top-0 left-0 h-screen">
+            <AudioVideo
+              remoteUserId={activeCall.from}
+              onEndCall={() => setActiveCall(null)}
+              setVideoCall={setActiveCall}
+            />
+          </div>
+        )}
+      </div>
       <AppRoutes />
     </>
   );
