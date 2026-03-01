@@ -19,7 +19,7 @@ const LeftSideBar = () => {
   const location = useLocation();
 
   return (
-    <div className="sticky top-0 h-screen w-full border-r bg-linear-to-br from-white via-blue-100 to-green-100 px-6 py-6 flex flex-col">
+    <div className="sticky top-0 h-screen w-full border-r bg-linear-to-b from-blue-200 via-green-50 to-blue-100 px-6 py-6 flex flex-col">
       {/* Logo */}
       <div className="mb-10">
         <Link

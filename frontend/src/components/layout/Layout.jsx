@@ -25,10 +25,10 @@ const Layout = () => {
           <Navbar />
 
           {/* Page Content */}
-          <div className="flex flex-1 justify-center  md:px-0 pb-20 md:pb-6  bg-gradient-to-l from-blue-100 via-white to-green-100">
+          <div className="flex flex-1 justify-center gap-10  md:px-0 pb-20 md:pb-6  bg-gradient-to-l from-blue-100 via-white to-green-100">
             <Suspense
               fallback={
-                <div className="w-full h-80 flex items-center justify-center">
+                <div className="w-full flex  items-center justify-center">
                   <div className="w-10 h-10 border-4 border-blue-400 border-dashed rounded-full animate-spin" />
                 </div>
               }

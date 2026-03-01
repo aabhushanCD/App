@@ -77,21 +77,21 @@ const CreatePost = ({
   return (
     <>
       {/* Popup modal */}
-      <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
+      <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/20 ">
         <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-lg">
           <div className="flex justify-center items-center bg-transparent ">
-            <div className=" flex flex-col justify-between top-3 w-full bg-gray-500 text-black rounded-xl h-[550px] z-10">
+            <div className=" flex flex-col justify-between top-3 w-full bg-linear-to-br from-blue-50 to-green-50 text-black rounded-xl h-[550px] z-10">
               <div>
                 <span className=" flex justify-between items-center mb-3 p-4 border-b-2">
                   <span></span>
-                  <h1 className="text-center font-semibold text-3xl">
+                  <h1 className="text-center font-semibold text-3xl text-gray-600">
                     Create Post
                   </h1>
                   <span
                     onClick={() => {
                       setCreate(false);
                     }}
-                    className="hover:text-red-200 cursor-pointer "
+                    className="hover:text-blue-600 cursor-pointer "
                   >
                     Close
                   </span>
@@ -110,13 +110,13 @@ const CreatePost = ({
                   name="content"
                   onChange={handleContent}
                   ref={contentInputRef}
-                  placeholder="Write something ..."
-                  className="w-full h-[50px] resize-none border-none outline-none 
+                  placeholder="Write something . . ."
+                  className="w-full max-h-[150px] text-gray-600 resize-none border-none outline-none 
                           focus:!ring-0 focus:!outline-none shadow-none
                           bg-transparent p-3  placeholder:text-gray-400 !text-3xl"
                 />
               </div>
-              <div className="overflow-auto p-3 mt-2 max-h-100 break-words bg-gray-500">
+              <div className="overflow-auto p-3 mt-2 max-h-100 break-words ">
                 {previews?.length > 0 && (
                   <div className="grid grid-cols-2  mt-3 gap-1  items-center">
                     {previews.map((file, idx) => {

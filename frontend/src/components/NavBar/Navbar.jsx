@@ -19,7 +19,7 @@ const Navbar = () => {
   // Audio/video calling setup
 
   return (
-    <div className="flex justify-evenly flex-1  items-center px-6 py-3 bg-white shadow-md sticky top-0 z-50">
+    <div className="flex justify-evenly flex-1  items-center px-6 py-3 bg-linear-to-r from-blue-100  to-purple-50 shadow-md sticky top-0 z-50">
       {/* Logo */}
       
 
@@ -40,7 +40,7 @@ const Navbar = () => {
       </div>
 
       {/* Right Icons */}
-      <div className=" flex gap-2 items-center ">
+      <div className=" flex gap-1 items-center ">
         {/* Navigation Search every thing in this component */}
         <NavSearch />
         <div className="hidden md:flex gap-2">

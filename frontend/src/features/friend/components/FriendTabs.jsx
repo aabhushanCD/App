@@ -50,10 +50,10 @@ const FriendTabs = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-8 inline-flex space-x-2">
+    <div className="    bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-8 inline-flex md:space-x-2">
       <button
         onClick={handleAllFriends}
-        className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center space-x-2 ${
+        className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center md:space-x-2 ${
           activeTab === "all"
             ? "bg-blue-600 text-white shadow-md"
             : "text-gray-600 hover:bg-gray-100"
@@ -62,7 +62,7 @@ const FriendTabs = ({
         <Users className="w-5 h-5" />
         <span>All Friends</span>
         {activeTab === "all" && (
-          <span className="bg-white text-blue-600 text-xs font-bold px-2 py-1 rounded-full">
+          <span className="bg-white text-blue-600 md:text-xs font-bold px-2 py-1 rounded-full">
             {allUsers.data.length}
           </span>
         )}
@@ -79,7 +79,7 @@ const FriendTabs = ({
         <UserCheck className="w-5 h-5" />
         <span>Requests</span>
         {activeTab === "requests" && allUsers.data.length > 0 && (
-          <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          <span className="bg-red-500 text-white md:text-xs font-bold px-2 py-1 rounded-full">
             {allUsers.data.length}
           </span>
         )}

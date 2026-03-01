@@ -13,7 +13,6 @@ const CreatePost = ({
   setCreate,
   setForm,
   handleButton,
- 
 }) => {
   const navigate = useNavigate();
   const handlePostSubmit = async () => {
@@ -44,7 +43,7 @@ const CreatePost = ({
   };
   return (
     <div
-      className={`bg-white border md:rounded-2xl shadow-sm flex gap-3 items-start p-2 md:p-4 ${
+      className={`bg-white border md:rounded-2xl inset-0 shadow-sm flex gap-3 items-start p-2 md:p-4 ${
         location.pathname === "/newsfeeds" ? "hidden" : ""
       }`}
     >
@@ -60,7 +59,7 @@ const CreatePost = ({
       <div className="flex-1">
         <div
           onClick={handleButton}
-          className="cursor-pointer rounded-xl bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
+          className="cursor-pointer rounded-xl text-gray-500 overflow-hidden max-h-auto bg-gray-100  px-4 py-2 hover:bg-gray-200 transition"
         >
           {form.content || "What's on your mind?"}
         </div>

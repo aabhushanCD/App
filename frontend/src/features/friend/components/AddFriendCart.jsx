@@ -34,7 +34,7 @@ const AddFriendCart = ({ user }) => {
             className="w-full h-48 object-cover"
           />
         ) : (
-          <div className="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+          <div className="w-full h-48 bg-gradient-to-br from-green-800 to-purple-600 flex items-center justify-center">
             <span className="text-5xl font-bold text-white">
               {getInitials(user.name)}
             </span>
