@@ -1,25 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import AppRoutes from "./routes/AppRoutes";
 import { useNotify } from "./features/notification/NotificationStore";
 
+import CallPopup from "./components/CallPopup";
+
 function App() {
   const socket = useNotify();
+  const [incomingCall, setIncomingCall] = useState(null);
   useEffect(() => {
-    socket.on("incoming-call", ({ from }) => {
-      const accepted = window.confirm("Incoming Call. Accept?");
+    if (!socket) return;
+    const handleIncomingCall = ({ from, name }) => {
+      setIncomingCall({ from, name });
+    };
+    socket.on("incoming-call", handleIncomingCall);
 
-      if (accepted) {
-        socket.emit("call-accepted", { receiverId: from });
-      } else {
-        socket.emit("call-rejected", { receiverId: from });
-      }
-    });
-    return socket.off("incoming-call");
+    return () => {
+      socket.off("incoming-call", handleIncomingCall);
+    };
   }, [socket]);
   return (
     <>
+      {incomingCall && (
+        <CallPopup
+          caller={incomingCall}
+          onAccept={() => {
+            socket.emit("call-accepted", { receiverId: incomingCall.from });
+            setIncomingCall(null);
+          }}
+          onReject={() => {
+            socket.emit("call-rejected", { receiverId: incomingCall.from });
+            setIncomingCall(null);
+          }}
+        />
+      )}
       <AppRoutes />
     </>
   );
