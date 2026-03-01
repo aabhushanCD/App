@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useNotify } from "@/features/notification/NotificationStore";
 
-const AudioVideo = ({ remoteUserId, onEndCall }) => {
+const AudioVideo = ({ remoteUserId, onEndCall, setVideoCall }) => {
   const socket = useNotify();
   const {
     localStream,
@@ -13,7 +13,6 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
     createAnswer,
     setRemoteDescription,
     addIceCandidate,
-    stopStream,
     closeConnection,
   } = useWebRTC(remoteUserId);
 
@@ -36,7 +35,6 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
 
     socket.on("call-ended", () => {
       closeConnection();
-      stopStream();
       onEndCall?.();
     });
 
@@ -45,7 +43,6 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
       socket.off("answer");
       socket.off("ice-candidate");
       socket.off("call-ended");
-      stopStream();
     };
   }, [socket, remoteUserId]);
 
@@ -56,7 +53,7 @@ const AudioVideo = ({ remoteUserId, onEndCall }) => {
 
   const endCall = () => {
     socket.emit("end", { receiverId: remoteUserId });
-    stopStream();
+    setVideoCall(false);
     closeConnection();
     onEndCall?.();
   };

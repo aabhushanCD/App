@@ -132,7 +132,7 @@ const ChatBox = ({ user, setMiniChat }) => {
       {/* Video call (no gray background) */}
       {videoCall && (
         <div className="absolute inset-0 z-50 bg-white">
-          <AudioVideo remoteUserId={user._id} />
+          <AudioVideo remoteUserId={user._id} setVideoCall={setVideoCall} />
         </div>
       )}
     </div>

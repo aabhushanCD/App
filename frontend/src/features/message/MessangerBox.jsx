@@ -10,36 +10,40 @@ const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
     <div
       className={`${
         location.pathname === "/messanger" && "h-screen"
-      }  bg-white w-full shadow-2xl   `}
+      }  bg-white w-full shadow-2xl  overflow-y-auto`}
     >
       <div className="flex flex-col gap-3 p-4  h-auto min-h-90">
-        <div className=" flex gap-3 justify-between items-center ">
-          <h1
-            className="flex font-bold text-3xl text-blue-600 cursor-pointer"
-            onClick={() => navigate("/home")}
-          >
-            Hello's
-          </h1>
-          <div className="flex gap-3">
-            <Ellipsis />
+        <div className="sticky top-4 bg-white flex flex-col gap-3 p-4 ">
+          <div className=" flex gap-3 justify-between items-center ">
+            <h1
+              className="flex font-bold text-3xl text-blue-600 cursor-pointer"
+              onClick={() => navigate("/home")}
+            >
+              Hello's
+            </h1>
+            <div className="flex gap-3">
+              <Ellipsis />
+            </div>
+          </div>
+          <div className="flex gap-2 bg-gray-200 text-gray-500 rounded-2xl p-1">
+            <Search />
+            <input
+              type="text"
+              className="w-full border-none outline-none"
+              placeholder="Write Something..."
+            />
+          </div>
+          <div className=" hidden md:flex  font-semibold flex-wrap ">
+            {["All", "Unread", "Groups", "Communities"].map((btm, index) => (
+              <button
+                className="rounded-2xl active:bg-gray-200 p-2"
+                key={index}
+              >
+                {btm}
+              </button>
+            ))}
           </div>
         </div>
-        <div className="flex gap-2 bg-gray-200 text-gray-500 rounded-2xl p-1">
-          <Search />
-          <input
-            type="text"
-            className="w-full border-none outline-none"
-            placeholder="Write Something..."
-          />
-        </div>
-        <div className=" hidden md:flex  font-semibold flex-wrap ">
-          {["All", "Unread", "Groups", "Communities"].map((btm) => (
-            <button className="rounded-2xl active:bg-gray-200 p-2">
-              {btm}
-            </button>
-          ))}
-        </div>
-
         <div className="overflow-auto h-auto flex flex-col gap-2">
           {allUsers.map((uj) => (
             <div
@@ -47,7 +51,9 @@ const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
               className=" flex flex-wrap gap-2 items-center rounded-2xl p-2 hover:bg-blue-300 cursor-pointer"
               onClick={() => {
                 setMiniChat({ open: true, user: uj });
-                setShowMessanger(false);
+                location.pathname === "messanger"
+                  ? ""
+                  : setShowMessanger(false);
               }}
             >
               <div className=" flex  w-12 h-12 border-2 rounded-full overflow-hidden ">

@@ -63,6 +63,7 @@ export const useWebRTC = (remoteUserId) => {
         if (sender.track) sender.track.stop();
       });
       peer.current.close();
+      setLocalStream(null);
     }
   };
 
