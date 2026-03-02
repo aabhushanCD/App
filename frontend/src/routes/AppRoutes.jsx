@@ -13,6 +13,7 @@ import Messanger from "@/features/message/Messanger";
 import OtherProfile from "@/features/profile/OtherProfile";
 import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
 import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
+import NotificationPage from "@/features/notification/NotificationPage";
 
 const AppRoutes = () => {
   return (
@@ -34,7 +35,10 @@ const AppRoutes = () => {
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
-
+          <Route
+            path="/notification"
+            element={<NotificationPage></NotificationPage>}
+          />
           {/* Add more protected routes here */}
         </Route>
         <Route

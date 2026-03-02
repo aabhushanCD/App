@@ -1,13 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Home,
-  Users,
-  MessageCircle,
-  Bell,
-  LogOut,
-  Newspaper,
-} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Users, MessageCircle, Bell, LogOut, Newspaper } from "lucide-react";
 
 const menuItems = [
   { name: "News Feed", path: "/newsfeeds", icon: Newspaper },
@@ -17,7 +10,7 @@ const menuItems = [
 
 const LeftSideBar = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   return (
     <div className="sticky top-0 h-screen w-full border-r bg-linear-to-b from-blue-200 via-green-50 to-blue-100 px-6 py-6 flex flex-col">
       {/* Logo */}
@@ -56,7 +49,10 @@ const LeftSideBar = () => {
 
       {/* Bottom Section */}
       <div className="border-t pt-5 flex flex-col gap-2">
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/notification")}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition"
+        >
           <Bell size={20} />
           Notifications
         </button>
