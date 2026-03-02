@@ -20,10 +20,11 @@ const Layout = () => {
         </div>
 
         {/* Main Section */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col ">
           {/* Navbar */}
-          <Navbar />
-
+          <div className="">
+            <Navbar />
+          </div>
           {/* Page Content */}
           <div className="flex flex-1 justify-center gap-10  md:px-0 pb-20 md:pb-6  bg-gradient-to-l from-blue-100 via-white to-green-100">
             <Suspense
@@ -47,7 +48,7 @@ const Layout = () => {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full z-50">
+      <div className="md:hidden fixed max-h-11 bg-white  bottom-0 left-0 w-full z-50">
         <MobileNav />
       </div>
     </>

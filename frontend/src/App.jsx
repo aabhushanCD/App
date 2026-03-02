@@ -80,7 +80,7 @@ function App() {
       )}
 
       {/* Active video call */}
-      {activeCall && <Navigate to="/web" />}
+      {activeCall && <Navigate to="/messanger" />}
 
       <AppRoutes />
     </>
