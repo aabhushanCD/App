@@ -1,25 +1,27 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const SearchUser = ({ data }) => {
+const SearchUser = ({ data, setOpen }) => {
   const navigate = useNavigate();
+
   return (
     <div
-      className="flex gap-2  items-center border p-2 rounded-2xl bg-gray-100 "
+      className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer transition"
       onClick={() => {
+        setOpen(false);
         navigate(`/user/profile/${data._id}`);
       }}
     >
-      <div className="border rounded-full w-10 h-10">
-        {data.imageUrl && (
-          <img
-            src={data.imageUrl}
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-          />
+      <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+        {data.imageUrl ? (
+          <img src={data.imageUrl} className="w-full h-full object-cover" />
+        ) : (
+          <span className="font-semibold text-gray-700">{data.name[0]}</span>
         )}
       </div>
-      <h1 className="font-semibold text-[17px]">{data.name}</h1>
+
+      <div className="flex flex-col">
+        <span className="text-sm font-semibold text-gray-800">{data.name}</span>
+      </div>
     </div>
   );
 };

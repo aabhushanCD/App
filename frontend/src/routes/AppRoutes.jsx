@@ -33,12 +33,19 @@ const AppRoutes = () => {
           <Route path="/web" element={<Audio_Video />} />
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
-
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
 
           {/* Add more protected routes here */}
         </Route>
-        <Route path="/messanger" element={<Messanger />} />
+        <Route
+          path="/messanger"
+          element={
+            <ProtectedRoute>
+              <Messanger />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Public Routes */}
         <Route
           path="/login"
