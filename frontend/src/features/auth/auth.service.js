@@ -5,7 +5,7 @@ export const loginApi = (data) => {
 };
 
 export const registerApi = (data) => {
-  return api.post("/auth/post", data);
+  return api.post("/auth/register", data);
 };
 
 export const logOutApi = () => {

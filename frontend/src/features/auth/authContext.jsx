@@ -51,7 +51,6 @@ export const AuthContextProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await registerApi(data);
-
       toast.success(res?.data?.message);
       return true;
     } catch (error) {

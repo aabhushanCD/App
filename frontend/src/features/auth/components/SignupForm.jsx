@@ -41,12 +41,6 @@ const SignupForm = () => {
         error: "Email Invalid! ",
       });
     }
-    if (!form.password.length < 7) {
-      return setErrorMessage({
-        type: "password",
-        error: "Password must be greater than 7 ",
-      });
-    }
 
     const success = await register(form);
     if (success) {
