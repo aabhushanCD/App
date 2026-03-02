@@ -3,7 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { useNotify } from "./features/notification/NotificationStore";
 
 import CallPopup from "./components/CallPopup";
-import AudioVideo from "./components/AudioVideo";
+import AudioVideo from "./components/Audio_Video";
 
 function App() {
   const socket = useNotify();
@@ -81,14 +81,16 @@ function App() {
 
       {/* Active video call */}
       {activeCall && (
-        <AudioVideo
-          remoteUserId={activeCall.from}
-          onEndCall={() => {
-            socket.emit("call-ended", { receiverId: activeCall.from });
-            setActiveCall(null);
-          }}
-          setVideoCall={setActiveCall}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <AudioVideo
+            remoteUserId={activeCall.from}
+            onEndCall={() => {
+              socket.emit("call-ended", { receiverId: activeCall.from });
+              setActiveCall(null);
+            }}
+            setVideoCall={setActiveCall}
+          />
+        </div>
       )}
 
       <AppRoutes />

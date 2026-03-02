@@ -52,6 +52,17 @@ const FriendTabs = ({
   return (
     <div className="    bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-8 inline-flex md:space-x-2">
       <button
+        onClick={fetchUser}
+        className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center space-x-2 ${
+          activeTab === "add"
+            ? "bg-blue-600 text-white shadow-md"
+            : "text-gray-600 hover:bg-gray-100"
+        }`}
+      >
+        <UserPlus className="w-5 h-5" />
+        <span>Add Friends</span>
+      </button>
+      <button
         onClick={handleAllFriends}
         className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center md:space-x-2 ${
           activeTab === "all"
@@ -83,18 +94,6 @@ const FriendTabs = ({
             {allUsers.data.length}
           </span>
         )}
-      </button>
-
-      <button
-        onClick={fetchUser}
-        className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center space-x-2 ${
-          activeTab === "add"
-            ? "bg-blue-600 text-white shadow-md"
-            : "text-gray-600 hover:bg-gray-100"
-        }`}
-      >
-        <UserPlus className="w-5 h-5" />
-        <span>Add Friends</span>
       </button>
     </div>
   );
