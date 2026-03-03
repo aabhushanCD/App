@@ -1,14 +1,19 @@
+import React, {
+  lazy,
+  memo,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { House, LogOut, Menu, X } from "lucide-react";
 import { toast } from "sonner";
-import React, { lazy, memo, Suspense, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/features/auth/authContext";
 
 import NavSearch from "./NavSearch";
 import MenuBar from "../MenuBar";
-// import NavMessenger from "./NavBar/NavMessanger";
-// import NavNotification from "./NavNotification";
 
 const NavMessenger = lazy(() => import("./NavMessanger"));
 const NavNotification = lazy(() => import("./NavNotification"));
@@ -18,7 +23,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMobileMenu, setIsMobileMenu] = useState(false);
   const menuRef = useRef();
-  // Audio/video calling setup
+
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -28,39 +34,44 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  return (
-    <div className="flex justify-evenly flex-1   items-center px-6 py-3 bg-linear-to-r from-blue-100  to-purple-50 shadow-md sticky top-0 z-50">
-      {/* Logo */}
 
-      {/* Center Navigation */}
-      <div className="hidden md:flex gap-6">
-        <Button
-          className="bg-transparent text-gray-700 hover:text-blue-500 hover:bg-gray-100"
+  return (
+    <nav className="flex items-center justify-between px-6 py-3 bg-gradient-to-r from-blue-100 via-white to-purple-50 shadow-md z-50">
+      {/* Left / Logo placeholder */}
+      <div className="flex items-center">
+        <h1
+          className="text-xl font-bold text-blue-600 cursor-pointer"
           onClick={() => navigate("/home")}
         >
-          Home
-        </Button>
-        <Button className="bg-transparent text-gray-700 hover:text-blue-500 hover:bg-gray-100">
-          Timeline
-        </Button>
-        <Button className="bg-transparent text-gray-700 hover:text-blue-500 hover:bg-gray-100">
-          Account
-        </Button>
+          
+        </h1>
       </div>
 
-      {/* Right Icons */}
-      <div className="flex gap-1 items-center  ">
-        {/* Navigation Search every thing in this component */}
+      {/* Center Navigation - Desktop */}
+      <div className="hidden md:flex gap-6">
+        {["Home", "Timeline", "Account"].map((item) => (
+          <Button
+            key={item}
+            className="bg-transparent text-gray-700 hover:text-blue-500 hover:bg-gray-100 transition-colors"
+            onClick={() => navigate(item.toLowerCase())}
+          >
+            {item}
+          </Button>
+        ))}
+      </div>
+
+      {/* Right Icons / Actions */}
+      <div className="flex items-center gap-4">
+        {/* Search */}
         <NavSearch />
-        <div className="hidden md:flex gap-2 flex-1">
+
+        {/* Desktop Icons */}
+        <div className="hidden md:flex items-center gap-4 ml-4">
           <House
-            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"
+            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500 transition-colors"
             onClick={() => navigate("/home")}
           />
-        </div>
 
-        {/* Bell */}
-        <div className=" hidden md:flex items-center gap-1 md:gap-6 ml-6">
           <Suspense
             fallback={
               <div className="w-5 h-5 rounded-full bg-gray-300 animate-pulse" />
@@ -71,7 +82,7 @@ const Navbar = () => {
           </Suspense>
 
           <Button
-            className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100"
+            className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100 transition-colors"
             onClick={async () => {
               const success = await logout();
               if (success) {
@@ -83,20 +94,29 @@ const Navbar = () => {
             <LogOut />
           </Button>
         </div>
-        <div className="relative md:hidden " ref={menuRef}>
+
+        {/* Mobile Menu */}
+        <div className="relative md:hidden" ref={menuRef}>
           {!isMobileMenu ? (
-            <Menu onClick={() => setIsMobileMenu(() => !isMobileMenu)} />
+            <Menu
+              className="w-6 h-6 cursor-pointer text-gray-700 hover:text-blue-500 transition-colors"
+              onClick={() => setIsMobileMenu(true)}
+            />
           ) : (
-            <X onClick={() => setIsMobileMenu(() => !isMobileMenu)} />
+            <X
+              className="w-6 h-6 cursor-pointer text-gray-700 hover:text-blue-500 transition-colors"
+              onClick={() => setIsMobileMenu(false)}
+            />
           )}
+
           {isMobileMenu && (
-            <div className="flex flex-col">
+            <div className="absolute top-10 right-0 w-48 bg-white shadow-lg rounded-md p-4 flex flex-col gap-2">
               <MenuBar />
             </div>
           )}
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

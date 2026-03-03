@@ -1,35 +1,33 @@
 import React, { Suspense } from "react";
-import Navbar from "../NavBar/Navbar";
 import { Outlet } from "react-router-dom";
 
+import Navbar from "../NavBar/Navbar";
 import MobileNav from "../NavBar/MobileNav";
 import LeftSideBar from "../LeftSideBar";
 import RightSideBar from "../RightSideBar";
 
 const Layout = () => {
-  // const location = useLocation();
-
-  // const hideFooterRoutes = ["/home", "/newsfeeds", "/login"];
-  // const hideFooter = hideFooterRoutes.includes(location.pathname);
   return (
     <>
+      {/* Main Layout Container */}
       <div className="flex min-h-screen bg-gray-50">
-        {/* Left Sidebar - Desktop Only */}
-        <div className="hidden md:block md:w-[22%] lg:w-[20%] border-r bg-white">
+        {/* Left Sidebar - Desktop */}
+        <aside className="hidden md:block md:w-[22%] lg:w-[20%] border-r border-gray-200 bg-white">
           <LeftSideBar />
-        </div>
+        </aside>
 
-        {/* Main Section */}
-        <div className="flex-1 flex flex-col ">
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col">
           {/* Navbar */}
-          <div className="">
+          <header className="bg-white shadow-sm z-10 sticky top-0">
             <Navbar />
-          </div>
+          </header>
+
           {/* Page Content */}
-          <div className="flex flex-1 justify-center gap-10  md:px-0 pb-20 md:pb-6  bg-gradient-to-l from-blue-100 via-white to-green-100">
+          <section className="flex flex-1 justify-center gap-8 md:px-4 pb-20 md:pb-6 bg-gradient-to-l from-blue-50 via-white to-green-50">
             <Suspense
               fallback={
-                <div className="w-full flex  items-center justify-center">
+                <div className="w-full flex items-center justify-center">
                   <div className="w-10 h-10 border-4 border-blue-400 border-dashed rounded-full animate-spin" />
                 </div>
               }
@@ -39,18 +37,18 @@ const Layout = () => {
               </div>
             </Suspense>
 
-            {/* Right Sidebar - Large Screens Only */}
-            <div className="hidden lg:block lg:w-[300px] ml-8">
+            {/* Right Sidebar - Large Screens */}
+            <aside className="hidden lg:block lg:w-[300px] ml-8 border-l border-gray-200 bg-white rounded-md p-4 shadow-sm">
               <RightSideBar />
-            </div>
-          </div>
-        </div>
+            </aside>
+          </section>
+        </main>
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed max-h-11 bg-white  bottom-0 left-0 w-full z-50">
+      <footer className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow-t z-50">
         <MobileNav />
-      </div>
+      </footer>
     </>
   );
 };

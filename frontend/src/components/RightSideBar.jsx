@@ -1,37 +1,88 @@
 import React from "react";
-import { TrendingUp, Hash } from "lucide-react";
+import { TrendingUp, Hash, UserPlus } from "lucide-react";
 
-const trends = ["ReactJS", "TailwindCSS", "WebDevelopment", "JavaScript"];
+const trends = [
+  "ReactJS",
+  "TailwindCSS",
+  "WebDevelopment",
+  "JavaScript",
+  "NodeJS",
+];
+
+const suggestions = [
+  {
+    id: 1,
+    name: "John Carter",
+    avatar: "https://i.pravatar.cc/40?img=1",
+  },
+  {
+    id: 2,
+    name: "Sarah Wilson",
+    avatar: "https://i.pravatar.cc/40?img=2",
+  },
+  {
+    id: 3,
+    name: "Michael Lee",
+    avatar: "https://i.pravatar.cc/40?img=3",
+  },
+];
 
 const RightSideBar = () => {
   return (
-    <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pr-4">
-      <div className="bg-white rounded-2xl border shadow-sm p-5">
-        {/* Header */}
+    <div className="sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto space-y-8">
+      {/* Trending Section */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp size={18} className="text-blue-500" />
           <h3 className="font-semibold text-gray-800">Trending Topics</h3>
         </div>
 
-        {/* Trending List */}
         <ul className="space-y-3">
-          {trends.map((item) => (
+          {trends.map((trend) => (
             <li
-              key={item}
+              key={trend}
               className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 cursor-pointer transition"
             >
               <Hash size={14} />
-              <span className="hover:underline">{item}</span>
+              <span className="hover:underline">{trend}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Extra Card (Optional) */}
-      <div className="bg-white rounded-2xl border shadow-sm p-5 mt-6">
-        <h3 className="font-semibold text-gray-800 mb-3">Suggestions</h3>
-        <p className="text-sm text-gray-600">
-          Follow developers and explore new technologies to grow your network.
+      {/* Suggested Friends */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <h3 className="font-semibold text-gray-800 mb-4">Suggested for you</h3>
+
+        <div className="space-y-4">
+          {suggestions.map((user) => (
+            <div key={user.id} className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-9 h-9 rounded-full object-cover"
+                />
+
+                <span className="text-sm font-medium text-gray-700">
+                  {user.name}
+                </span>
+              </div>
+
+              <button className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium">
+                <UserPlus size={14} />
+                Follow
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Info Card */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <p className="text-sm text-gray-600 leading-relaxed">
+          Connect with developers, share posts, and explore new ideas in the
+          community.
         </p>
       </div>
     </div>
