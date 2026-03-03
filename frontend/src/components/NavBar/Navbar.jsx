@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { House, LogOut, Menu } from "lucide-react";
+import { House, LogOut, Menu, X } from "lucide-react";
 import { toast } from "sonner";
-import React, { lazy, memo, Suspense, useState } from "react";
+import React, { lazy, memo, Suspense, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/features/auth/authContext";
 
 import NavSearch from "./NavSearch";
@@ -17,8 +17,17 @@ const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenu, setIsMobileMenu] = useState(false);
+  const menuRef = useRef();
   // Audio/video calling setup
-
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMobileMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <div className="flex justify-evenly flex-1   items-center px-6 py-3 bg-linear-to-r from-blue-100  to-purple-50 shadow-md sticky top-0 z-50">
       {/* Logo */}
@@ -74,8 +83,12 @@ const Navbar = () => {
             <LogOut />
           </Button>
         </div>
-        <div className="relative md:hidden ">
-          <Menu onClick={() => setIsMobileMenu(() => !isMobileMenu)} />
+        <div className="relative md:hidden " ref={menuRef}>
+          {!isMobileMenu ? (
+            <Menu onClick={() => setIsMobileMenu(() => !isMobileMenu)} />
+          ) : (
+            <X onClick={() => setIsMobileMenu(() => !isMobileMenu)} />
+          )}
           {isMobileMenu && (
             <div className="flex flex-col">
               <MenuBar />

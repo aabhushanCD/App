@@ -37,7 +37,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
   };
   return (
     <div className="relative">
-      <div className="flex flex-col border-t  border-b rounded-lg bg-white shadow-sm">
+      <div className="flex flex-col  rounded-sm bg-white shadow-sm">
         {/* header */}
         <PostHead
           currentUser={currentUser}
