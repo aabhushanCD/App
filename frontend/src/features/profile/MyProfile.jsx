@@ -29,8 +29,8 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="md:flex md:items-center md:justify-center ">
-      <div className="p-2 md:w-[50%]">
+    <div className="flex justify-center px-4">
+      <div className="w-full max-w-3xl">
         {/* --- Profile Info Section --- */}
         <ProfileHeader
           setIsEdit={setIsEdit}
@@ -52,7 +52,7 @@ const Profile = () => {
         <ProfileTabs />
 
         {/* --- My Posts --- */}
-        <ProfilePostsGrid myPost={myPost} />
+        <ProfilePostsGrid posts={myPost} />
       </div>
     </div>
   );

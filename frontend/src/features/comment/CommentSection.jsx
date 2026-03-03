@@ -6,7 +6,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
 
   const preview = comment?.file ? URL.createObjectURL(comment.file) : null;
   return (
-    <div className=" p-4 border-t bg-gray-50 rounded-b-xl ">
+    <div className=" p-4 border-t bg-gray-50 rounded-b-xl  min-h-60">
       {/* Input Section */}
       <CommentInput
         setComments={setComments}
@@ -21,7 +21,7 @@ const Comment = ({ postId, comments, setComments, updatePostCommentCount }) => {
       {/* Comment List */}
 
       {comments?.length > 0 && (
-        <div>
+        <div className="">
           {comments.map((comment) => (
             <CommentListData
               key={comment._id}

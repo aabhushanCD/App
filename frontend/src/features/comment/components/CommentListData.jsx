@@ -1,8 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { deleteComment, editComment, likeComments } from "../comment.service";
 import { toast } from "sonner";
 import { timeAgo } from "@/utils/constants";
 import { Heart, SendIcon } from "lucide-react";
+import ToggleMenu from "@/components/toggleMenu";
 
 const CommentListData = ({
   comment,
@@ -13,6 +14,7 @@ const CommentListData = ({
   const [activeMenu, setActiveMenu] = useState(null);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const menuRef = useRef(null);
 
   const handleDeleteComment = async (commentId) => {
     try {
@@ -30,9 +32,16 @@ const CommentListData = ({
     }
   };
 
-  const toggleMenu = (id) => {
-    setActiveMenu((prev) => (prev === id ? null : id));
-  };
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setActiveMenu(false);
+        setEditingCommentId(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleEditComment = async (commentId) => {
     if (!editingText.trim()) return toast.error("Comment cannot be empty");
@@ -71,65 +80,73 @@ const CommentListData = ({
   };
 
   return (
-    <div key={comment._id} className="mt-4 space-y-3 overflow-auto ">
-      <div className="relative flex   gap-3 items-start ">
-        <span className="absolute right-2 cursor-pointer">
-          <button onClick={() => toggleMenu(comment._id)}>...</button>
-          {activeMenu === comment._id && (
-            <ul className="absolute right-2 top-5">
-              <li onClick={() => handleDeleteComment(comment._id)}>Delete</li>
-              <li
-                onClick={() => {
-                  setEditingCommentId(comment._id);
-                  setEditingText(comment.text);
-                  toggleMenu(comment._id);
-                }}
-              >
-                Edit
-              </li>
-            </ul>
-          )}
-        </span>
-        <img
-          src={comment.creatorId?.imageUrl}
-          alt="user"
-          className="w-8 h-8 rounded-full object-cover"
-        />
-        <div className="flex flex-col   ">
-          <div className=" border  rounded-2xl p-2">
-            <p className=" text-sm font-medium">{comment.creatorId?.name}</p>
+    <div key={comment._id} className="mt-3">
+      <div className="flex justify-between items-start gap-3 group">
+        <div className="flex gap-3 w-full">
+          {/* Avatar */}
+          <img
+            src={comment.creatorId?.imageUrl}
+            alt="user"
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-gray-200"
+          />
+
+          {/* Comment Bubble */}
+          <div className="bg-gray-100 dark:bg-neutral-800 rounded-2xl px-4 py-2 w-full max-w-[520px] shadow-sm">
+            {/* Name */}
+            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+              {comment.creatorId?.name}
+            </p>
+
+            {/* Edit Mode */}
             {editingCommentId === comment._id ? (
-              <div className="md:flex gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-2">
                 <input
-                  className="border p-1 rounded "
+                  className="flex-1 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   value={editingText}
                   onChange={(e) => setEditingText(e.target.value)}
                 />
+
                 <SendIcon
                   onClick={() => handleEditComment(comment._id)}
-                  className="mt-2 "
-                >
-                  Save
-                </SendIcon>
+                  className="w-5 h-5 text-blue-500 cursor-pointer hover:scale-110 transition"
+                />
               </div>
             ) : (
-              <p className="text-sm text-gray-700">{comment.text}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                {comment.text}
+              </p>
             )}
+
+            {/* Image */}
             {comment.imageUrl && (
               <img
                 src={comment.imageUrl}
-                className="object-cover w-40 h-40"
+                className="rounded-lg mt-2 w-44 h-44 object-cover"
                 alt=""
               />
             )}
+
+            {/* Footer */}
+            <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
+              <span>{timeAgo(comment.createdAt)}</span>
+
+              <button
+                onClick={() => likeComment(comment._id)}
+                className="flex items-center gap-1 hover:text-red-500 transition"
+              >
+                <Heart className="w-4 h-4" />
+                {comment.likes?.length || 0}
+              </button>
+            </div>
           </div>
-          <div className=" flex gap-3">
-            <span>{timeAgo(comment.createdAt)}</span>
-            <span className="flex" onClick={() => likeComment(comment._id)}>
-              <Heart className="p-1 text-red-400"></Heart>
-              {comment.likes.length || 0}
-            </span>
-          </div>
+          <ToggleMenu
+            menuRef={menuRef}
+            setMenuOpen={setActiveMenu}
+            isMenuOpen={activeMenu}
+            handleDelete={handleDeleteComment}
+            setEditing={setEditingCommentId}
+            id={comment._id}
+          />
         </div>
       </div>
     </div>

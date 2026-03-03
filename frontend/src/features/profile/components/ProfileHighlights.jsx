@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getHighlights } from "../profile.service";
+import { addHighlights, getHighlights } from "../profile.service";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ const ProfileHighlights = ({ myPost }) => {
         memo: highlightMemo,
         type: "image",
       };
-      await addHighlight(data);
+      await addHighlights(data);
       toast.success("Highlight added successfully!");
       setAddHighlight({ open: false, state: 1 });
       document.body.style.overflow = "auto";
@@ -65,95 +65,144 @@ const ProfileHighlights = ({ myPost }) => {
     fetchHighlights();
   }, []);
   return (
-    <div
-      className={` ${
-        addHighlight.open ? "relative" : ""
-      } flex flex-row-reverse  gap-4 p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400`}
-    >
-      <div
-        className="flex-shrink-0 w-24 h-24 flex items-center justify-center rounded-full border bg-gray-500 text-white font-bold cursor-pointer"
-        onClick={handleAddHighlight}
-      >
-        <span className="text-2xl">+</span>
-      </div>
-      {highlights.map((h, i) => (
-        <div key={i} className="flex-shrink-0 w-24 flex flex-col items-center">
-          {h.mediaUrl && (
-            <img
-              src={h.mediaUrl}
-              alt="highlight"
-              className="w-24 h-24 rounded-full border-4 object-cover"
-            />
-          )}
-          {h.memo && <span className="text-sm text-center mt-1">{h.memo}</span>}
+    <>
+      {/* HIGHLIGHTS ROW */}
+      <div className="flex gap-4 w-100 md:w-full p-4 overflow-x-auto scrollbar-thin">
+        {/* ADD HIGHLIGHT */}
+        <div
+          onClick={handleAddHighlight}
+          className="flex flex-col items-center gap-1 cursor-pointer"
+        >
+          <div className="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center hover:bg-gray-100 transition">
+            <span className="text-2xl text-gray-500">+</span>
+          </div>
+          <span className="text-xs text-gray-600">New</span>
         </div>
-      ))}
 
-      {addHighlight.open && (
-        <div className="fixed flex flex-col justify-between self-center w-90   z-1 p-2  md:w-[100vh] h-140 top-20 rounded-2xl overflow-hidden bg-orange-300">
-          <X
-            className="absolute right-2 hover:bg-gray-400 rounded-full"
-            onClick={() => {
-              setAddHighlight({ open: false, state: 1 });
-              document.body.style.overflow = "auto";
-            }}
-          />
-          {addHighlight.state === 1 && (
-            <div className="">
-              <h1>Write a Memo</h1>
-              <Input
-                type="text"
-                maxLength={24}
-                className="mt-3"
-                placeholder="Write Your Memories Here..."
-                value={highlightMemo}
-                onChange={(e) => setHighlightMemo(e.target.value)}
+        {/* EXISTING HIGHLIGHTS */}
+        {highlights.map((h, i) => (
+          <div
+            key={i}
+            className="flex flex-col items-center gap-1 cursor-pointer"
+          >
+            <div className="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-pink-500 to-yellow-400">
+              <img
+                src={h.mediaUrl}
+                alt="highlight"
+                className="w-full h-full rounded-full object-cover border-2 border-white"
               />
             </div>
-          )}
-          {addHighlight.state === 2 && (
-            <div className="grid md:grid-cols-3 gap-2 grid-cols-2 border  overflow-y-auto ">
-              {myPost.map((post) => (
-                <div key={post._id} className="flex">
-                  {post.media &&
-                    post.media.map((m, i) => (
-                      <div className="max-h-75 border">
-                        <img
-                          src={m.url}
-                          key={i}
-                          className="h-70 p-2 transition:transform hover:scale-101 duration-300 object-cover"
-                          onClick={() => handleHighlightChange(post._id, i)}
-                        />
-                      </div>
-                    ))}
-                </div>
-              ))}
+
+            <span className="text-xs text-gray-600 max-w-[80px] text-center truncate">
+              {h.memo}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* MODAL */}
+      {addHighlight.open && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="w-full max-w-xl bg-white rounded-xl shadow-xl flex flex-col max-h-[85vh]">
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-5 py-4 border-b">
+              <h2 className="font-semibold text-gray-800 text-lg">
+                Create Highlight
+              </h2>
+
+              <X
+                className="cursor-pointer text-gray-500 hover:text-red-500"
+                onClick={() => {
+                  setAddHighlight({ open: false, state: 1 });
+                  document.body.style.overflow = "auto";
+                }}
+              />
             </div>
-          )}
-          <div className="flex gap-2 justify-end">
-            <Button onClick={() => setAddHighlight({ open: true, state: 1 })}>
-              {"<-- Previous"}
-            </Button>
-            {addHighlight.state === 2 ? (
-              <Button
-                disabled={
-                  isLoading || !selectedPostId || selectedMediaIndex === null
-                }
-                onClick={() =>
-                  handleAddHighlightSubmit(selectedPostId, selectedMediaIndex)
-                }
-              >
-                {"Create"}
-              </Button>
-            ) : (
-              <Button onClick={() => setAddHighlight({ open: true, state: 2 })}>
-                {"Next -->"}
-              </Button>
+
+            {/* STEP 1 MEMO */}
+            {addHighlight.state === 1 && (
+              <div className="p-6 space-y-4">
+                <label className="text-sm font-medium text-gray-700">
+                  Highlight Title
+                </label>
+
+                <Input
+                  maxLength={24}
+                  placeholder="Write your memories..."
+                  value={highlightMemo}
+                  onChange={(e) => setHighlightMemo(e.target.value)}
+                />
+              </div>
             )}
+
+            {/* STEP 2 MEDIA SELECT */}
+            {addHighlight.state === 2 && (
+              <div className="p-4 overflow-y-auto grid grid-cols-2 md:grid-cols-3 gap-3">
+                {myPost.map((post) =>
+                  post.media?.map((m, i) => (
+                    <div
+                      key={`${post._id}-${i}`}
+                      className={`relative cursor-pointer rounded-lg overflow-hidden border
+                      ${
+                        selectedPostId === post._id && selectedMediaIndex === i
+                          ? "border-blue-500 ring-2 ring-blue-400"
+                          : "border-gray-200"
+                      }`}
+                      onClick={() => handleHighlightChange(post._id, i)}
+                    >
+                      <img
+                        src={m.url}
+                        className="w-full h-36 object-cover hover:scale-105 transition"
+                      />
+                    </div>
+                  )),
+                )}
+              </div>
+            )}
+
+            {/* FOOTER BUTTONS */}
+            <div className="flex justify-between items-center px-5 py-4 border-t">
+              {addHighlight.state === 2 && (
+                <Button
+                  variant="outline"
+                  onClick={() => setAddHighlight({ open: true, state: 1 })}
+                >
+                  Previous
+                </Button>
+              )}
+
+              <div className="ml-auto">
+                {addHighlight.state === 2 ? (
+                  <Button
+                    disabled={
+                      isLoading ||
+                      !selectedPostId ||
+                      selectedMediaIndex === null
+                    }
+                    onClick={() =>
+                      handleAddHighlightSubmit(
+                        selectedPostId,
+                        selectedMediaIndex,
+                      )
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                  >
+                    Create Highlight
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => setAddHighlight({ open: true, state: 2 })}
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                  >
+                    Next
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

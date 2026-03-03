@@ -73,7 +73,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
             className="bg-white shadow-lg w-full max-h-[90vh] overflow-auto p-4"
             onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
           >
-            <div className="flex justify-between items-center border-b pb-2 mb-4">
+            <div className="flex justify-between items-center border-b  pb-2 mb-4">
               <h2 className="text-lg font-semibold">Comments</h2>
               <X
                 className="cursor-pointer hover:text-red-500"
@@ -81,7 +81,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
               />
             </div>
             {comments === null ? (
-              <div className="text-center py-6">Loading comments... </div>
+              <div className="text-center py-6 ">Loading comments... </div>
             ) : (
               <Comment
                 postId={post._id}

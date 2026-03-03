@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Grid2x2, Bookmark, Tags } from "lucide-react";
+
 import { getUserProfile } from "./profile.service";
+import ProfileTabs from "./components/ProfileTabs";
+import ProfilePostsGrid from "./components/ProfilePostsGrid";
 
 const OtherProfile = () => {
   const { Id } = useParams();
+
   const [profile, setProfile] = useState({
     user: {},
     posts: [],
     highlights: [],
   });
 
-  // 🧠 Fetch user profile
   const fetchUserProfile = async () => {
     try {
       const res = await getUserProfile(Id);
@@ -19,7 +21,7 @@ const OtherProfile = () => {
         setProfile(res.data);
       }
     } catch (error) {
-      console.error(error.message || "Failed to fetch user profile");
+      console.error(error.message || "Failed to fetch profile");
     }
   };
 
@@ -30,118 +32,100 @@ const OtherProfile = () => {
   const { user, posts, highlights } = profile;
 
   return (
-    <div className="md:flex md:items-center md:justify-center">
-      <div className="p-2 md:w-[50%]">
-        {/* --- Profile Info Section --- */}
-        <div className="flex rounded-full gap-4 md:gap-20 items-center">
-          {user.imageUrl ? (
+    <div className="flex justify-center px-4">
+      <div className="w-full max-w-3xl">
+        {/* ---------- Profile Header ---------- */}
+
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 py-6 border-b">
+          {/* Profile Image */}
+          {user?.imageUrl ? (
             <img
               src={user.imageUrl}
               alt="profile"
-              className="w-25 h-25 md:h-50 md:w-50 rounded-full object-cover"
+              className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover border-4 border-gray-200 shadow-sm"
             />
           ) : (
-            <span className="w-40 h-40 border-2 rounded-full bg-gray-300" />
+            <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-semibold">
+              U
+            </div>
           )}
 
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-4 items-center">
+          {/* Profile Info */}
+          <div className="flex flex-col gap-3 text-center md:text-left">
+            <span className="text-xl font-semibold text-gray-900">
+              {user?.name || "User"}
+            </span>
+
+            {/* Stats */}
+            <div className="flex justify-center md:justify-start gap-6 text-sm text-gray-700">
               <span>
-                <span className="font-bold">{posts?.length || 0}</span> Posts
+                <span className="font-semibold text-gray-900">
+                  {posts?.length || 0}
+                </span>{" "}
+                posts
               </span>
+
               <span>
-                <span className="font-bold">{user?.totalFriends || 0}</span>{" "}
-                Friends
+                <span className="font-semibold text-gray-900">
+                  {user?.totalFriends || 0}
+                </span>{" "}
+                friends
               </span>
             </div>
 
-            <div className="flex flex-col">
-              <span className="font-semibold text-lg">
-                {user?.name || "User"}
-              </span>
-              <span>{user?.bio || "No bio yet."}</span>
-              <span className="text-blue-500 cursor-pointer">webLink</span>
+            {/* Bio */}
+            <div className="text-sm text-gray-700 flex flex-col gap-1">
+              {user?.bio && <p>{user.bio}</p>}
+
+              {user?.website && (
+                <a
+                  href={user.website}
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                >
+                  {user.website}
+                </a>
+              )}
             </div>
           </div>
         </div>
 
-        {/* --- Highlights Section --- */}
+        {/* ---------- Highlights ---------- */}
+
         {highlights?.length > 0 && (
-          <div className="flex gap-4 p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400">
+          <div className="flex gap-5 py-5 overflow-x-auto scrollbar-thin">
             {highlights.map((h, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-24 flex flex-col items-center"
+                className="flex-shrink-0 flex flex-col items-center gap-1"
               >
                 {h.mediaUrl ? (
                   <img
                     src={h.mediaUrl}
                     alt="highlight"
-                    className="w-24 h-24 rounded-full border-4 object-cover"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
                   />
                 ) : (
-                  <div className="w-24 h-24 flex items-center justify-center rounded-full border text-gray-500 bg-gray-200">
-                    No Media
+                  <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    ?
                   </div>
                 )}
-                {h.memo && (
-                  <span className="text-sm text-center mt-1">{h.memo}</span>
-                )}
+
+                <span className="text-xs text-gray-600 max-w-[80px] text-center truncate">
+                  {h.memo}
+                </span>
               </div>
             ))}
           </div>
         )}
 
-        {/* --- Tabs Section --- */}
-        <div className="flex bg-gray-300 justify-around p-3">
-          <Grid2x2 />
-          <Bookmark />
-          <Tags />
-        </div>
+        {/* ---------- Tabs ---------- */}
 
-        {/* --- Posts Section --- */}
-        {posts?.length > 0 ? (
-          <div className="grid md:grid-cols-3 grid-cols-2 gap-2 p-2">
-            {posts.map((post) => (
-              <div
-                key={post._id}
-                className="relative aspect-square bg-gray-200 overflow-hidden rounded-md cursor-pointer group"
-              >
-                {post?.media?.length > 0 ? (
-                  <>
-                    {post.media[0].type === "image" ? (
-                      <img
-                        src={post.media[0].url}
-                        alt="post"
-                        className="w-full h-full object-cover group-hover:opacity-90 transition"
-                      />
-                    ) : (
-                      <video
-                        src={post.media[0].url}
-                        className="w-full h-full object-cover group-hover:opacity-90 transition"
-                        controls
-                      />
-                    )}
+        <ProfileTabs />
 
-                    {post.media.length > 1 && (
-                      <div className="absolute top-[50%] right-[50%] bg-black/60 text-white text-lg px-2 py-1 rounded-md">
-                        +{post.media.length - 1}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500">
-                    No Media
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-6 text-gray-500">
-            No posts available
-          </div>
-        )}
+        {/* ---------- Posts Grid ---------- */}
+
+        <ProfilePostsGrid posts={posts}></ProfilePostsGrid>
       </div>
     </div>
   );

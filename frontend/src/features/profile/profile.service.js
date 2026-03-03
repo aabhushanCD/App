@@ -4,7 +4,7 @@ export const updateProfile = (form) => {
   return api.put("/auth/updateProfile/", form);
 };
 
-export const addHighlight = (data) => {
+export const addHighlights = (data) => {
   return api.post("highlight/addHighlight", data);
 };
 

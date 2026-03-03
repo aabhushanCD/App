@@ -1,14 +1,14 @@
 import React from "react";
 
-const ProfilePostsGrid = ({ myPost }) => {
+const ProfilePostsGrid = ({ posts }) => {
   return (
     <>
-      {myPost?.length > 0 && (
-        <div className="grid md:grid-cols-3 grid-cols-2 gap-2 p-2">
-          {myPost.map((post) => (
+      {posts?.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 py-4">
+          {posts.map((post) => (
             <div
               key={post._id}
-              className="relative aspect-square bg-gray-200 overflow-hidden rounded-md cursor-pointer group"
+              className="relative aspect-square bg-gray-100 overflow-hidden rounded-md cursor-pointer group"
             >
               {post?.media?.length > 0 ? (
                 <>
@@ -16,30 +16,32 @@ const ProfilePostsGrid = ({ myPost }) => {
                     <img
                       src={post.media[0].url}
                       alt="post"
-                      className="w-full h-full object-cover group-hover:opacity-90 transition"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   ) : (
                     <video
                       src={post.media[0].url}
-                      className="w-full h-full object-cover group-hover:opacity-90 transition"
-                      controls
+                      className="w-full h-full object-cover"
                     />
                   )}
 
-                  {/* Show overlay if multiple media */}
                   {post.media.length > 1 && (
-                    <div className="absolute top-[50%] right-[50%] bg-black/60 text-white text-lg px-2 py-1 rounded-md">
+                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
                       +{post.media.length - 1}
                     </div>
                   )}
                 </>
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
                   No Media
                 </div>
               )}
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="text-center py-10 text-gray-500 text-sm">
+          No posts available
         </div>
       )}
     </>
