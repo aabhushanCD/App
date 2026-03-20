@@ -93,7 +93,7 @@ It includes realtime chat, video calls, notifications, infinite scrolling, and m
 
 Clone the repo:
 
-git clone https://github.com/aabhushanCD/App.git
+git clone https://github.com/aabhushanCD/social-media
 
 Install dependencies:
 
