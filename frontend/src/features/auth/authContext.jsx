@@ -19,9 +19,8 @@ export const AuthContextProvider = ({ children }) => {
         const res = await meApi();
         setCurrentUser(res.data.user);
       } catch (error) {
-        console.error(error);
+        toast.error(error);
         setCurrentUser(null);
-        localStorage.removeItem("user");
       } finally {
         setLoading(false);
       }

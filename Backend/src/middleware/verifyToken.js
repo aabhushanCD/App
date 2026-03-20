@@ -4,12 +4,17 @@ dotenv.config();
 export const verifyToken = (req, res, next) => {
   try {
     const accessToken = req.cookies?.accessToken;
+
+    if (!accessToken) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     if (!decoded) {
       return res.status(401).json({ message: "UnAuthorized" });
     }
     req.user = decoded;
-    req.userId = decoded.userId;
+    req.userId = decoded.userId; 
 
     next();
   } catch (error) {

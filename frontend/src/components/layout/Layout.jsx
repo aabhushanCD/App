@@ -38,7 +38,7 @@ const Layout = () => {
             </Suspense>
 
             {/* Right Sidebar - Large Screens */}
-            <aside className="hidden lg:block lg:w-[300px] ml-8 border-l border-gray-200 bg-white rounded-md p-4 shadow-sm">
+            <aside className="hidden lg:block lg:w-[390px] ml-8 border-l border-gray-200 bg-white rounded-md p-4 shadow-sm">
               <RightSideBar />
             </aside>
           </section>
