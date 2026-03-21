@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { House, LogOut, Menu, X } from "lucide-react";
 import { toast } from "sonner";
@@ -40,6 +40,15 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-gradient-to-r from-blue-100 via-white to-purple-50 shadow-md z-50">
       {/* Left / Logo placeholder */}
+      {/* Logo */}
+      <div className="">
+        <Link
+          to="/home"
+          className="text-4xl font-mono text-blue-500 tracking-wide"
+        >
+          Hell'O
+        </Link>
+      </div>
       <div className="flex items-center">
         <h1
           className="text-xl font-bold text-blue-600 cursor-pointer"
@@ -67,33 +76,33 @@ const Navbar = () => {
 
         {/* Desktop Icons */}
         {/* <div className="hidden md:flex items-center gap-4 ml-4">
-          <House
-            className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500 transition-colors"
-            onClick={() => navigate("/home")}
-          />
+            <House
+              className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500 transition-colors"
+              onClick={() => navigate("/home")}
+            />
 
-          <Suspense
-            fallback={
-              <div className="w-5 h-5 rounded-full bg-gray-300 animate-pulse" />
-            }
-          >
-            <NavMessenger />
-            <NavNotification />
-          </Suspense>
-
-          <Button
-            className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100 transition-colors"
-            onClick={async () => {
-              const success = await logout();
-              if (success) {
-                toast.success("Logout Successfully");
-                navigate("/login");
+            <Suspense
+              fallback={
+                <div className="w-5 h-5 rounded-full bg-gray-300 animate-pulse" />
               }
-            }}
-          >
-            <LogOut />
-          </Button>
-        </div> */}
+            >
+              <NavMessenger />
+              <NavNotification />
+            </Suspense>
+
+            <Button
+              className="bg-transparent text-gray-700 hover:text-red-500 hover:bg-gray-100 transition-colors"
+              onClick={async () => {
+                const success = await logout();
+                if (success) {
+                  toast.success("Logout Successfully");
+                  navigate("/login");
+                }
+              }}
+            >
+              <LogOut />
+            </Button>
+          </div> */}
         <NavNotification />
         <div className="relative">
           <div

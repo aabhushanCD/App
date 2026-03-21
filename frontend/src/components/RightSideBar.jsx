@@ -29,12 +29,14 @@ const suggestions = [
 
 const RightSideBar = () => {
   return (
-    <div className="sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto space-y-8">
-      {/* Trending Section */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+    <aside className="sticky top-20 h-fit space-y-6 px-3 py-4">
+      {/* Trending */}
+      <div className="bg-white rounded-xl border p-5">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp size={18} className="text-blue-500" />
-          <h3 className="font-semibold text-gray-800">Trending Topics</h3>
+          <h3 className="font-semibold text-gray-800 text-sm">
+            Trending Topics
+          </h3>
         </div>
 
         <ul className="space-y-3">
@@ -50,9 +52,11 @@ const RightSideBar = () => {
         </ul>
       </div>
 
-      {/* Suggested Friends */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-        <h3 className="font-semibold text-gray-800 mb-4">Suggested for you</h3>
+      {/* Suggestions */}
+      <div className="bg-white rounded-xl border p-5">
+        <h3 className="font-semibold text-gray-800 text-sm mb-4">
+          Suggested for you
+        </h3>
 
         <div className="space-y-4">
           {suggestions.map((user) => (
@@ -63,7 +67,6 @@ const RightSideBar = () => {
                   alt={user.name}
                   className="w-9 h-9 rounded-full object-cover"
                 />
-
                 <span className="text-sm font-medium text-gray-700">
                   {user.name}
                 </span>
@@ -79,13 +82,13 @@ const RightSideBar = () => {
       </div>
 
       {/* Info Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <div className="bg-white rounded-xl border p-5">
         <p className="text-sm text-gray-600 leading-relaxed">
-          Connect with developers, share posts, and explore new ideas in the
+          Connect with developers, share posts, and explore ideas with the
           community.
         </p>
       </div>
-    </div>
+    </aside>
   );
 };
 
