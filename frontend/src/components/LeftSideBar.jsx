@@ -1,6 +1,13 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Users, MessageCircle, Bell, LogOut, Newspaper } from "lucide-react";
+import {
+  Users,
+  MessageCircle,
+  Bell,
+  LogOut,
+  Newspaper,
+  Settings2,
+} from "lucide-react";
 
 const menuItems = [
   { name: "News Feed", path: "/newsfeeds", icon: Newspaper },
@@ -47,9 +54,11 @@ const LeftSideBar = () => {
           Notifications
         </button>
 
-        <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition">
-          <LogOut size={20} />
-          Logout
+        <button
+          className="flex items-center gap-3 px-4 py-3 rounded-lg  hover:bg-gray-100 transition"
+          onClick={() => navigate("/setting")}
+        >
+          <Settings2 /> Setting
         </button>
       </div>
     </aside>

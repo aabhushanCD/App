@@ -34,9 +34,9 @@ const FriendContainer = () => {
   useEffect(() => {
     fetchUser();
   }, []);
-  
+
   return (
-    <div className=" min-h-screen text-sm  md:text-lg flex-wrap min-w-full sm:justify-self-center bg-gradient-to-r from-blue-50 via-white to-purple-50 p-6 ">
+    <div className=" min-h-screen text-sm   md:text-lg flex-wrap min-w-full sm:justify-self-center   ">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <FriendHead />
