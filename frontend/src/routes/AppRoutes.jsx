@@ -14,6 +14,7 @@ import OtherProfile from "@/features/profile/OtherProfile";
 import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
 import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
 import NotificationPage from "@/features/notification/NotificationPage";
+import Setting from "@/features/settings/Setting";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           <Route path="/web" element={<Audio_Video />} />
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
+          <Route path="/setting" element={<Setting />} />
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
           <Route
             path="/notification"

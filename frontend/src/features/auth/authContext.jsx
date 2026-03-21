@@ -8,6 +8,7 @@ import {
   registerApi,
 } from "@/features/auth/auth.service";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -19,7 +20,7 @@ export const AuthContextProvider = ({ children }) => {
         const res = await meApi();
         setCurrentUser(res.data.user);
       } catch (error) {
-        toast.error(error);
+        console.error(error.message);
         setCurrentUser(null);
       } finally {
         setLoading(false);
@@ -87,4 +88,5 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

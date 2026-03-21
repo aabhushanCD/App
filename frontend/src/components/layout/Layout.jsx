@@ -20,7 +20,7 @@ const Layout = () => {
         <main className="flex-1 flex flex-col">
           {/* Navbar */}
           <header className="bg-white shadow-sm z-10 sticky top-0">
-            <Navbar />
+            <Navbar />  
           </header>
 
           {/* Page Content */}

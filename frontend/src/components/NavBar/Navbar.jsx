@@ -14,15 +14,17 @@ import { useAuth } from "@/features/auth/authContext";
 
 import NavSearch from "./NavSearch";
 import MenuBar from "../MenuBar";
+import ToggleMenu from "../ToggleMenu";
 
 const NavMessenger = lazy(() => import("./NavMessanger"));
 const NavNotification = lazy(() => import("./NavNotification"));
 
 const Navbar = () => {
-  const { logout } = useAuth();
+  const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenu, setIsMobileMenu] = useState(false);
   const menuRef = useRef();
+  const [profileClick, setProfileClick] = useState(false);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -42,9 +44,7 @@ const Navbar = () => {
         <h1
           className="text-xl font-bold text-blue-600 cursor-pointer"
           onClick={() => navigate("/home")}
-        >
-          
-        </h1>
+        ></h1>
       </div>
 
       {/* Center Navigation - Desktop */}
@@ -66,7 +66,7 @@ const Navbar = () => {
         <NavSearch />
 
         {/* Desktop Icons */}
-        <div className="hidden md:flex items-center gap-4 ml-4">
+        {/* <div className="hidden md:flex items-center gap-4 ml-4">
           <House
             className="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500 transition-colors"
             onClick={() => navigate("/home")}
@@ -93,6 +93,47 @@ const Navbar = () => {
           >
             <LogOut />
           </Button>
+        </div> */}
+        <div className="relative">
+          <div
+            className="w-10 h-10 rounded-full bg-black cursor-pointer"
+            onClick={() => setProfileClick(!profileClick)}
+          >
+            {currentUser.imageUrl ? (
+              <img
+                src={currentUser?.imageUrl}
+                className="rounded-full w-10 h-10 "
+                alt=""
+              />
+            ) : (
+              <div className="text-white flex items-center p-2  justify-center">
+                {currentUser.name[0]}
+              </div>
+            )}
+          </div>
+          {profileClick && (
+            <div className="absolute top-10 z-1000 right-0 flex flex-col gap-4  border p-2 w-50 bg-white  text-gray-700 rounded-2xl">
+              <Button variant="outlined" className={"border "}>
+                Profile
+              </Button>
+              <Button variant="outlined" className={"border "}>
+                Message
+              </Button>
+              <Button
+                variant="outlined"
+                className={"border"}
+                onClick={async () => {
+                  const success = await logout();
+                  if (success) {
+                    toast.success("Logout Successfully");
+                    navigate("/login");
+                  }
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu */}
