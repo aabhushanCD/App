@@ -94,6 +94,7 @@ const Navbar = () => {
             <LogOut />
           </Button>
         </div> */}
+        <NavNotification />
         <div className="relative">
           <div
             className="w-10 h-10 rounded-full bg-black cursor-pointer"
@@ -112,16 +113,16 @@ const Navbar = () => {
             )}
           </div>
           {profileClick && (
-            <div className="absolute top-10 z-1000 right-0 flex flex-col gap-4  border p-2 w-50 bg-white  text-gray-700 rounded-2xl">
-              <Button variant="outlined" className={"border "}>
+            <div className="absolute top-10 z-1000 right-0 flex flex-col gap-2  border p-2 w-50 bg-gray-50  text-gray-700 rounded-2xl">
+              <Button variant="outlined" className={"border hover:bg-white"}>
                 Profile
               </Button>
-              <Button variant="outlined" className={"border "}>
+              <Button variant="outlined" className={"border hover:bg-white "}>
                 Message
               </Button>
               <Button
                 variant="outlined"
-                className={"border"}
+                className={"border  hover:bg-white"}
                 onClick={async () => {
                   const success = await logout();
                   if (success) {

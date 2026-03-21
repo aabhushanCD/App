@@ -6,6 +6,7 @@ import LeftSideBar from "./LeftSideBar";
 import { useAuth } from "@/features/auth/authContext";
 import RightSideBar from "./RightSideBar";
 import { getPostPagenation } from "@/features/post/postService";
+import PostSkeleton from "./Skeletons/PostSkeleton";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -85,6 +86,7 @@ const Home = () => {
       {/* Main Feed */}
       <div className=" flex-1 max-w-2xl w-full md:space-y-2 justify-self-center">
         {/* Create Post Section */}
+
         <PostCreateSmall
           currentUser={currentUser}
           setLoading={setLoading}
@@ -118,15 +120,11 @@ const Home = () => {
             setLoading={setLoading}
             setHasMore={setHasMore}
           />
+          {loading && <PostSkeleton />}
           <div
             ref={observerRef}
             className="h-12 flex justify-center items-center"
           >
-            {loading && (
-              <p className="text-gray-500 text-sm animate-pulse">
-                Loading more posts...
-              </p>
-            )}
             {!hasMore && (
               <p className="text-gray-400 text-sm">You’ve reached the end</p>
             )}

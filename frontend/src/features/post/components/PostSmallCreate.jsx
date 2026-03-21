@@ -1,46 +1,46 @@
 import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../postService";
-import { toast } from "sonner";
+// import { createPost } from "../postService";
+// import { toast } from "sonner";
 import { Camera, Image, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CreatePost = ({
   currentUser,
-  setLoading,
+  // setLoading,
   form,
-  setPostData,
-  setCreate,
-  setForm,
+  // setPostData,
+  // setCreate,
+  // setForm,
   handleButton,
 }) => {
   const navigate = useNavigate();
-  const handlePostSubmit = async () => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("content", form.content);
+  // const handlePostSubmit = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const formData = new FormData();
+  //     formData.append("content", form.content);
 
-      form.files.forEach((file) => {
-        formData.append("media", file);
-      });
-      const res = await createPost(formData);
-      // res.data;
-      if (res.status === 200) {
-        setPostData((prev) => ({
-          ...prev,
-          posts: [res.data.newPost, ...prev.posts],
-        }));
-        toast.success("Post Successfully", res.message);
-        setCreate(false);
-        setForm({ content: "", files: [] });
-      }
-    } catch (error) {
-      toast.error(error.response?.message || error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     form.files.forEach((file) => {
+  //       formData.append("media", file);
+  //     });
+  //     const res = await createPost(formData);
+  //     // res.data;
+  //     if (res.status === 200) {
+  //       setPostData((prev) => ({
+  //         ...prev,
+  //         posts: [res.data.newPost, ...prev.posts],
+  //       }));
+  //       toast.success("Post Successfully", res.message);
+  //       setCreate(false);
+  //       setForm({ content: "", files: [] });
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.message || error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <div
       className={`bg-white border md:rounded-2xl inset-0 shadow-sm flex gap-3 items-start p-2 md:p-4 ${
@@ -89,12 +89,12 @@ const CreatePost = ({
               <span className="hidden sm:inline">Camera</span>
             </button>
           </div>
-          <Button
+          {/* <Button
             onClick={handlePostSubmit}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-9 rounded-lg shadow-sm"
           >
             Post
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

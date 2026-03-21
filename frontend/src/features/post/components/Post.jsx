@@ -36,7 +36,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
     }
   };
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className="flex flex-col  rounded-sm bg-white shadow-sm">
         {/* header */}
         <PostHead
