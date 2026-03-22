@@ -46,7 +46,7 @@ const Navbar = () => {
           to="/home"
           className="text-4xl font-mono text-blue-500 tracking-wide"
         >
-          Hell'O
+          Gen-Z
         </Link>
       </div>
       <div className="flex items-center">
