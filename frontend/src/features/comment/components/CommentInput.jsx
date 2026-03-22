@@ -1,9 +1,9 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import { sendComment } from "../comment.service";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Image, Send } from "lucide-react";
+import { Image, Loader, Send } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 const CommentInput = ({
@@ -15,6 +15,7 @@ const CommentInput = ({
 }) => {
   const fileInputRef = useRef();
   const textinputRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,6 +23,7 @@ const CommentInput = ({
     }
   };
   const handleSendComment = async () => {
+    setIsLoading(true);
     const text = textinputRef.current.value;
     if (!text && !comment.file) {
       toast.error("Cannot send empty comment");
@@ -40,15 +42,16 @@ const CommentInput = ({
         textinputRef.current.value = "";
         setComment({ text: "", file: null });
       }
+      setIsLoading(false);
     } catch (error) {
       console.error(error.message);
       toast.error("Something went wrong while sending comment");
     }
   };
   return (
-    <div className=" flex items-center gap-2">
+    <div className=" flex items-center gap-2 ">
       {/* Comment Input */}
-      <div className=" flex flex-1 items-center bg-white border rounded-full  shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
+      <div className=" flex flex-1 items-center bg-white border rounded-full  shadow-sm focus-within:ring-2 focus-within:ring-blue-400 ">
         <Input
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -61,13 +64,17 @@ const CommentInput = ({
           ref={textinputRef}
           // onChange={handleTextChange}
         />
-        <Button
-          size="icon"
-          className=" rounded-full bg-blue-500 hover:bg-blue-600 text-white"
-          onClick={handleSendComment}
-        >
-          <Send size={18} />
-        </Button>
+        {!isLoading ? (
+          <Button
+            size="icon"
+            className=" rounded-full bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={handleSendComment}
+          >
+            <Send size={18} />
+          </Button>
+        ) : (
+          <Loader />
+        )}
       </div>
       {/* Upload Image */}
       <Label htmlFor="image">
