@@ -9,7 +9,7 @@ const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
     <div
       className={`${
         location.pathname === "/messanger" ? "h-screen" : "h-150 "
-      }  bg-white w-full shadow-2xl  flex flex-col`}
+      }  bg-gray-100 w-full shadow-2xl  flex flex-col`}
     >
       <div className="flex flex-col h-full">
         <div className="sticky  top-0 bg-white flex flex-col gap-3 p-4 ">
@@ -51,7 +51,7 @@ const MessangerBox = ({ setMiniChat, allUsers, setShowMessanger }) => {
           {allUsers.map((uj) => (
             <div
               key={uj._id}
-              className=" flex flex-wrap gap-2 items-center rounded-2xl p-2 hover:bg-blue-300 cursor-pointer"
+              className=" flex flex-wrap gap-2 items-center rounded-2xl p-2 hover:bg-white cursor-pointer"
               onClick={() => {
                 setMiniChat({ open: true, user: uj });
                 location.pathname === "messanger"

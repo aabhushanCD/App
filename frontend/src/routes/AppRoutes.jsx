@@ -15,6 +15,12 @@ import ForgetPassword from "@/features/auth/pages/ForgetPasswordPage";
 import ResetPassword from "@/features/auth/pages/ResetPasswordPage";
 import NotificationPage from "@/features/notification/NotificationPage";
 
+import SettingLayout from "@/features/settings/components/SettingLayout";
+import Account from "@/features/settings/pages/Account";
+import Privacy from "@/features/settings/pages/Privacy";
+import Security from "@/features/settings/pages/Security";
+import Notification from "@/features/settings/pages/Notification";
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -34,6 +40,7 @@ const AppRoutes = () => {
           <Route path="/web" element={<Audio_Video />} />
           <Route path="/friend" element={<FriendContainer />} />
           <Route path="/newsfeeds" element={<Home />} />
+
           <Route path="/user/profile/:Id" element={<OtherProfile />} />
           <Route
             path="/notification"
@@ -49,7 +56,19 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/setting"
+          element={
+            <ProtectedRoute>
+              <SettingLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="account" element={<Account />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="security" element={<Security />} />
+          <Route path="notification" element={<Notification />} />
+        </Route>
         {/* Public Routes */}
         <Route
           path="/login"

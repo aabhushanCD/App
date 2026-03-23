@@ -36,7 +36,7 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
     }
   };
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className="flex flex-col  rounded-sm bg-white shadow-sm">
         {/* header */}
         <PostHead
@@ -73,25 +73,29 @@ const Post = ({ post, handlePostDelete, updatePostCommentCount }) => {
             className="bg-white shadow-lg w-full max-h-[90vh] overflow-auto p-4"
             onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
           >
-            <div className="flex justify-between items-center border-b  pb-2 mb-4">
+            <div className="flex justify-between items-center  px-4 py-3 border-b">
               <h2 className="text-lg font-semibold">Comments</h2>
               <X
                 className="cursor-pointer hover:text-red-500"
                 onClick={handleCloseModal}
               />
             </div>
-            {comments === null ? (
-              <div className="text-center py-6 ">Loading comments... </div>
-            ) : (
-              <Comment
-                postId={post._id}
-                serverComment={post.comments}
-                handleFetchComments={handleFetchComments}
-                comments={comments}
-                setComments={setComments}
-                updatePostCommentCount={updatePostCommentCount}
-              />
-            )}
+            <div className="flex-1 overflow-y-auto p-4">
+              {comments === null ? (
+                <div className="text-center py-6 text-gray-500">
+                  Loading comments...{" "}
+                </div>
+              ) : (
+                <Comment
+                  postId={post._id}
+                  serverComment={post.comments}
+                  handleFetchComments={handleFetchComments}
+                  comments={comments}
+                  setComments={setComments}
+                  updatePostCommentCount={updatePostCommentCount}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

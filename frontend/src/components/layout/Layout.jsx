@@ -8,48 +8,43 @@ import RightSideBar from "../RightSideBar";
 
 const Layout = () => {
   return (
-    <>
-      {/* Main Layout Container */}
-      <div className="flex min-h-screen bg-gray-50">
-        {/* Left Sidebar - Desktop */}
-        <aside className="hidden md:block md:w-[22%] lg:w-[20%] border-r border-gray-200 bg-white">
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-50 bg-white border-b">
+        <Navbar />
+      </header>
+
+      {/* Main Layout */}
+      <div className="flex flex-1 max-w-7xl w-full mx-auto">
+        {/* Left Sidebar */}
+        <aside className="hidden md:block md:w-[240px] border-r bg-white">
           <LeftSideBar />
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col">
-          {/* Navbar */}
-          <header className="bg-white shadow-sm z-10 sticky top-0">
-            <Navbar />
-          </header>
-
-          {/* Page Content */}
-          <section className="flex flex-1 justify-center gap-8 md:px-4 pb-20 md:pb-6 bg-gradient-to-l from-blue-50 via-white to-green-50">
-            <Suspense
-              fallback={
-                <div className="w-full flex items-center justify-center">
-                  <div className="w-10 h-10 border-4 border-blue-400 border-dashed rounded-full animate-spin" />
-                </div>
-              }
-            >
-              <div className="w-full max-w-6xl">
-                <Outlet />
+        <main className="flex-1 px-4 md:px-6 py-4 bg-gradient-to-l from-blue-50 via-white to-green-50">
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center py-20">
+                <div className="w-10 h-10 border-4 border-blue-400 border-dashed rounded-full animate-spin" />
               </div>
-            </Suspense>
-
-            {/* Right Sidebar - Large Screens */}
-            <aside className="hidden lg:block lg:w-[390px] ml-8 border-l border-gray-200 bg-white rounded-md p-4 shadow-sm">
-              <RightSideBar />
-            </aside>
-          </section>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
+
+        {/* Right Sidebar */}
+        <aside className="hidden lg:block w-[280px] border-l bg-white">
+          <RightSideBar />
+        </aside>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <footer className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow-t z-50">
+      {/* Mobile Navigation */}
+      <footer className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t z-50">
         <MobileNav />
       </footer>
-    </>
+    </div>
   );
 };
 
