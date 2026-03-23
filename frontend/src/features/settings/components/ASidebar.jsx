@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -26,10 +25,9 @@ const NavBarLink = ({ btm }) => {
   );
 };
 
-const Sidebar = () => {
+const ASidebar = () => {
   return (
     <>
-      
       <aside className="w-64 border-r min-h-screen">
         <div className="pb-8 pt-4 px-4">
           <h1 className="text-2xl font-semibold">Settings</h1>
@@ -46,4 +44,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default ASidebar;
