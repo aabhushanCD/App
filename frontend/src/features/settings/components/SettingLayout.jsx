@@ -1,7 +1,8 @@
 import React from "react";
-import Sidebar from "./sidebar";
+
 import { Outlet } from "react-router-dom";
 import Navbar from "@/components/NavBar/Navbar";
+import Sidebar from "./Sidebar";
 
 const SettingLayout = () => {
   return (
@@ -10,6 +11,7 @@ const SettingLayout = () => {
         <Navbar />
         <div className="flex">
           <Sidebar />
+
           <div className="w-full">
             <Outlet />
           </div>
